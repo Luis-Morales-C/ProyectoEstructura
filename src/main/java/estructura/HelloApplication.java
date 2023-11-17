@@ -1,4 +1,4 @@
-package estructura.proyecto;
+package estructura;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
