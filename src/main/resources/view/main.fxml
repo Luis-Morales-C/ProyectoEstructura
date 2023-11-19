@@ -10,29 +10,57 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="600" prefWidth="900" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="estructura.infrastructure.view.controllers.LibraryController">
-        <HBox alignment="CENTER" spacing="15.0" styleClass="nav" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <TextField fx:id="searchField" prefHeight="26.0" prefWidth="190.0" promptText="Look for" styleClass="search-field" HBox.hgrow="NEVER" />
-            <Button fx:id="b_process" styleClass="nav-button" text="Processes" HBox.hgrow="ALWAYS">
-                 <cursor>
-                    <Cursor fx:constant="HAND" />
-                 </cursor>
-            </Button>
-            <Button fx:id="b_notifications" styleClass="nav-button" text="Notifications" HBox.hgrow="ALWAYS">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-            </Button>
-             <Button fx:id="b_export" styleClass="nav-button" text="Export" HBox.hgrow="ALWAYS">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-             </Button>
-              <padding>
-                 <Insets bottom="5.0" top="5.0" />
-              </padding>
-        </HBox>
-   <AnchorPane fx:id="p_container" layoutX="-1.0" layoutY="130.0" prefHeight="200.0" prefWidth="750.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="54.0">
 
-   </AnchorPane>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.CheckBox?>
+<AnchorPane prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="estructura.infrastructure.view.controllers.Controller">
+    <VBox layoutX="500" layoutY="30" spacing="10">
+        <Label text="Crear Proceso"/>
+        <TextField fx:id="nombreProceso" promptText="Nombre del Proceso"/>
+        <Button text="Crear Proceso" onAction="#handleCrearProceso"/>
+
+        <Label text="Crear Actividad"/>
+        <TextField fx:id="nombreActividad" promptText="Nombre de la Actividad"/>
+        <TextArea fx:id="descripcionActividad" promptText="Descripción de la Actividad"/>
+        <CheckBox fx:id="esObligatoria" text="Es Obligatoria"/>
+        <Button text="Crear Actividad" onAction="#handleCrearActividad"/>
+
+    </VBox>
+    <MenuBar>
+        <Menu text="Archivo">
+            <MenuItem text="Nuevo Proceso" onAction="#handleNuevoProceso"/>
+            <MenuItem text="Salir" onAction="#handleSalir"/>
+        </Menu>
+        <Menu text="Usuario">
+            <MenuItem text="Iniciar Sesión" onAction="#handleIniciarSesion"/>
+            <MenuItem text="Cerrar Sesión" onAction="#handleCerrarSesion"/>
+        </Menu>
+    </MenuBar>
+    <Button fx:id="btnIniciarSesion" text="Iniciar Sesión" onAction="#handleIniciarSesion"/>
+    <VBox layoutX="10" layoutY="30" spacing="10">
+        <Label text="Lista de Procesos"/>
+        <ListView fx:id="listaProcesos" prefHeight="200" prefWidth="200"/>
+        <Button text="Ver Detalles" onAction="#handleVerDetallesProceso"/>
+        <Button fx:id="btnVerDetallesProceso" text="Ver Detalles del Proceso" onAction="#handleVerDetallesProceso" />
+
+    </VBox>
+    <VBox layoutX="250" layoutY="30" spacing="10">
+        <Label text="Lista de Actividades"/>
+        <ListView fx:id="listaActividades" prefHeight="200" prefWidth="200"/>
+        <Button text="Ver Detalles" onAction="#handleVerDetallesActividad"/>
+        <Button fx:id="btnVerDetallesActividad" text="Ver Detalles del Actividad" onAction="#handleVerDetallesActividad" />
+
+    </VBox>
+
+    <Button fx:id="btnSalir" text="Salir" onAction="#handleSalir"/>
 </AnchorPane>
+
+
+
+
