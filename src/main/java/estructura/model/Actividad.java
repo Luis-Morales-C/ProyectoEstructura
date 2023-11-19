@@ -1,20 +1,18 @@
-package estructura.model;
+package estructura.main.modelos;
 
-
+import estructura.main.nodos.Cola;
+import estructura.main.util.CrearID;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * La clase Actividades representa una actividad en el contexto del proyecto.
  * Una actividad tiene tareas pendientes y completadas, así como métodos para
  * gestionarlas y obtener información sobre la actividad.
  */
-public class Actividad {
+public class Actividades {
+    private String id;
     private String nombre;
-    private String descripcion;
-    private Estado estado;
-    private ListaDobleEnlazada<Tarea> listaTarea;
     private Cola<Tarea> tareasPendientes; // Cola de tareas pendientes
     private Cola<Tarea> completarTarea; // Cola de tareas completadas
 
@@ -23,15 +21,11 @@ public class Actividad {
      *
      * @param nombre El nombre de la actividad.
      */
-    public Actividad(String nombre,String descripcion,Estado estado) {
+    public Actividades(String nombre) {
+        this.id = CrearID.generarID(); // Genera un ID único para la actividad
         this.nombre = nombre;
-        this.descripcion=descripcion;
-        this.estado=estado;
         this.tareasPendientes = new Cola<>();
         this.completarTarea = new Cola<>();
-    }
-    public Actividad(){
-        super();
     }
 
     /**
@@ -57,6 +51,22 @@ public class Actividad {
         return completetarTarea;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setTareasPendientes(Cola<Tarea> tareasPendientes) {
+        this.tareasPendientes = tareasPendientes;
+    }
+
+    public void setCompletarTarea(Cola<Tarea> completarTarea) {
+        this.completarTarea = completarTarea;
+    }
+
     /**
      * Obtiene la cola de tareas pendientes.
      *
@@ -75,6 +85,14 @@ public class Actividad {
         return completarTarea;
     }
 
+    /**
+     * Obtiene el ID de la actividad.
+     *
+     * @return El ID de la actividad.
+     */
+    public String getId() {
+        return id;
+    }
 
     /**
      * Obtiene el nombre de la actividad.
@@ -117,39 +135,5 @@ public class Actividad {
         return totalDuration;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public Estado getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Estado estado) {
-        this.estado = estado;
-    }
-
-    public void setTareasPendientes(Cola<Tarea> tareasPendientes) {
-        this.tareasPendientes = tareasPendientes;
-    }
-
-    public void setCompletarTarea(Cola<Tarea> completarTarea) {
-        this.completarTarea = completarTarea;
-    }
-
-    public ListaDobleEnlazada<Tarea> getListaTarea() {
-        return listaTarea;
-    }
-
-    public void setListaTarea(ListaDobleEnlazada<Tarea> listaTarea) {
-        this.listaTarea = listaTarea;
-    }
 }
