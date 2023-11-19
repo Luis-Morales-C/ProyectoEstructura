@@ -1,12 +1,17 @@
-package estructura.main.modelos;
+package estructura.model;
+
+import java.time.LocalDateTime;
 
 /**
  * Representa una tarea dentro de un proceso o actividad.
  */
 public class Tarea {
     private String descripcion;
-    private EstadoTarea estado;
+    private Estado estado;
     private int duracionMinutos;
+    private LocalDateTime inicio;
+    private LocalDateTime fin;
+
 
     /**
      * Constructor para crear una nueva instancia de Tarea.
@@ -15,10 +20,13 @@ public class Tarea {
      * @param estado           El estado de la tarea, utilizando el enum EstadoTarea.
      * @param duracionMinutos  La duración estimada de la tarea en minutos.
      */
-    public Tarea(String descripcion, EstadoTarea estado, int duracionMinutos) {
+    public Tarea(String descripcion, Estado estado, int duracionMinutos) {
         this.descripcion = descripcion;
         this.estado = estado;
         this.duracionMinutos = duracionMinutos;
+    }
+    public Tarea(){
+        super();
     }
 
     public String getDescripcion() {
@@ -29,13 +37,6 @@ public class Tarea {
         this.descripcion = descripcion;
     }
 
-    public EstadoTarea getEstado() {
-        return estado;
-    }
-
-    public void setEstado(EstadoTarea estado) {
-        this.estado = estado;
-    }
 
     public int getDuracionMinutos() {
         return duracionMinutos;
@@ -49,7 +50,7 @@ public class Tarea {
      * Marca la tarea como completada.
      */
     public void completarTarea() {
-        setEstado(EstadoTarea.COMPLETO);
+        setEstado(Estado.COMPLETO);
     }
 
     @Override
@@ -59,5 +60,24 @@ public class Tarea {
                 ", estado=" + estado +
                 ", duracionMinutos=" + duracionMinutos +
                 '}';
+    }
+
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+    public void iniciarTarea() {
+        this.inicio = LocalDateTime.now();
+    }
+
+    public void finalizarTarea() {
+        this.fin = LocalDateTime.now();
+    }
+
+    public int calcularDuracion() {
+        return (int) inicio.until(fin, java.time.temporal.ChronoUnit.MINUTES);
     }
 }

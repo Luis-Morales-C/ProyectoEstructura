@@ -1,4 +1,4 @@
-package estructura.main.nodos;
+package estructura.model;
 
 import java.util.ArrayList;
 import java.util.List;
