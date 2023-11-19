@@ -1,4 +1,4 @@
-package estructura.main.modelos;
+package estructura.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,7 @@ public class GestorProcesos {
     private static GestorProcesos instance;
 
     // Mapa para almacenar los procesos
-    private Map<String, Procesos> procesos;
+    private Map<String, Proceso> procesos;
 
     /**
      * Constructor privado para prevenir la instanciación desde fuera.
@@ -37,7 +37,7 @@ public class GestorProcesos {
      *
      * @param process el proceso a añadir.
      */
-    public void addProcess(Procesos process) {
+    public void addProcess(Proceso process) {
         procesos.put(process.getId(), process);
     }
 
@@ -47,7 +47,7 @@ public class GestorProcesos {
      * @param id el ID del proceso.
      * @return el proceso correspondiente, o null si no se encuentra.
      */
-    public Procesos getProcess(String id) {
+    public Proceso getProcess(String id) {
         return procesos.get(id);
     }
 
@@ -57,7 +57,7 @@ public class GestorProcesos {
      * @param id el ID del proceso a eliminar.
      * @return el proceso eliminado, o null si no se encuentra.
      */
-    public Procesos removeProcess(String id) {
+    public Proceso removeProcess(String id) {
         return procesos.remove(id);
     }
 }
