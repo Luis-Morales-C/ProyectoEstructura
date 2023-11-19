@@ -234,14 +234,7 @@ public class Controller {
     }
 
 
-    private void mostrarMensajeError(String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
 
-        alert.showAndWait();
-    }
 
     // Método para actualizar la interfaz según sea necesario
     private void actualizarInterfaz() {
