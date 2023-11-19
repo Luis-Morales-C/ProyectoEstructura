@@ -15,6 +15,8 @@ public class Actividades {
     private String nombre;
     private Cola<Tarea> tareasPendientes; // Cola de tareas pendientes
     private Cola<Tarea> completarTarea; // Cola de tareas completadas
+    private String descripcion;
+    boolean obligatoria = false;
 
     /**
      * Constructor de la clase Actividades.
@@ -22,10 +24,11 @@ public class Actividades {
      * @param nombre El nombre de la actividad.
      */
     public Actividades(String nombre) {
-        this.id = CrearID.generarID(); // Genera un ID único para la actividad
+        this.id = CrearID.generarID();
         this.nombre = nombre;
         this.tareasPendientes = new Cola<>();
         this.completarTarea = new Cola<>();
+        this.obligatoria = false; // Inicializar con el valor por defecto
     }
 
     /**
@@ -136,4 +139,22 @@ public class Actividades {
     }
 
 
+    public void setObligatoria(boolean obligatoria) {
+
+        this.obligatoria = obligatoria;
+    }
+
+    public boolean isObligatoria() {
+
+        return obligatoria;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
 }
