@@ -1,6 +1,11 @@
 package estructura.controller;
 
 import estructura.MainApp;
+import estructura.model.Actividad;
+import estructura.model.Proceso;
+import estructura.model.Tarea;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
@@ -29,6 +34,10 @@ public class CrudProceso {
 
     @FXML
     private TextField txtNombreProceso;
+
+    private ObservableList<Proceso> listaProcesos = FXCollections.observableArrayList();
+    private ObservableList<Actividad> listaActividad = FXCollections.observableArrayList();
+    private ObservableList<Tarea> listaTarea = FXCollections.observableArrayList();
 
     @FXML
     void onBuscarClick(ActionEvent event) {
@@ -64,6 +73,7 @@ public class CrudProceso {
     void onRemoverClick(ActionEvent event) {
 
     }
+
 
     public MainApp getAplicacion() {
         return aplicacion;
