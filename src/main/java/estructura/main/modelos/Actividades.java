@@ -51,6 +51,22 @@ public class Actividades {
         return completetarTarea;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setTareasPendientes(Cola<Tarea> tareasPendientes) {
+        this.tareasPendientes = tareasPendientes;
+    }
+
+    public void setCompletarTarea(Cola<Tarea> completarTarea) {
+        this.completarTarea = completarTarea;
+    }
+
     /**
      * Obtiene la cola de tareas pendientes.
      *
@@ -118,4 +134,6 @@ public class Actividades {
 
         return totalDuration;
     }
+
+
 }

@@ -16,8 +16,6 @@ public class Main extends Application {
         // Crear la escena utilizando el diseño cargado desde FXML
         Scene scene = new Scene(fxmlLoader.load());
 
-        // Agregar una hoja de estilo CSS a la escena (opcional)
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/main.css")).toExternalForm());
 
         // Configurar la escena en el escenario (ventana principal)
         stage.setScene(scene);
