@@ -1,8 +1,10 @@
 package estructura.controller;
 
 import estructura.exceptions.ProcesoExisteException;
+import estructura.model.ListaDobleEnlazada;
 import estructura.model.Proceso;
 import estructura.persistencia.Persistencia;
+import javafx.scene.control.Alert;
 
 import java.io.IOException;
 
@@ -19,8 +21,19 @@ public class ModelFactory {
     }
 
     public ModelFactory() {
-
+        cargarDatos();
     }
+    public ListaDobleEnlazada<Proceso> cargarDatos() {
+        Proceso proceso = new Proceso();
+        try {
+            ListaDobleEnlazada<Proceso> listaProcesos = Persistencia.cargarDatos(proceso);
+            setProceso(proceso); // Actualizar el proceso en ModelFactory
+            return listaProcesos;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Proceso crearProceso(Proceso proceso){
         Proceso nuevoProceso = null;
         try {
@@ -30,6 +43,7 @@ public class ModelFactory {
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ProcesoExisteException e) {
+            mostrarMensaje("PROCESO YA EXISTE");
             throw new RuntimeException(e);
         }
         return nuevoProceso;
@@ -43,5 +57,12 @@ public class ModelFactory {
     }
     public void setProceso(Proceso proceso) {
         this.proceso = proceso;
+    }
+    private void mostrarMensaje(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Información");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 }

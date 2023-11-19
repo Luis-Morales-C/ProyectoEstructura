@@ -27,32 +27,39 @@
                           </columns>
                         </TableView>
                         <Button layoutX="574.0" layoutY="110.0" mnemonicParsing="false" onAction="#onRegistrarClick" text="Registrar" />
-                        <Label layoutX="575.0" layoutY="50.0" text="Crear proceso" />
+                        <Label layoutX="567.0" layoutY="51.0" text="Crear proceso" />
                         <TextField fx:id="txtNombreProceso" layoutX="529.0" layoutY="75.0" />
                         <Label layoutX="468.0" layoutY="79.0" text="Nombre:" />
-                        <Label layoutX="565.0" layoutY="152.0" text="Configuracion:" />
-                        <Label layoutX="552.0" layoutY="218.0" prefHeight="17.0" prefWidth="108.0" text="Cambio Nombre:" />
-                        <Button layoutX="582.0" layoutY="286.0" mnemonicParsing="false" onAction="#onCambiarNombreClick" text="Cambiar" />
-                        <TextField layoutX="528.0" layoutY="247.0" onAction="#onCambioNombreClick" prefHeight="25.0" prefWidth="152.0" />
-                        <Label layoutX="558.0" layoutY="325.0" prefHeight="17.0" prefWidth="108.0" text="Consultar Tiempo:" />
-                        <Button layoutX="579.0" layoutY="353.0" mnemonicParsing="false" onAction="#onConsultarTiempoPClick" text="Consultar" />
+                        <Label layoutX="566.0" layoutY="170.0" text="Configuracion:" />
+                        <TextField fx:id="txtAux" layoutX="528.0" layoutY="199.0" prefHeight="25.0" prefWidth="152.0" />
+                        <Label layoutX="550.0" layoutY="305.0" prefHeight="17.0" prefWidth="108.0" text="Consultar Tiempo:" />
+                        <Button layoutX="570.0" layoutY="341.0" mnemonicParsing="false" onAction="#onConsultarTiempoPClick" text="Consultar" />
+                        <HBox layoutX="483.0" layoutY="256.0" prefHeight="41.0" prefWidth="242.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#onRemoverClick" text="Eliminar" />
+                              <Button mnemonicParsing="false" onAction="#onBuscarClick" text="Buscar" />
+                              <Button mnemonicParsing="false" onAction="#onCancelarClick" text="Cancelar" />
+                              <Button mnemonicParsing="false" onAction="#onCambiarNombreClick" text="Cambiar" />
+                           </children>
+                        </HBox>
                      </children>
                   </AnchorPane>
             </content>
           </Tab>
           <Tab text="Actividades">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="tblProcesos" layoutX="28.0" layoutY="53.0" prefHeight="377.0" prefWidth="171.0">
+                           <columns>
+                              <TableColumn fx:id="colNombreProceso" prefWidth="204.0" text="NOMBRE" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
             </content>
           </Tab>
         </tabs>
       </TabPane>
-      <HBox layoutX="595.0" layoutY="222.0" prefHeight="41.0" prefWidth="301.0">
-         <children>
-            <Button mnemonicParsing="false" onAction="#onRemoverClick" text="Eliminar" />
-            <Button mnemonicParsing="false" onAction="#onBuscarClick" text="Buscar" />
-            <Button mnemonicParsing="false" onAction="#onCancelarClick" text="Cancelar" />
-         </children>
-      </HBox>
    </children>
 </AnchorPane>

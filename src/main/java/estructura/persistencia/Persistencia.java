@@ -16,12 +16,12 @@ public class Persistencia {
         String contenido = "";
 
         for(Proceso proceso: listaProcesos) {
-            contenido += proceso.getId()+"@@"+proceso.getNombre()+"@@"+proceso.getActividades()+"\n";
+            contenido += proceso.getId()+"@@"+proceso.getNombre()+"@@"+proceso.getNumActividades()+"\n";
         }
         guardarArchivo(RUTA_ARCHIVO_PROCESOS, contenido);
     }
 
-    public static void guardarActividades(ArrayList<Actividad> listaActividades) throws IOException {
+    public static void guardarActividades(ListaDobleEnlazada<Actividad> listaActividades) throws IOException {
         String contenido = "";
 
         for(Actividad actividad: listaActividades) {
@@ -30,7 +30,7 @@ public class Persistencia {
         guardarArchivo(RUTA_ARCHIVO_ACTIVIDADES, contenido);
     }
 
-    public static void guardarTareas(ArrayList<Tarea> listaTareas) throws IOException {
+    public static void guardarTareas(ListaDobleEnlazada<Tarea> listaTareas) throws IOException {
         String contenido = "";
 
         for(Tarea tarea: listaTareas) {
@@ -47,32 +47,40 @@ public class Persistencia {
         fw.close();
     }
 
-    public static ArrayList<Proceso> cargarProceso() throws IOException {
-        ArrayList<Proceso> procesos = new ArrayList<>();
+    public static ListaDobleEnlazada<Proceso> cargarProceso() throws IOException {
+        ListaDobleEnlazada<Proceso> procesos = new ListaDobleEnlazada<>();
 
         ArrayList<String> contenido = leerArchivo(RUTA_ARCHIVO_PROCESOS);
-        String linea="";
+        String linea = "";
 
         for (int i = 0; i < contenido.size(); i++) {
             linea = contenido.get(i);
-            Proceso proceso=new Proceso();
 
-            Actividad actividad=new Actividad(linea.split("@@")[2],linea.split("@@")[3],Estado.valueOf(linea.split("@@")[4]));
-            proceso.setId(linea.split("@@")[0]);
-            proceso.setNombre(linea.split("@@")[1]);
+            try {
+                String[] partes = linea.split("@@");
 
-            ListaDobleEnlazada<Actividad> actividades=new ListaDobleEnlazada<>();
-            actividades.agregarUltimo(actividad);
-            proceso.setActividades(actividades);
-
-            procesos.add(proceso);
-
+                if (partes.length >= 3) {
+                    Proceso proceso = new Proceso();
+                    proceso.setId(partes[0]);
+                    proceso.setNombre(partes[1]);
+                    proceso.setNumActividades(Integer.parseInt(partes[2]));
+                    procesos.agregarUltimo(proceso);
+                } else {
+                    // Manejar el caso donde la línea no tiene la longitud esperada
+                    System.err.println("Error: La línea no tiene el formato esperado. Linea: " + linea);
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("Error al convertir a entero: " + e.getMessage());
+                e.printStackTrace();
+            } catch (Exception e) {
+                System.err.println("Error inesperado: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
         return procesos;
     }
-
-    public static ArrayList<Actividad> cargarActividades() throws IOException {
-        ArrayList<Actividad> actividades = new ArrayList<>();
+    public static ListaDobleEnlazada<Actividad> cargarActividades() throws IOException {
+        ListaDobleEnlazada<Actividad> actividades =new ListaDobleEnlazada<>();
 
         ArrayList<String> contenido = leerArchivo(RUTA_ARCHIVO_ACTIVIDADES);
         String linea="";
@@ -92,14 +100,14 @@ public class Persistencia {
 
             actividad.setListaTarea(tareas);
 
-            actividades.add(actividad);
+            actividades.agregarUltimo(actividad);
 
         }
         return actividades;
     }
 
-    public static ArrayList<Tarea> cargarTareas() throws IOException {
-        ArrayList<Tarea> tareas = new ArrayList<>();
+    public static ListaDobleEnlazada<Tarea> cargarTareas() throws IOException {
+        ListaDobleEnlazada<Tarea> tareas = new ListaDobleEnlazada<>();
 
         ArrayList<String> contenido = leerArchivo(RUTA_ARCHIVO_TAREAS);
         String linea="";
@@ -113,7 +121,7 @@ public class Persistencia {
             tarea.setEstado(Estado.valueOf(linea.split("@@")[1]));
             tarea.setDuracionMinutos(Integer.parseInt(linea.split("@@")[2]));
 
-           tareas.add(tarea);
+           tareas.agregarUltimo(tarea);
         }
         return tareas;
     }
@@ -132,6 +140,28 @@ public class Persistencia {
         fr.close();
         return contenido;
     }
+    public static ListaDobleEnlazada<Proceso> cargarDatos(Proceso proceso) throws IOException {
+        ListaDobleEnlazada<Proceso> procesos = cargarProceso();
+        ListaDobleEnlazada<Actividad> actividades = cargarActividades();
+        ListaDobleEnlazada<Tarea> tareas = cargarTareas();
 
+        // Agregar procesos a la lista existente
+        for (Proceso p : procesos) {
+            proceso.getListaProcesos().agregarUltimo(p);
+        }
 
+        // Agregar actividades a la lista existente
+        for (Actividad actividad : actividades) {
+            proceso.getActividades().agregarUltimo(actividad);
+        }
+
+        // Agregar tareas a la lista existente
+        for (Tarea tarea : tareas) {
+            proceso.getTareas().agregarUltimo(tarea);
+        }
+
+        return procesos;
+    }
 }
+
+

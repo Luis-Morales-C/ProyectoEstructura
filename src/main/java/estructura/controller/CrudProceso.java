@@ -27,6 +27,7 @@ public class CrudProceso {
 
     private Tarea tareaSeleccionada;
 
+    //Items Proceso
     @FXML
     private TableColumn<?, ?> colIdProceso;
 
@@ -44,31 +45,20 @@ public class CrudProceso {
 
     @FXML
     private TextField txtNombreProceso;
+    @FXML
+    private TextField txtAux;
+
+    //items actividades
 
     private ObservableList<Proceso> listaProcesos = FXCollections.observableArrayList();
     private ObservableList<Actividad> listaActividad = FXCollections.observableArrayList();
     private ObservableList<Tarea> listaTarea = FXCollections.observableArrayList();
 
-    @FXML
-    void onBuscarClick(ActionEvent event) {
 
-    }
-    @FXML
-    void onCambiarNombreClick(ActionEvent event) {
-    }
-    @FXML
-    void onCambioNombreClick(ActionEvent event) {
-    }
-    @FXML
-    void onCancelarClick(ActionEvent event) {
-    }
-    @FXML
-    void onConsultarTiempoPClick(ActionEvent event) {
-
-    }
+    //Registro Proceso
     @FXML
     void onRegistrarClick(ActionEvent event) {
-        String id= String.valueOf(Proceso.generarID());
+        String id = String.valueOf(Proceso.generarID());
         String nombre= txtNombreProceso.getText();
         int numActividades=0;
 
@@ -105,10 +95,71 @@ public class CrudProceso {
         }
     }
 
+    //eliminar proceso
     @FXML
     void onRemoverClick(ActionEvent event) {
+        if (procesoSeleccionado != null) {
+            // Llamamos al método eliminarProceso del modelo, pasando el procesoSeleccionado
+            modelFactory.getProceso().eliminarProceso(procesoSeleccionado);
+
+            // Actualizamos la tabla después de la eliminación
+            cargarProcesosEnTabla();
+
+            // Mostrar un mensaje de éxito o cualquier lógica adicional que desees
+            mostrarMensaje("Proceso eliminado correctamente.");
+        } else {
+            // Mostrar un mensaje de error o lógica adicional si no hay un proceso seleccionado
+            mostrarMensaje("Seleccione un proceso antes de intentar eliminarlo.");
+        }
+    }
+
+    @FXML
+    void onBuscarClick(ActionEvent event) {
+        boolean bandera = false;
+        String buscado = txtAux.getText();
+
+        for (Proceso proceso : listaProcesos) {
+            if (buscado.equals(proceso.getNombre())) {
+                bandera = true;
+                break;  // Agregar un break para salir del bucle una vez que se encuentra el proceso
+            }
+        }
+
+        if (bandera) {
+            mostrarMensaje("Proceso encontrado");
+        } else {
+            mostrarMensaje("Proceso no encontrado");
+        }
+    }
+    @FXML
+    void onCambiarNombreClick(ActionEvent event) {
+        if(procesoSeleccionado!=null){
+            String nombre= txtAux.getText();
+            procesoSeleccionado.setNombre(nombre);
+            mostrarMensaje("Proceso cambiado correctamente.");
+        }else{
+            mostrarMensaje("Proceso no cambiado");
+        }
+            // Actualizar la tabla
+            cargarProcesosEnTabla();
+
+            // Limpiar los campos de texto
+
+            limpiarCamposProceso();
+            // Mostrar un mensaje de éxito
+
+        }
+    @FXML
+    void onCancelarClick(ActionEvent event) {
+        limpiarCamposProceso();
 
     }
+    @FXML
+    void onConsultarTiempoPClick(ActionEvent event) {
+
+    }
+
+
     public MainApp getAplicacion() {
         return aplicacion;
     }
@@ -181,6 +232,4 @@ public class CrudProceso {
     void limpiarCamposProceso() {
          txtNombreProceso.clear();
     }
-
-
 }

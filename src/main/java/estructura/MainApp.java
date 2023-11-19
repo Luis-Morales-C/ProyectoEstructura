@@ -2,6 +2,8 @@ package estructura;
 
 import estructura.controller.CrudProceso;
 import estructura.controller.InicioController;
+import estructura.model.Proceso;
+import estructura.persistencia.Persistencia;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -10,6 +12,7 @@ import javafx.stage.Stage;
 
 
 public class MainApp extends Application {
+
     public Stage primaryStage;
     @Override
     public void start(Stage Stage) {

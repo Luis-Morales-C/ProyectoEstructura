@@ -1,6 +1,9 @@
 package estructura.model;
 
 
+import estructura.persistencia.Persistencia;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -20,8 +23,8 @@ public class ListaDobleEnlazada<E> implements Iterable<E> {
         /**
          * Constructor para crear un nuevo nodo con referencias de nodo anterior y siguiente.
          *
-         * @param elemento el elemento a almacenar en este nodo
-         * @param anterior el nodo anterior en la lista
+         * @param elemento  el elemento a almacenar en este nodo
+         * @param anterior  el nodo anterior en la lista
          * @param siguiente el siguiente nodo en la lista
          */
         Nodo(E elemento, Nodo<E> anterior, Nodo<E> siguiente) {
@@ -82,6 +85,16 @@ public class ListaDobleEnlazada<E> implements Iterable<E> {
         if (estaVacia()) return null;
         return eliminar(cola.anterior);
     }
+    public void eliminar(E elemento) {
+        Nodo<E> actual = cabeza.siguiente;
+        while (actual != cola) {
+            if (actual.elemento.equals(elemento)) {
+                eliminar(actual);
+                return;
+            }
+            actual = actual.siguiente;
+        }
+    }
 
     /**
      * Verifica si la lista está vacía.
@@ -122,7 +135,7 @@ public class ListaDobleEnlazada<E> implements Iterable<E> {
      * Realiza la acción dada para cada elemento de la lista hasta que se procesen todos los elementos
      * o la acción lance una excepción. El orden de iteración está determinado por el parámetro reverse.
      *
-     * @param acción   la acción a realizar para cada elemento
+     * @param acción  la acción a realizar para cada elemento
      * @param reverso si es true, la lista se itera en orden inverso
      */
     public void forEach(Consumer<E> acción, boolean reverso) {
@@ -202,6 +215,17 @@ public class ListaDobleEnlazada<E> implements Iterable<E> {
         return listaPersonalizada;
     }
 
+    public boolean contieneId(int id) {
+        Nodo<E> actual = cabeza.siguiente;
+        while (actual != cola) {
+            if (actual.elemento instanceof Integer && (Integer) actual.elemento == id) {
+                return true;
+            }
+            actual = actual.siguiente;
+        }
+        return false;
+    }
+
     @Override
     public Iterator<E> iterator() {
         return new ListaDobleEnlazadaIterator();
@@ -212,6 +236,7 @@ public class ListaDobleEnlazada<E> implements Iterable<E> {
      */
     private class ListaDobleEnlazadaIterator implements Iterator<E> {
         private Nodo<E> actual = cabeza.siguiente; // Comenzamos desde el primer elemento
+        private Nodo<E> ultimoRetornado = null; // Último elemento retornado por next()
 
         @Override
         public boolean hasNext() {
@@ -224,13 +249,24 @@ public class ListaDobleEnlazada<E> implements Iterable<E> {
                 throw new java.util.NoSuchElementException();
             }
             E elemento = actual.elemento;
+            ultimoRetornado = actual;
             actual = actual.siguiente;
             return elemento;
         }
 
         @Override
         public void remove() {
-            throw new UnsupportedOperationException("Remove no está soportado por este iterador");
+            if (ultimoRetornado == null) {
+                throw new IllegalStateException("next() no ha sido llamado o el elemento ya ha sido eliminado");
+            }
+            Nodo<E> predecesor = ultimoRetornado.anterior;
+            Nodo<E> sucesor = ultimoRetornado.siguiente;
+            predecesor.siguiente = sucesor;
+            sucesor.anterior = predecesor;
+            tamaño--;
+            ultimoRetornado = null;
+
         }
-    }
+        }
 }
+

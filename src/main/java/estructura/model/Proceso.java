@@ -2,8 +2,11 @@ package estructura.model;
 
 
 import estructura.exceptions.ProcesoExisteException;
+import estructura.persistencia.Persistencia;
 
+import java.io.IOException;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -15,9 +18,9 @@ public class Proceso {
     private int numActividades;
     private ListaDobleEnlazada<Proceso> ListaProcesos;
     private ListaDobleEnlazada<Actividad> actividades;
-    private ListaDobleEnlazada<Tarea> tareas=new Actividad().getListaTarea();
+    private ListaDobleEnlazada<Tarea> tareas = new Actividad().getListaTarea();
 
-    private static ListaDobleEnlazada<Integer> ids= new ListaDobleEnlazada<>();
+    private static ListaDobleEnlazada<Integer> ids = new ListaDobleEnlazada<>();
     private int duracionTotal;
 
     /**
@@ -31,7 +34,8 @@ public class Proceso {
         this.actividades = new ListaDobleEnlazada<>();
         this.duracionTotal = 0;
     }
-    public Proceso(){
+
+    public Proceso() {
         super();
     }
 
@@ -78,7 +82,7 @@ public class Proceso {
     private void actualizarDuracion() {
         this.duracionTotal = 0;
         actividades.forEach(actividad ->
-                        actualizarDuracion(actividad.getTotalDuracionMinutes()), false);
+                actualizarDuracion(actividad.getTotalDuracionMinutes()), false);
     }
 
     /**
@@ -100,7 +104,6 @@ public class Proceso {
     }
 
 
-
     public ListaDobleEnlazada<Tarea> getTareas() {
         return tareas;
     }
@@ -117,6 +120,7 @@ public class Proceso {
     public void setActividades(ListaDobleEnlazada<Actividad> actividades) {
         this.actividades = actividades;
     }
+
     public void setDuracionTotal(int duracionTotal) {
         this.duracionTotal = duracionTotal;
     }
@@ -126,8 +130,12 @@ public class Proceso {
     }
 
     public ListaDobleEnlazada<Proceso> getListaProcesos() {
+        if (ListaProcesos == null) {
+            ListaProcesos = new ListaDobleEnlazada<>();
+        }
         return ListaProcesos;
     }
+
 
     public void setListaProcesos(ListaDobleEnlazada<Proceso> listaProcesos) {
         ListaProcesos = listaProcesos;
@@ -140,23 +148,50 @@ public class Proceso {
         Iterator<Proceso> iterator = ListaProcesos.iterator();
         while (iterator.hasNext()) {
             Proceso procesoActual = iterator.next();
-            if (procesoActual.equals(procesoBuscado)) {
+            String cadena1=procesoActual.getNombre().replace(" ","");
+            if (cadena1.equals(procesoBuscado.getNombre().replace(" ",""))) {
                 return true;
             }
         }
         return false;
     }
+
     public Proceso crearProceso(String nombre) throws ProcesoExisteException {
         Proceso nuevoProceso = new Proceso(nombre);
         if (ListaProcesos == null) {
             ListaProcesos = new ListaDobleEnlazada<>();
-        } if (!buscarProceso(nuevoProceso)) {
-            ListaProcesos.agregarUltimo(nuevoProceso);
         }
-        else{
+        if (!buscarProceso(nuevoProceso)) {
+            ListaProcesos.agregarUltimo(nuevoProceso);
+        } else {
             throw new ProcesoExisteException("El proceso ya existe");
         }
         return nuevoProceso;
+    }
+    public void eliminarProceso(Proceso proceso) {
+        try {
+            if (ListaProcesos != null) {
+                Iterator<Proceso> iterator = ListaProcesos.iterator();
+                while (iterator.hasNext()) {
+                    Proceso procesoActual = iterator.next();
+                    String cadena1 = procesoActual.getNombre().replace(" ", "");
+                    String cadena2 = proceso.getNombre().replace(" ", "");
+                    if (cadena1.equals(cadena2)) {
+                        iterator.remove();
+                        break;  // Mover el break dentro del if para salir después de eliminar el elemento
+                    }
+                }
+
+                // Actualizar la lista antes de guardarla en persistencia
+                setListaProcesos(ListaProcesos);
+
+                // Guardar la lista actualizada en persistencia
+                Persistencia.guardarProcesos(getListaProcesos());
+            }
+        } catch (IOException e) {
+            // Manejar la excepción (mostrar mensaje, registrar en un archivo de registro, etc.)
+            e.printStackTrace();
+        }
     }
 
     public int getNumActividades() {
@@ -169,14 +204,11 @@ public class Proceso {
     public static int generarID() {
         Random random = new Random();
         int nuevoID;
-
         do {
             nuevoID = random.nextInt(100) + 1;
         } while (idExisteEnLista(nuevoID));
-
         return nuevoID;
     }
-
     private static boolean idExisteEnLista(int id) {
         // Utiliza el iterador para recorrer la lista de IDs y verifica si el ID ya existe
         for (Integer existingID : ids) {
@@ -185,5 +217,34 @@ public class Proceso {
             }
         }
         return false; // El ID no existe en la lista
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Proceso proceso = (Proceso) o;
+
+        if (numActividades != proceso.numActividades) return false;
+        if (duracionTotal != proceso.duracionTotal) return false;
+        if (!Objects.equals(id, proceso.id)) return false;
+        if (!Objects.equals(nombre, proceso.nombre)) return false;
+        if (!Objects.equals(ListaProcesos, proceso.ListaProcesos))
+            return false;
+        if (!Objects.equals(actividades, proceso.actividades)) return false;
+        return Objects.equals(tareas, proceso.tareas);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (nombre != null ? nombre.hashCode() : 0);
+        result = 31 * result + numActividades;
+        result = 31 * result + (ListaProcesos != null ? ListaProcesos.hashCode() : 0);
+        result = 31 * result + (actividades != null ? actividades.hashCode() : 0);
+        result = 31 * result + (tareas != null ? tareas.hashCode() : 0);
+        result = 31 * result + duracionTotal;
+        return result;
     }
 }
