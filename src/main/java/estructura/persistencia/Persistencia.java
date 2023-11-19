@@ -4,7 +4,6 @@ package estructura.persistencia;
 import estructura.model.*;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Persistencia {
@@ -13,11 +12,11 @@ public class Persistencia {
     public static final String RUTA_ARCHIVO_TAREAS = "src/main/resources/persistencia/tareas.txt";
 
 
-    public static void guardarProcesos(ArrayList<Proceso> listaProcesos) throws IOException {
+    public static void guardarProcesos(ListaDobleEnlazada<Proceso> listaProcesos) throws IOException {
         String contenido = "";
 
         for(Proceso proceso: listaProcesos) {
-            contenido += proceso.getId()+"@@"+proceso.getName()+"@@"+proceso.getActividades()+"\n";
+            contenido += proceso.getId()+"@@"+proceso.getNombre()+"@@"+proceso.getActividades()+"\n";
         }
         guardarArchivo(RUTA_ARCHIVO_PROCESOS, contenido);
     }
@@ -60,10 +59,10 @@ public class Persistencia {
 
             Actividad actividad=new Actividad(linea.split("@@")[2],linea.split("@@")[3],Estado.valueOf(linea.split("@@")[4]));
             proceso.setId(linea.split("@@")[0]);
-            proceso.setName(linea.split("@@")[1]);
+            proceso.setNombre(linea.split("@@")[1]);
 
             ListaDobleEnlazada<Actividad> actividades=new ListaDobleEnlazada<>();
-            actividades.addLast(actividad);
+            actividades.agregarUltimo(actividad);
             proceso.setActividades(actividades);
 
             procesos.add(proceso);
@@ -85,7 +84,7 @@ public class Persistencia {
                     Integer.parseInt(linea.split("@@")[5]));
 
             ListaDobleEnlazada<Tarea> tareas = new ListaDobleEnlazada<>();
-            tareas.addLast(tarea);
+            tareas.agregarUltimo(tarea);
 
             actividad.setNombre(linea.split("@@")[0]);
             actividad.setDescripcion(linea.split("@@")[1]);

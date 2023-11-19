@@ -1,6 +1,9 @@
 package estructura.model;
 
 
+import estructura.exceptions.ProcesoExisteException;
+
+import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -8,19 +11,23 @@ import java.util.Random;
  */
 public class Proceso {
     private String id;
-    private String name;
+    private String nombre;
+    private int numActividades;
+    private ListaDobleEnlazada<Proceso> ListaProcesos;
     private ListaDobleEnlazada<Actividad> actividades;
     private ListaDobleEnlazada<Tarea> tareas=new Actividad().getListaTarea();
+
+    private static ListaDobleEnlazada<Integer> ids= new ListaDobleEnlazada<>();
     private int duracionTotal;
 
     /**
      * Constructor de la clase Procesos.
      *
-     * @param name El nombre del proceso.
+     * @param nombre El nombre del proceso.
      */
-    public Proceso(String name) {
+    public Proceso(String nombre) {
         this.id = String.valueOf(generarID());
-        this.name = name;
+        this.nombre = nombre;
         this.actividades = new ListaDobleEnlazada<>();
         this.duracionTotal = 0;
     }
@@ -42,8 +49,8 @@ public class Proceso {
      *
      * @return El nombre del proceso.
      */
-    public String getName() {
-        return name;
+    public String getNombre() {
+        return nombre;
     }
 
     /**
@@ -52,7 +59,7 @@ public class Proceso {
      * @param actividad La actividad a añadir.
      */
     public void addActividad(Actividad actividad) {
-        actividades.addLast(actividad);
+        actividades.agregarUltimo(actividad);
         actualizarDuracion();
     }
 
@@ -91,10 +98,8 @@ public class Proceso {
     public ListaDobleEnlazada<Actividad> getActividades() {
         return actividades;
     }
-    public static int generarID() {
-        Random random = new Random();
-        return random.nextInt();
-    }
+
+
 
     public ListaDobleEnlazada<Tarea> getTareas() {
         return tareas;
@@ -105,14 +110,13 @@ public class Proceso {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public void setActividades(ListaDobleEnlazada<Actividad> actividades) {
         this.actividades = actividades;
     }
-
     public void setDuracionTotal(int duracionTotal) {
         this.duracionTotal = duracionTotal;
     }
@@ -121,4 +125,65 @@ public class Proceso {
         this.tareas = tareas;
     }
 
+    public ListaDobleEnlazada<Proceso> getListaProcesos() {
+        return ListaProcesos;
+    }
+
+    public void setListaProcesos(ListaDobleEnlazada<Proceso> listaProcesos) {
+        ListaProcesos = listaProcesos;
+    }
+
+    public boolean buscarProceso(Proceso procesoBuscado) {
+        if (ListaProcesos == null) {
+            return false;
+        }
+        Iterator<Proceso> iterator = ListaProcesos.iterator();
+        while (iterator.hasNext()) {
+            Proceso procesoActual = iterator.next();
+            if (procesoActual.equals(procesoBuscado)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public Proceso crearProceso(String nombre) throws ProcesoExisteException {
+        Proceso nuevoProceso = new Proceso(nombre);
+        if (ListaProcesos == null) {
+            ListaProcesos = new ListaDobleEnlazada<>();
+        } if (!buscarProceso(nuevoProceso)) {
+            ListaProcesos.agregarUltimo(nuevoProceso);
+        }
+        else{
+            throw new ProcesoExisteException("El proceso ya existe");
+        }
+        return nuevoProceso;
+    }
+
+    public int getNumActividades() {
+        return numActividades;
+    }
+
+    public void setNumActividades(int numActividades) {
+        this.numActividades = numActividades;
+    }
+    public static int generarID() {
+        Random random = new Random();
+        int nuevoID;
+
+        do {
+            nuevoID = random.nextInt(100) + 1;
+        } while (idExisteEnLista(nuevoID));
+
+        return nuevoID;
+    }
+
+    private static boolean idExisteEnLista(int id) {
+        // Utiliza el iterador para recorrer la lista de IDs y verifica si el ID ya existe
+        for (Integer existingID : ids) {
+            if (existingID == id) {
+                return true; // El ID ya existe en la lista
+            }
+        }
+        return false; // El ID no existe en la lista
+    }
 }

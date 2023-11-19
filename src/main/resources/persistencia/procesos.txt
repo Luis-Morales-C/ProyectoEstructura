@@ -1,0 +1,6 @@
+100@@a@@estructura.model.ListaDobleEnlazada@12ea808c
+99@@c@@estructura.model.ListaDobleEnlazada@1b8c0f3f
+23@@1@@estructura.model.ListaDobleEnlazada@248af2f1
+79@@3@@estructura.model.ListaDobleEnlazada@74a06052
+19@@a@@estructura.model.ListaDobleEnlazada@85cc3d5
+70@@a@@estructura.model.ListaDobleEnlazada@72ec8542

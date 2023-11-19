@@ -2,186 +2,235 @@ package estructura.model;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 
-/**
- * Custom implementation of a doubly linked list.
- * It provides methods to add, remove, and iterate over elements.
- *
- * @param <E> the type of elements in this list
- */
-public class ListaDobleEnlazada<E> {
-    // Reference to the head node of the list
-    private Node<E> head;
+public class ListaDobleEnlazada<E> implements Iterable<E> {
 
-    // Reference to the tail node of the list
-    private Node<E> tail;
+    private Nodo<E> cabeza;
+    private Nodo<E> cola;
+    private int tamaño;
 
-    // The size of the list
-    private int size;
-
-    /**
-     * A node within the doubly linked list.
-     * This inner class is static because it does not need access to the instance variables of ListaDobleEnlazada.
-     */
-    private static class Node<E> {
-        E element;
-        Node<E> next;
-        Node<E> prev;
+    private static class Nodo<E> {
+        E elemento;
+        Nodo<E> siguiente;
+        Nodo<E> anterior;
 
         /**
-         * Constructor for creating a new node with previous and next node references.
+         * Constructor para crear un nuevo nodo con referencias de nodo anterior y siguiente.
          *
-         * @param element the element to store in this node
-         * @param prev    the previous node in the list
-         * @param next    the next node in the list
+         * @param elemento el elemento a almacenar en este nodo
+         * @param anterior el nodo anterior en la lista
+         * @param siguiente el siguiente nodo en la lista
          */
-        Node(E element, Node<E> prev, Node<E> next) {
-            this.element = element;
-            this.prev = prev;
-            this.next = next;
+        Nodo(E elemento, Nodo<E> anterior, Nodo<E> siguiente) {
+            this.elemento = elemento;
+            this.anterior = anterior;
+            this.siguiente = siguiente;
         }
 
         /**
-         * Constructor for creating a new node with no element and no next and previous node references.
+         * Constructor para crear un nuevo nodo sin elemento y sin referencias de nodo siguiente y anterior.
          */
-        Node() {
+        Nodo() {
             this(null, null, null);
         }
     }
+
     public ListaDobleEnlazada() {
-        head = new Node<>();
-        tail = new Node<>(null, head, null);
-        head.next = tail;
-        size = 0;
+        cabeza = new Nodo<>();
+        cola = new Nodo<>(null, cabeza, null);
+        cabeza.siguiente = cola;
+        tamaño = 0;
     }
 
     /**
-     * Adds an element to the beginning of the list.
+     * Agrega un elemento al principio de la lista.
      *
-     * @param element the element to add
+     * @param elemento el elemento a agregar
      */
-    public void addFirst(E element) {
-        addBetween(element, head, head.next);
+    public void agregarPrimero(E elemento) {
+        agregarEntre(elemento, cabeza, cabeza.siguiente);
     }
-
-
-    public void addLast(E element) {
-        addBetween(element, tail.prev, tail);
-    }
-    public E removeFirst() {
-        if (isEmpty()) return null;
-        return remove(head.next);
-    }
-    public E removeLast() {
-        if (isEmpty()) return null;
-        return remove(tail.prev);
-    }
-    public boolean isEmpty() {
-        return size == 0;
-    }
-    public int size() {
-        return size;
-    }
-
 
     /**
-     * Finds the first element that matches the given predicate.
+     * Agrega un elemento al final de la lista.
      *
-     * @param predicate a predicate to apply to each element to determine if it should be returned
-     * @return the first matching element, or null if no element matches
+     * @param elemento el elemento a agregar
      */
-    public E findFirst(java.util.function.Predicate<E> predicate) {
-        Node<E> current = head.next;
-        while (current != tail) {
-            if (predicate.test(current.element)) {
-                return current.element;
+    public void agregarUltimo(E elemento) {
+        agregarEntre(elemento, cola.anterior, cola);
+    }
+
+    /**
+     * Elimina el primer elemento de la lista.
+     *
+     * @return el elemento eliminado, o null si la lista está vacía
+     */
+    public E eliminarPrimero() {
+        if (estaVacia()) return null;
+        return eliminar(cabeza.siguiente);
+    }
+
+    /**
+     * Elimina el último elemento de la lista.
+     *
+     * @return el elemento eliminado, o null si la lista está vacía
+     */
+    public E eliminarUltimo() {
+        if (estaVacia()) return null;
+        return eliminar(cola.anterior);
+    }
+
+    /**
+     * Verifica si la lista está vacía.
+     *
+     * @return true si la lista está vacía, false en caso contrario
+     */
+    public boolean estaVacia() {
+        return tamaño == 0;
+    }
+
+    /**
+     * Obtiene el tamaño de la lista.
+     *
+     * @return el tamaño de la lista
+     */
+    public int tamaño() {
+        return tamaño;
+    }
+
+    /**
+     * Encuentra el primer elemento que coincide con el predicado dado.
+     *
+     * @param predicado un predicado para aplicar a cada elemento y determinar si debe ser devuelto
+     * @return el primer elemento que coincide, o null si no hay coincidencia
+     */
+    public E encontrarPrimero(java.util.function.Predicate<E> predicado) {
+        Nodo<E> actual = cabeza.siguiente;
+        while (actual != cola) {
+            if (predicado.test(actual.elemento)) {
+                return actual.elemento;
             }
-            current = current.next;
+            actual = actual.siguiente;
         }
         return null;
     }
 
     /**
-     * Performs the given action for each element of the list until all elements have been processed or the action throws an exception.
-     * The order of iteration is determined by the reverse parameter.
+     * Realiza la acción dada para cada elemento de la lista hasta que se procesen todos los elementos
+     * o la acción lance una excepción. El orden de iteración está determinado por el parámetro reverse.
      *
-     * @param action  the action to be performed for each element
-     * @param reverse if true, the list is iterated in reverse order
+     * @param acción   la acción a realizar para cada elemento
+     * @param reverso si es true, la lista se itera en orden inverso
      */
-    public void forEach(Consumer<E> action, boolean reverse) {
-        if (reverse) {
-            Node<E> current = tail.prev; // Comenzamos por el final
-            while (current != head) { // Mientras no lleguemos al nodo ficticio de cabeza
-                action.accept(current.element);
-                current = current.prev;
+    public void forEach(Consumer<E> acción, boolean reverso) {
+        if (reverso) {
+            Nodo<E> actual = cola.anterior; // Comenzamos por el final
+            while (actual != cabeza) { // Mientras no lleguemos al nodo ficticio de cabeza
+                acción.accept(actual.elemento);
+                actual = actual.anterior;
             }
         } else {
-            Node<E> current = head.next; // Comenzamos por el principio
-            while (current != tail) { // Mientras no lleguemos al nodo ficticio de cola
-                action.accept(current.element);
-                current = current.next;
+            Nodo<E> actual = cabeza.siguiente; // Comenzamos por el principio
+            while (actual != cola) { // Mientras no lleguemos al nodo ficticio de cola
+                acción.accept(actual.elemento);
+                actual = actual.siguiente;
             }
         }
     }
 
     /**
-     * Removes the first element that matches the given predicate.
+     * Elimina el primer elemento que coincide con el predicado dado.
      *
-     * @param predicate a predicate to apply to each element to determine if it should be removed
-     * @return true if an element was removed, false otherwise
+     * @param predicado un predicado para aplicar a cada elemento y determinar si debe ser eliminado
+     * @return true si se eliminó un elemento, false en caso contrario
      */
-    public boolean removeIf(java.util.function.Predicate<E> predicate) {
-        Node<E> current = head.next;
-        while (current != tail) {
-            if (predicate.test(current.element)) {
-                remove(current);
+    public boolean eliminarSi(java.util.function.Predicate<E> predicado) {
+        Nodo<E> actual = cabeza.siguiente;
+        while (actual != cola) {
+            if (predicado.test(actual.elemento)) {
+                eliminar(actual);
                 return true;
             }
-            current = current.next;
+            actual = actual.siguiente;
         }
         return false;
     }
 
     /**
-     * Converts this ListaDobleEnlazada to a standard List.
-     * @return A standard List containing the elements of the ListaDobleEnlazada.
+     * Convierte esta ListaDobleEnlazada a una lista estándar.
+     *
+     * @return Una lista estándar que contiene los elementos de la ListaDobleEnlazada.
      */
-    public List<E> toList() {
-        List<E> list = new ArrayList<>();
-        this.forEach(list::add,false);
-        return list;
+    public List<E> aLista() {
+        List<E> lista = new ArrayList<>();
+        this.forEach(lista::add, false);
+        return lista;
     }
-    private void addBetween(E element, Node<E> predecessor, Node<E> successor) {
+
+    private void agregarEntre(E elemento, Nodo<E> predecesor, Nodo<E> sucesor) {
         // Crear y enlazar un nuevo nodo entre el predecesor y el sucesor
-        Node<E> newNode = new Node<>(element, predecessor, successor);
-        predecessor.next = newNode;
-        successor.prev = newNode;
-        size++;
+        Nodo<E> nuevoNodo = new Nodo<>(elemento, predecesor, sucesor);
+        predecesor.siguiente = nuevoNodo;
+        sucesor.anterior = nuevoNodo;
+        tamaño++;
     }
-    private E remove(Node<E> node) {
-        Node<E> predecessor = node.prev;
-        Node<E> successor = node.next;
-        predecessor.next = successor;
-        successor.prev = predecessor;
-        size--;
-        return node.element;
+
+    private E eliminar(Nodo<E> nodo) {
+        Nodo<E> predecesor = nodo.anterior;
+        Nodo<E> sucesor = nodo.siguiente;
+        predecesor.siguiente = sucesor;
+        sucesor.anterior = predecesor;
+        tamaño--;
+        return nodo.elemento;
     }
 
     /**
-     * Converts a standard List to a ListaDobleEnlazada.
+     * Convierte una lista estándar a una ListaDobleEnlazada.
      *
-     * @param list The standard List to convert.
-     * @param <E>  The type of elements in the List.
-     * @return A ListaDobleEnlazada containing the elements of the List.
+     * @param lista La lista estándar a convertir.
+     * @param <E>   El tipo de elementos en la lista.
+     * @return Una ListaDobleEnlazada que contiene los elementos de la lista.
      */
-    public static <E> ListaDobleEnlazada<E> fromList(List<E> list) {
-        ListaDobleEnlazada<E> customList = new ListaDobleEnlazada<>();
-        for (E element : list) {
-            customList.addLast(element);
+    public static <E> ListaDobleEnlazada<E> desdeLista(List<E> lista) {
+        ListaDobleEnlazada<E> listaPersonalizada = new ListaDobleEnlazada<>();
+        for (E elemento : lista) {
+            listaPersonalizada.agregarUltimo(elemento);
         }
-        return customList;
+        return listaPersonalizada;
     }
 
+    @Override
+    public Iterator<E> iterator() {
+        return new ListaDobleEnlazadaIterator();
+    }
+
+    /**
+     * Clase interna que implementa el iterador para la lista doblemente enlazada.
+     */
+    private class ListaDobleEnlazadaIterator implements Iterator<E> {
+        private Nodo<E> actual = cabeza.siguiente; // Comenzamos desde el primer elemento
+
+        @Override
+        public boolean hasNext() {
+            return actual != cola;
+        }
+
+        @Override
+        public E next() {
+            if (!hasNext()) {
+                throw new java.util.NoSuchElementException();
+            }
+            E elemento = actual.elemento;
+            actual = actual.siguiente;
+            return elemento;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Remove no está soportado por este iterador");
+        }
+    }
 }

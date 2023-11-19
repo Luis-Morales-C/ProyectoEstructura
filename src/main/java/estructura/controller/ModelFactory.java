@@ -1,9 +1,10 @@
 package estructura.controller;
 
+import estructura.exceptions.ProcesoExisteException;
 import estructura.model.Proceso;
+import estructura.persistencia.Persistencia;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 
 public class ModelFactory {
@@ -19,5 +20,28 @@ public class ModelFactory {
 
     public ModelFactory() {
 
+    }
+    public Proceso crearProceso(Proceso proceso){
+        Proceso nuevoProceso = null;
+        try {
+            nuevoProceso =getProceso().crearProceso(proceso.getNombre());
+            Persistencia.guardarProcesos(getProceso().getListaProcesos());
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ProcesoExisteException e) {
+            throw new RuntimeException(e);
+        }
+        return nuevoProceso;
+    }
+
+    public Proceso getProceso() {
+        if (proceso == null) {
+            proceso = new Proceso();
+        }
+        return proceso;
+    }
+    public void setProceso(Proceso proceso) {
+        this.proceso = proceso;
     }
 }
