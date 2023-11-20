@@ -1,15 +1,16 @@
-package estructura.main.modelos;
+package estructura.model;
 
-import estructura.main.nodos.ListaDobleEnlazada;
-import estructura.main.util.CrearID;
+
+import java.util.Random;
 
 /**
  * Clase que representa un proceso en la aplicación.
  */
-public class Procesos {
+public class Proceso {
     private String id;
     private String name;
-    private ListaDobleEnlazada<Actividades> actividades;
+    private ListaDobleEnlazada<Actividad> actividades;
+    private ListaDobleEnlazada<Tarea> tareas=new Actividad().getListaTarea();
     private int duracionTotal;
 
     /**
@@ -17,11 +18,14 @@ public class Procesos {
      *
      * @param name El nombre del proceso.
      */
-    public Procesos(String name) {
-        this.id = CrearID.generarID();
+    public Proceso(String name) {
+        this.id = String.valueOf(generarID());
         this.name = name;
         this.actividades = new ListaDobleEnlazada<>();
         this.duracionTotal = 0;
+    }
+    public Proceso(){
+        super();
     }
 
     /**
@@ -47,33 +51,9 @@ public class Procesos {
      *
      * @param actividad La actividad a añadir.
      */
-    public void addActividad(Actividades actividad) {
+    public void addActividad(Actividad actividad) {
         actividades.addLast(actividad);
         actualizarDuracion();
-    }
-
-    /**
-     * Obtiene una actividad del proceso por su ID.
-     *
-     * @param actividadId El ID de la actividad.
-     * @return La actividad correspondiente, o null si no se encuentra.
-     */
-    public Actividades getActivity(String actividadId) {
-        return actividades.findFirst(actividad -> actividad.getId().equals(actividadId));
-    }
-
-    /**
-     * Elimina una actividad del proceso por su ID.
-     *
-     * @param actividadId El ID de la actividad a eliminar.
-     * @return true si la actividad se eliminó correctamente, false si no se encontró.
-     */
-    public boolean removeActivity(String actividadId) {
-        boolean isRemoved = actividades.removeIf(actividad -> actividad.getId().equals(actividadId));
-        if (isRemoved) {
-            actualizarDuracion();
-        }
-        return isRemoved;
     }
 
     /**
@@ -108,7 +88,37 @@ public class Procesos {
      *
      * @return La lista de actividades del proceso.
      */
-    public ListaDobleEnlazada<Actividades> getActividades() {
+    public ListaDobleEnlazada<Actividad> getActividades() {
         return actividades;
     }
+    public static int generarID() {
+        Random random = new Random();
+        return random.nextInt();
+    }
+
+    public ListaDobleEnlazada<Tarea> getTareas() {
+        return tareas;
+    }
+
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setActividades(ListaDobleEnlazada<Actividad> actividades) {
+        this.actividades = actividades;
+    }
+
+    public void setDuracionTotal(int duracionTotal) {
+        this.duracionTotal = duracionTotal;
+    }
+
+    public void setTareas(ListaDobleEnlazada<Tarea> tareas) {
+        this.tareas = tareas;
+    }
+
 }

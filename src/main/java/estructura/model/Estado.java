@@ -1,25 +1,21 @@
-package estructura.main.modelos;
+package estructura.model;
 
 /**
  * Enumeración para las opciones de estado de una tarea.
  */
-public enum EstadoTarea {
+public enum Estado {
     OBLIGATORIO("Obligatoria"),
     OPTIONAL("Opcional"),
     COMPLETO("Completada");
-
-
     private final String status;
-
     /**
      * Constructor de EstadoTarea.
      *
      * @param status El estado de la tarea.
      */
-    EstadoTarea(String status) {
+    Estado(String status) {
         this.status = status;
     }
-
     /**
      * Obtiene una representación en cadena del estado.
      *
