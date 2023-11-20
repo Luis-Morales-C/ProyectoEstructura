@@ -12,6 +12,7 @@ public class ModelFactory {
     Aplicacion aplicacion;
 
     public Tarea crearTareaFinal(Proceso procesoSeleccionado, Actividad actividadSeleccionada, Tarea tarea) {
+        return null;
     }
 
     private static class SingletonHolder {
@@ -74,20 +75,6 @@ public class ModelFactory {
         }
         return actividadAnterior;
     }
-
-    /*public Proceso getProceso() {
-        if (proceso == null) {
-            proceso = new Proceso();
-        }
-        return proceso;
-    }
-
-    public Proceso buscarProceso(Proceso proceso) {
-
-    }
-    public void setProceso(Proceso proceso) {
-        this.proceso = proceso;
-    }*/
     private void mostrarMensaje(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Información");

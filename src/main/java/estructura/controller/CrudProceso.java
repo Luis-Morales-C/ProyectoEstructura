@@ -51,6 +51,10 @@ public class CrudProceso {
     private SplitMenuButton SplitCrear;
 
     @FXML
+    private TableColumn<?, ?> colProcesoTarea;
+    @FXML
+    private TableView<Proceso> tblProcesosTareas;
+    @FXML
     private MenuButton crearTarea;
 
     @FXML
@@ -81,6 +85,24 @@ public class CrudProceso {
 
     @FXML
     private TableView<Proceso> tblProcesos2;
+
+    @FXML
+    private TableColumn<?, ?> colDescripcionTarea;
+    @FXML
+    private TableColumn<?, ?> colDuracionTarea;
+    @FXML
+    private TableColumn<?, ?> colObligatorioTarea;
+    @FXML
+    private TableView<Tarea> tblTareas;
+
+    @FXML
+    private TableColumn<?, ?> colNombreActividadTarea;
+    @FXML
+    private TableColumn<?, ?> colDescripcionActividadTarea;
+    @FXML
+    private TableColumn<?, ?> colEstadoActividadTarea;
+    @FXML
+    private TableView<Actividad> tblActividadesTareas;
 
     @FXML
     private TextField txtNombreActividad;
@@ -153,7 +175,7 @@ public class CrudProceso {
             if (nuevaTarea != null) {
                 listaTareas.add(nuevaTarea);
                 cargarActividadesEnTabla();
-                limpiarCamposActividad();
+                limpiarCamposTarea();
                 mostrarMensaje("Tarea Registrada");
             } else {
                 mostrarMensaje("Tarea no registrada");
@@ -355,6 +377,13 @@ public class CrudProceso {
         tblProcesos2.refresh();
     }
 
+    public void cargarProcesosTarea() {
+        colProcesoTarea.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        tblProcesosTareas.getItems().clear();
+        tblProcesosTareas.setItems(getListaProcesosTarea());
+        tblProcesosTareas.refresh();
+    }
+
     public void cargarActividadesEnTabla() {
         colNombreActividad.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colDescripcionActividad.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
@@ -363,6 +392,24 @@ public class CrudProceso {
         tblActividades.setItems(getListaActivades(procesoSeleccionado));
         tblActividades.refresh();
     }
+
+    public void cargarActividadesTareas() {
+        colNombreActividadTarea.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colDescripcionActividadTarea.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+        colEstadoActividadTarea.setCellValueFactory(new PropertyValueFactory<>("obligatoria"));
+        tblActividadesTareas.getItems().clear();
+        tblActividadesTareas.setItems(getListaActivades(procesoSeleccionado));
+        tblActividadesTareas.refresh();
+    }
+    public void cargarTareasEnTabla() {
+        colDescripcionTarea.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+        colDuracionTarea.setCellValueFactory(new PropertyValueFactory<>("duracionMinutos"));
+        colObligatorioTarea.setCellValueFactory(new PropertyValueFactory<>("estado"));
+        tblTareas.getItems().clear();
+        tblTareas.setItems(getListaTareas(procesoSeleccionado, actividadSeleccionada));
+        tblTareas.refresh();
+    }
+
     public ObservableList<Proceso> getListaProcesos() {
         listaProcesos.addAll(modelFactory.getAplicacion().getListaProcesos());
         return listaProcesos;
@@ -373,10 +420,22 @@ public class CrudProceso {
         return listaProcesos;
     }
 
+    public ObservableList<Proceso> getListaProcesosTarea() {
+        listaProcesosAct.addAll(modelFactory.getAplicacion().getListaProcesos());
+        return listaProcesos;
+    }
+
     public ObservableList<Actividad> getListaActivades(Proceso proceso) {
         if(proceso != null)
             listaActividades.addAll(modelFactory.getAplicacion().buscarActividades(proceso));
         return listaActividades;
+    }
+
+
+    public ObservableList<Actividad> getListaTareas(Proceso proceso, Actividad actividad) {
+        if(actividad != null)
+            listaTareas.addAll(modelFactory.getAplicacion().buscarActividades(proceso));
+        return listaTareas;
     }
 
     private void mostrarMensaje(String mensaje) {
@@ -394,6 +453,13 @@ public class CrudProceso {
     void limpiarCamposActividad() {
         txtNombreActividad.clear();
         txtDescripcionActividad.clear();
+        checkObligatorio.setSelected(false);
+    }
 
+    void limpiarCamposTarea() {
+        txtDescripcionTarea.clear();
+        txtDuracionTarea.clear();
+        txtPosicionTarea.clear();
+        checkBoxTarea.setSelected(false);
     }
 }

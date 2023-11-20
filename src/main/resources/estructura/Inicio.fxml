@@ -93,14 +93,14 @@
                      <children>
                         <TableView fx:id="tblProcesosTareas" layoutX="14.0" layoutY="172.0" prefHeight="162.0" prefWidth="141.0">
                           <columns>
-                            <TableColumn prefWidth="147.20001220703125" text="Procesos" />
+                            <TableColumn fx:id="colProcesoTarea" prefWidth="147.20001220703125" text="Procesos" />
                           </columns>
                         </TableView>
                         <TableView fx:id="tblActividadesTareas" layoutX="172.0" layoutY="172.0" prefHeight="164.0" prefWidth="446.0">
                           <columns>
-                            <TableColumn prefWidth="160.0" text="Nombre actividad" />
-                            <TableColumn minWidth="0.0" prefWidth="186.4000244140625" text="Descripción" />
-                              <TableColumn prefWidth="96.0" text="Estado" />
+                            <TableColumn fx:id="colNombreActividadTarea" prefWidth="160.0" text="Nombre actividad" />
+                            <TableColumn fx:id="colDescripcionActividadTarea" minWidth="0.0" prefWidth="186.4000244140625" text="Descripción" />
+                              <TableColumn fx:id="colEstadoActividadTarea" prefWidth="96.0" text="Estado" />
                           </columns>
                         </TableView>
                         <Label layoutX="228.0" layoutY="33.0" text="Descripción:" />
@@ -110,14 +110,14 @@
                         <TextField fx:id="txtDuracionTarea" layoutX="657.0" layoutY="83.0" />
                         <TableView fx:id="tblTareas" layoutX="172.0" layoutY="349.0" prefHeight="209.0" prefWidth="442.0">
                           <columns>
-                            <TableColumn prefWidth="177.5999755859375" text="Descripción" />
-                            <TableColumn prefWidth="144.00006103515625" text="Duración" />
-                              <TableColumn prefWidth="119.19998779296873" text="Obligatorio" />
+                            <TableColumn fx:id="colDescripcionTarea" prefWidth="177.5999755859375" text="Descripción" />
+                            <TableColumn fx:id="colDuracionTarea" prefWidth="144.00006103515625" text="Duración" />
+                              <TableColumn fx:id="colObligatorioTarea" prefWidth="119.19998779296873" text="Obligatorio" />
                           </columns>
                         </TableView>
-                        <MenuButton layoutX="36.0" layoutY="70.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Crear">
+                        <MenuButton fx:id="crearTarea" layoutX="36.0" layoutY="70.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Crear">
                           <items>
-                            <MenuItem mnemonicParsing="false" text="Insertar al final" />
+                            <MenuItem mnemonicParsing="false" onAction="#crearTareaFinal" text="Insertar al final" />
                             <MenuItem mnemonicParsing="false" text="Insertar en la posición:" />
                           </items>
                         </MenuButton>
