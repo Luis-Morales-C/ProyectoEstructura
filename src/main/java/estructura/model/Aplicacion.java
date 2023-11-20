@@ -53,24 +53,18 @@ public class Aplicacion implements Serializable {
 
     public void eliminarProceso(Proceso proceso) {
         try {
-            if (listaProcesos != null) {
-                Iterator<Proceso> iterator = listaProcesos.iterator();
-                while (iterator.hasNext()) {
-                    Proceso procesoActual = iterator.next();
-                    String cadena1 = procesoActual.getNombre().replace(" ", "");
-                    String cadena2 = proceso.getNombre().replace(" ", "");
-                    if (cadena1.equals(cadena2)) {
-                        iterator.remove();
-                        break;  // Mover el break dentro del if para salir después de eliminar el elemento
-                    }
+            Iterator<Proceso> iterator = listaProcesos.iterator();
+            while (iterator.hasNext()) {
+                Proceso procesoActual = iterator.next();
+                String cadena1 = procesoActual.getNombre().replace(" ", "");
+                String cadena2 = proceso.getNombre().replace(" ", "");
+                if (cadena1.equals(cadena2)) {
+                    iterator.remove();
+                    break;  // Mover el break dentro del if para salir después de eliminar el elemento
                 }
-
-                // Actualizar la lista antes de guardarla en persistencia
-                setListaProcesos(listaProcesos);
-
-                // Guardar la lista actualizada en persistencia
-                Persistencia.guardarProcesos(getListaProcesos());
             }
+            setListaProcesos(listaProcesos);
+            Persistencia.guardarProcesos(getListaProcesos());
         } catch (IOException e) {
             // Manejar la excepción (mostrar mensaje, registrar en un archivo de registro, etc.)
             e.printStackTrace();

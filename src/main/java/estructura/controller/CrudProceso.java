@@ -83,6 +83,7 @@ public class CrudProceso {
     MenuItem crearOrdenActividad;
 
     private ObservableList<Proceso> listaProcesos = FXCollections.observableArrayList();
+    private ObservableList<Proceso> listaProcesosAct = FXCollections.observableArrayList();
     private ObservableList<Actividad> listaActividades = FXCollections.observableArrayList();
     private ObservableList<Tarea> listaTareas = FXCollections.observableArrayList();
 
@@ -167,17 +168,11 @@ public class CrudProceso {
         colIdProceso.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNombreProceso.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colNumActividades.setCellValueFactory(new PropertyValueFactory<>("numActividades"));
-
-        //inicializar la tabla de procesos2
         colNombreProceso2.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-
-        //inicializar la tabla de actividades
-
         colNombreActividad.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colDescripcionActividad.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
         colEstado.setCellValueFactory(new PropertyValueFactory<>("obligatoria"));
 
-        // Configurar el evento de selección de la tabla
         tblProcesos.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 procesoSeleccionado = (Proceso) newSelection;
@@ -196,16 +191,13 @@ public class CrudProceso {
         });
         cargarProcesosEnTabla();
         cargarProcesosNombreEnTabla();
+        cargarActividadesEnTabla();
     }
 
     private String obtenerEstado() {
         return checkObligatorio.isSelected() ? "Obligatorio" : "No Obligatorio";
     }
 
-
-
-
-    //Registro Proceso
     @FXML
     void onRegistrarClick(ActionEvent event) {
         String id = String.valueOf(Proceso.generarID());
@@ -236,16 +228,10 @@ public class CrudProceso {
     @FXML
     void onRemoverClick(ActionEvent event) {
         if (procesoSeleccionado != null) {
-            // Llamamos al método eliminarProceso del modelo, pasando el procesoSeleccionado
-            //modelFactory.getProceso().eliminarProceso(procesoSeleccionado);
-
-            // Actualizamos la tabla después de la eliminación
-            //cargarProcesosEnTabla();
-
-            // Mostrar un mensaje de éxito o cualquier lógica adicional que desees
+            modelFactory.getAplicacion().eliminarProceso(procesoSeleccionado);
+            cargarProcesosEnTabla();
             mostrarMensaje("Proceso eliminado correctamente.");
         } else {
-            // Mostrar un mensaje de error o lógica adicional si no hay un proceso seleccionado
             mostrarMensaje("Seleccione un proceso antes de intentar eliminarlo.");
         }
     }
@@ -321,7 +307,7 @@ public class CrudProceso {
     public void cargarProcesosNombreEnTabla() {
         colNombreProceso.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         tblProcesos2.getItems().clear();
-        tblProcesos2.setItems(getListaProcesos());
+        tblProcesos2.setItems(getListaProcesosAct());
         tblProcesos2.refresh();
     }
 
@@ -338,8 +324,14 @@ public class CrudProceso {
         return listaProcesos;
     }
 
+    public ObservableList<Proceso> getListaProcesosAct() {
+        listaProcesosAct.addAll(modelFactory.getAplicacion().getListaProcesos());
+        return listaProcesos;
+    }
+
     public ObservableList<Actividad> getListaActivades(Proceso proceso) {
-        listaActividades.addAll(modelFactory.getAplicacion().buscarActividades(proceso));
+        if(proceso != null)
+            listaActividades.addAll(modelFactory.getAplicacion().buscarActividades(proceso));
         return listaActividades;
     }
 

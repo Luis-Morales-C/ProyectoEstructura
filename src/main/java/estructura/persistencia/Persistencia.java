@@ -11,10 +11,8 @@ public class Persistencia {
     public static final String RUTA_ARCHIVO_ACTIVIDADES = "src/main/resources/persistencia/actividades.txt";
     public static final String RUTA_ARCHIVO_TAREAS = "src/main/resources/persistencia/tareas.txt";
 
-
     public static void guardarProcesos(List<Proceso> listaProcesos) throws IOException {
         String contenido = "";
-
         for(Proceso proceso: listaProcesos) {
             contenido += proceso.getId()+"@@"+proceso.getNombre()+"@@"+proceso.getNumActividades()+"\n";
         }
@@ -30,7 +28,6 @@ public class Persistencia {
                 contenido += procesoActual.getNombre()+"@@"+actividad.getNombre()+"@@"+actividad.getDescripcion()+"@@"+actividad.isObligatoria()+"\n";
             }
         }
-
         guardarArchivo(RUTA_ARCHIVO_ACTIVIDADES, contenido);
     }
 
@@ -88,33 +85,26 @@ public class Persistencia {
     }
     public static ListaDobleEnlazada<Actividad> cargarActividades() throws IOException {
         ListaDobleEnlazada<Actividad> actividades =new ListaDobleEnlazada<>();
-
         ArrayList<String> contenido = leerArchivo(RUTA_ARCHIVO_ACTIVIDADES);
         String linea="";
-
         for (int i = 0; i < contenido.size(); i++) {
             linea = contenido.get(i);
-            Actividad actividad=new Actividad();
+            Actividad actividad = new Actividad();
             // Tarea tarea=new Tarea(linea.split("@@")[3], Estado.valueOf(linea.split("@@")[4]),
               //      Integer.parseInt(linea.split("@@")[5]));
-
             //ListaDobleEnlazada<Tarea> tareas = new ListaDobleEnlazada<>();
             //tareas.agregarUltimo(tarea);
-
             String[] partes = linea.split("@@");
             if (partes.length >= 3) {
-                actividad.setNombre(partes[0]);
-                actividad.setDescripcion(partes[1]);
-                actividad.setObligatoria((partes[2]));
+                actividad.setNombre(partes[0]+"@@@"+partes[1]);
+                actividad.setDescripcion(partes[2]);
+                actividad.setObligatoria((partes[3]));
             } else {
                 // Manejar el caso donde la línea no tiene la longitud esperada
                 System.err.println("Error: La línea no tiene el formato esperado. Linea: " + linea);
             }
-
             //actividad.setListaTarea(tareas);
-
             actividades.agregarUltimo(actividad);
-
         }
         return actividades;
     }
@@ -139,7 +129,6 @@ public class Persistencia {
         return tareas;
     }
 
-
     public static ArrayList<String> leerArchivo(String ruta) throws IOException {
         ArrayList<String> contenido = new ArrayList<String>();
         FileReader fr = new FileReader(ruta);
@@ -153,19 +142,36 @@ public class Persistencia {
         fr.close();
         return contenido;
     }
+
     public static void cargarDatos(Aplicacion aplicacion) throws IOException {
         ListaDobleEnlazada<Proceso> procesos = cargarProceso();
         ListaDobleEnlazada<Actividad> actividades = cargarActividades();
         ListaDobleEnlazada<Tarea> tareas = cargarTareas();
         Iterator<Proceso> procesoIterator = procesos.iterator();
-        /*while (procesoIterator.hasNext()) {
+
+        while (procesoIterator.hasNext()) {
             Proceso procesoActual = procesoIterator.next();
             Iterator<Actividad> actividadIterator = actividades.iterator();
-            while (procesoIterator.hasNext()) {
+
+            while (actividadIterator.hasNext()) {
                 Actividad actividadActual = actividadIterator.next();
-                procesoActual.getActividades().agregarUltimo(actividadActual);
+
+                String[] procesoActividad = actividadActual.getNombre().split("@@@");
+                if(procesoActual.getNombre().equals(procesoActividad[0])) {
+                    procesoActual.getActividades().agregarUltimo(actividadActual);
+                    actividadActual.setNombre(procesoActividad[1]);
+                    /*Iterator<Tarea> tareaIterator = tareas.iterator();
+
+                    while(tareaIterator.hasNext()) {
+                        Tarea tareaActual = tareaIterator.next();
+                        actividadActual.getListaTarea().agregarUltimo(tareaActual);
+                    }*/
+
+                }
+
             }
-        }*/
+
+        }
         aplicacion.setListaProcesos(procesos);
     }
 }
