@@ -11,6 +11,13 @@ target/
 *.iws
 *.iml
 *.ipr
+.idea/
+.mvn/
+lib/
+mvnw
+mvnw.cmd
+target/
+.idea/misc.xml
 
 ### Eclipse ###
 .apt_generated

@@ -1,9 +1,6 @@
 package estructura;
 
 import estructura.controller.CrudProceso;
-import estructura.controller.InicioController;
-import estructura.model.Proceso;
-import estructura.persistencia.Persistencia;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -25,7 +22,7 @@ public class MainApp extends Application {
 
 
             CrudProceso controller = loader.getController();
-            controller.setAplicacion(this);
+            controller.setApp(this);
 
             Scene scene = new Scene(rootLayout);
             Stage secondaryStage = new Stage();

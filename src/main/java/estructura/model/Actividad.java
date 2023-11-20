@@ -4,6 +4,7 @@ package estructura.model;
 
 import javafx.scene.control.CheckBox;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
@@ -12,7 +13,7 @@ import java.util.Random;
  * Una actividad tiene tareas pendientes y completadas, así como métodos para
  * gestionarlas y obtener información sobre la actividad.
  */
-public class Actividad {
+public class Actividad implements Serializable {
     private String nombre;
     private String descripcion;
     private String obligatoria;

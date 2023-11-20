@@ -1,5 +1,6 @@
 package estructura.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  *
  * @param <E> El tipo de elementos almacenados en la cola.
  */
-public class Cola<E> {
+public class Cola<E> implements Serializable {
 
     private Node<E> inicio; // Referencia al inicio de la cola
     private Node<E> fin;    // Referencia al final de la cola

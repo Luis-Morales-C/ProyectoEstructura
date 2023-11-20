@@ -4,12 +4,13 @@ package estructura.model;
 import estructura.persistencia.Persistencia;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 
-    public class ListaDobleEnlazada<E> implements Iterable<E> {
+    public class ListaDobleEnlazada<E> implements Iterable<E>, Serializable {
 
         private Nodo<E> cabeza;
         private Nodo<E> cola;

@@ -5,6 +5,7 @@ import estructura.exceptions.ProcesoExisteException;
 import estructura.persistencia.Persistencia;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Random;
@@ -12,13 +13,11 @@ import java.util.Random;
 /**
  * Clase que representa un proceso en la aplicación.
  */
-public class Proceso {
+public class Proceso implements Serializable {
     private String id;
     private String nombre;
     private int numActividades;
-    private ListaDobleEnlazada<Proceso> ListaProcesos;
     private ListaDobleEnlazada<Actividad> ListaActividades;
-    private ListaDobleEnlazada<Tarea> tareas = new Actividad().getListaTarea();
     private static ListaDobleEnlazada<Integer> ids = new ListaDobleEnlazada<>();
     private int duracionTotal;
 
@@ -30,9 +29,7 @@ public class Proceso {
     public Proceso(String nombre) {
         this.id = String.valueOf(generarID());
         this.nombre = nombre;
-        this.ListaProcesos = new ListaDobleEnlazada<>();
         this.ListaActividades = new ListaDobleEnlazada<>();
-        this.tareas = new ListaDobleEnlazada<>();
         this.duracionTotal = 0;
     }
 
@@ -99,12 +96,6 @@ public class Proceso {
         return ListaActividades;
     }
 
-
-    public ListaDobleEnlazada<Tarea> getTareas() {
-        return tareas;
-    }
-
-
     public void setId(String id) {
         this.id = id;
     }
@@ -121,96 +112,12 @@ public class Proceso {
         this.duracionTotal = duracionTotal;
     }
 
-    public void setTareas(ListaDobleEnlazada<Tarea> tareas) {
-        this.tareas = tareas;
-    }
-
-    public ListaDobleEnlazada<Proceso> getListaProcesos() {
-        if (ListaProcesos == null) {
-            ListaProcesos = new ListaDobleEnlazada<>();
-        }
-        return ListaProcesos;
-    }
-
-
-    public void setListaProcesos(ListaDobleEnlazada<Proceso> listaProcesos) {
-        ListaProcesos = listaProcesos;
-    }
-
-    public boolean buscarProceso(Proceso procesoBuscado) {
-        if (ListaProcesos == null) {
-            return false;
-        }
-        Iterator<Proceso> iterator = ListaProcesos.iterator();
-        while (iterator.hasNext()) {
-            Proceso procesoActual = iterator.next();
-            String cadena1=procesoActual.getNombre().replace(" ","");
-            if (cadena1.equals(procesoBuscado.getNombre().replace(" ",""))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public Proceso crearProceso(String nombre) throws ProcesoExisteException {
-        Proceso nuevoProceso = new Proceso(nombre);
-        if (ListaProcesos == null) {
-            ListaProcesos = new ListaDobleEnlazada<>();
-        }
-        if (!buscarProceso(nuevoProceso)) {
-            ListaProcesos.agregarUltimo(nuevoProceso);
-        } else {
-            throw new ProcesoExisteException("El proceso ya existe");
-        }
-        return nuevoProceso;
-    }
-    public void eliminarProceso(Proceso proceso) {
-        try {
-            if (ListaProcesos != null) {
-                Iterator<Proceso> iterator = ListaProcesos.iterator();
-                while (iterator.hasNext()) {
-                    Proceso procesoActual = iterator.next();
-                    String cadena1 = procesoActual.getNombre().replace(" ", "");
-                    String cadena2 = proceso.getNombre().replace(" ", "");
-                    if (cadena1.equals(cadena2)) {
-                        iterator.remove();
-                        break;  // Mover el break dentro del if para salir después de eliminar el elemento
-                    }
-                }
-
-                // Actualizar la lista antes de guardarla en persistencia
-                setListaProcesos(ListaProcesos);
-
-                // Guardar la lista actualizada en persistencia
-                Persistencia.guardarProcesos(getListaProcesos());
-            }
-        } catch (IOException e) {
-            // Manejar la excepción (mostrar mensaje, registrar en un archivo de registro, etc.)
-            e.printStackTrace();
-        }
-    }
     //tres tipo de cracion;
     //Crear actividad al final
     //Crear actividad despues de otra actividad
     //Crear actividad en continuacion a la ultima insertada
     //todas usando listas enlazadas
-    public Actividad crearActividadFinal(Proceso procesoSeleccionado,Actividad actividad) {
-        if (ListaActividades == null ) {
-            ListaActividades = new ListaDobleEnlazada<>();
-        }
-        ListaActividades.agregarUltimo(actividad);
 
-        if(procesoSeleccionado ==null){
-            return null;
-        }
-        try {
-            Persistencia.guardarActividades(getActividades());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return actividad;
-    }
     public Actividad crearActividadDespuesDe(Actividad actividad) {
         try {
             if (ListaActividades != null) {
@@ -230,6 +137,7 @@ public class Proceso {
         }
         return actividad;
     }
+
     public int getNumActividades() {
         return numActividades;
     }
@@ -237,6 +145,7 @@ public class Proceso {
     public void setNumActividades(int numActividades) {
         this.numActividades = numActividades;
     }
+
     public static int generarID() {
         Random random = new Random();
         int nuevoID;
@@ -245,6 +154,7 @@ public class Proceso {
         } while (idExisteEnLista(nuevoID));
         return nuevoID;
     }
+
     private static boolean idExisteEnLista(int id) {
         // Utiliza el iterador para recorrer la lista de IDs y verifica si el ID ya existe
         for (Integer existingID : ids) {
@@ -257,19 +167,8 @@ public class Proceso {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        Proceso proceso = (Proceso) o;
-
-        if (numActividades != proceso.numActividades) return false;
-        if (duracionTotal != proceso.duracionTotal) return false;
-        if (!Objects.equals(id, proceso.id)) return false;
-        if (!Objects.equals(nombre, proceso.nombre)) return false;
-        if (!Objects.equals(ListaProcesos, proceso.ListaProcesos))
-            return false;
-        if (!Objects.equals(ListaActividades, proceso.ListaActividades)) return false;
-        return Objects.equals(tareas, proceso.tareas);
+        return this == o;
     }
 
     @Override
@@ -277,9 +176,7 @@ public class Proceso {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (nombre != null ? nombre.hashCode() : 0);
         result = 31 * result + numActividades;
-        result = 31 * result + (ListaProcesos != null ? ListaProcesos.hashCode() : 0);
         result = 31 * result + (ListaActividades != null ? ListaActividades.hashCode() : 0);
-        result = 31 * result + (tareas != null ? tareas.hashCode() : 0);
         result = 31 * result + duracionTotal;
         return result;
     }

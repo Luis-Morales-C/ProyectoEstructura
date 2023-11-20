@@ -12,7 +12,7 @@ public class Persistencia {
     public static final String RUTA_ARCHIVO_TAREAS = "src/main/resources/persistencia/tareas.txt";
 
 
-    public static void guardarProcesos(ListaDobleEnlazada<Proceso> listaProcesos) throws IOException {
+    public static void guardarProcesos(List<Proceso> listaProcesos) throws IOException {
         String contenido = "";
 
         for(Proceso proceso: listaProcesos) {
@@ -21,20 +21,27 @@ public class Persistencia {
         guardarArchivo(RUTA_ARCHIVO_PROCESOS, contenido);
     }
 
-    public static void guardarActividades(ListaDobleEnlazada<Actividad> listaActividades) throws IOException {
+    public static void guardarActividades(List<Proceso> listaProcesos, List<Actividad> listaActividades) throws IOException {
         String contenido = "";
-
-        for(Actividad actividad: listaActividades) {
-            contenido += actividad.getNombre()+"@@"+actividad.getDescripcion()+"@@"+actividad.isObligatoria()+"\n";
+        Iterator<Proceso> iterator = listaProcesos.iterator();
+        while (iterator.hasNext()) {
+            Proceso procesoActual = iterator.next();
+            for(Actividad actividad: procesoActual.getActividades()) {
+                contenido += procesoActual.getNombre()+"@@"+actividad.getNombre()+"@@"+actividad.getDescripcion()+"@@"+actividad.isObligatoria()+"\n";
+            }
         }
+
         guardarArchivo(RUTA_ARCHIVO_ACTIVIDADES, contenido);
     }
 
-    public static void guardarTareas(ListaDobleEnlazada<Tarea> listaTareas) throws IOException {
+    public static void guardarTareas(List<Actividad> listaActividades, List<Tarea> listaTareas) throws IOException {
         String contenido = "";
-
-        for(Tarea tarea: listaTareas) {
-            contenido += tarea.getDescripcion()+"@@"+tarea.getDescripcion()+"@@"+tarea.getDuracionMinutos()+"\n";
+        Iterator<Actividad> iterator = listaActividades.iterator();
+        while (iterator.hasNext()) {
+            Actividad actividadActual = iterator.next();
+            for(Tarea tarea: listaTareas) {
+                contenido += tarea.getDescripcion()+"@@"+tarea.getDescripcion()+"@@"+tarea.getDuracionMinutos()+"\n";
+            }
         }
         guardarArchivo(RUTA_ARCHIVO_TAREAS, contenido);
     }
@@ -146,38 +153,22 @@ public class Persistencia {
         fr.close();
         return contenido;
     }
-    public static ListaDobleEnlazada<Proceso> cargarDatos(Proceso proceso) throws IOException {
+    public static void cargarDatos(Aplicacion aplicacion) throws IOException {
         ListaDobleEnlazada<Proceso> procesos = cargarProceso();
         ListaDobleEnlazada<Actividad> actividades = cargarActividades();
         ListaDobleEnlazada<Tarea> tareas = cargarTareas();
 
-        // Verifica y, si es necesario, inicializa las listas en la instancia de Proceso
-        if (proceso.getListaProcesos() == null) {
-            proceso.setListaProcesos(new ListaDobleEnlazada<>());
+        Iterator<Proceso> iterator = procesos.iterator();
+        while (iterator.hasNext()) {
+            Proceso procesoActual = iterator.next();
+            Iterator<Actividad> iteratorActividades = actividades.iterator();
+            while (iterator.hasNext()) {
+                Actividad actividadActual = iteratorActividades.next();
+                procesoActual.setActividades(actividades);
+            }
+            procesoActual.setActividades(actividades);
         }
-        if (proceso.getActividades() == null) {
-            proceso.setActividades(new ListaDobleEnlazada<>());
-        }
-        if (proceso.getTareas() == null) {
-            proceso.setTareas(new ListaDobleEnlazada<>());
-        }
-
-        // Agregar procesos a la lista existente
-        for (Proceso p : procesos) {
-            proceso.getListaProcesos().agregarUltimo(p);
-        }
-
-        // Agregar actividades a la lista existente
-        for (Actividad actividad : actividades) {
-            proceso.getActividades().agregarUltimo(actividad);
-        }
-
-        // Agregar tareas a la lista existente
-        for (Tarea tarea : tareas) {
-            proceso.getTareas().agregarUltimo(tarea);
-        }
-
-        return procesos;
+        aplicacion.setListaProcesos(procesos);
     }
 }
 

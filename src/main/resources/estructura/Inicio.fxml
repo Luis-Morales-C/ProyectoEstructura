@@ -13,8 +13,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="634.0" prefWidth="907.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="estructura.controller.CrudProceso">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="634.0" prefWidth="907.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="estructura.controller.CrudProceso">
    <children>
       <TabPane layoutX="74.0" layoutY="17.0" prefHeight="600.0" prefWidth="807.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
@@ -33,7 +32,7 @@
                         <Label layoutX="591.0" layoutY="50.0" text="Crear proceso" />
                         <TextField fx:id="txtNombreProceso" layoutX="557.0" layoutY="75.0" />
                         <Label layoutX="482.0" layoutY="79.0" text="Nombre:" />
-                        <Label layoutX="599.0" layoutY="170.0" text="Configuracion:" />
+                        <Label layoutX="599.0" layoutY="170.0" text="Buscar proceso:" />
                         <TextField fx:id="txtAux" layoutX="557.0" layoutY="200.0" prefHeight="25.0" prefWidth="152.0" />
                         <Label layoutX="567.0" layoutY="308.0" prefHeight="18.0" prefWidth="153.0" text="Consultar Tiempo:" />
                         <Button layoutX="607.0" layoutY="342.0" mnemonicParsing="false" onAction="#onConsultarTiempoPClick" text="Consultar" />
@@ -68,9 +67,9 @@
                         <TextField fx:id="txtDescripcionActividad" layoutX="374.0" layoutY="32.0" prefHeight="136.0" prefWidth="149.0" />
                         <SplitMenuButton fx:id="SplitCrear" layoutX="58.0" layoutY="71.0" mnemonicParsing="false" onAction="#onCrearActividad" text="Crear">
                           <items>
-                            <MenuItem mnemonicParsing="false" onAction="#onCrearUltimo" text="Crear Ultimo" />
-                            <MenuItem mnemonicParsing="false" onAction="#onCrearDespuesDe" text="Crear Despues de " />
-                              <MenuItem mnemonicParsing="false" onAction="#onCrearOrden" text="Crear segun orden" />
+                            <MenuItem fx:id="crearUltimoActividad" mnemonicParsing="false" onAction="#onCrearUltimo" text="Crear al final" />
+                            <MenuItem fx:id="crearDespuesActividad" mnemonicParsing="false" onAction="#onCrearDespuesDe" text="Crear Despues de " />
+                              <MenuItem fx:id="crearOrdenActividad" mnemonicParsing="false" onAction="#onCrearOrden" text="Crear segun orden" />
                           </items>
                         </SplitMenuButton>
                         <Label layoutX="251.0" layoutY="14.0" text="Nombre: " />

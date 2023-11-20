@@ -2,7 +2,6 @@ package estructura.controller;
 
 import estructura.MainApp;
 import estructura.model.Actividad;
-import estructura.model.ListaDobleEnlazada;
 import estructura.model.Proceso;
 import estructura.model.Tarea;
 import javafx.collections.FXCollections;
@@ -12,11 +11,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.util.List;
-
 public class CrudProceso {
 
-    private MainApp aplicacion;
+    private MainApp app;
 
     private ModelFactory modelFactory;
 
@@ -79,18 +76,44 @@ public class CrudProceso {
     @FXML
     private TextField txtDescripcionActividad;
     @FXML
-    void onCrearActividad(ActionEvent event) {
+    MenuItem crearUltimoActividad;
+    @FXML
+    MenuItem crearDespuesActividad;
+    @FXML
+    MenuItem crearOrdenActividad;
 
+    @FXML
+    void onCrearActividad(ActionEvent event) {
+        if (procesoSeleccionado != null) {
+            crearUltimoActividad.setDisable(false);
+            crearDespuesActividad.setDisable(false);
+            crearOrdenActividad.setDisable(false);
+        }
     }
+
     @FXML
     void onCrearDespuesDe(ActionEvent event) {
+        if (verificarCamposActividad()) {
+            if (actividadSeleccionada != null) {
 
+            } else {
+                mostrarMensaje("Debe seleccionar una actividad para insertar " + txtNombreActividad.getText() + " después" +
+                        " de esta");
+            }
+        } else {
+            mostrarMensaje("Las actividades deben tener nombre y descripción");
+        }
+    }
+
+    private boolean verificarCamposActividad() {
+        return !txtNombreActividad.getText().isEmpty() || !txtDescripcionActividad.getText().isEmpty();
     }
 
     @FXML
     void onCrearOrden(ActionEvent event) {
 
     }
+
     @FXML
     public void initialize() {
         modelFactory = ModelFactory.getInstance();
@@ -117,24 +140,21 @@ public class CrudProceso {
         tblProcesos2.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 procesoSeleccionado = (Proceso) newSelection;
+                cargarActividadesEnTabla();
             }
         });
-
-
         tblActividades.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 actividadSeleccionada = (Actividad) newSelection;
             }
         });
-
-
-
+        crearUltimoActividad.setDisable(true);
+        crearDespuesActividad.setDisable(true);
+        crearOrdenActividad.setDisable(true);
         cargarProcesosEnTabla();
         cargarProcesosNombreEnTabla();
-        cargarActividadesEnTabla();
-
-
     }
+
     private String obtenerEstado() {
         return checkObligatorio.isSelected() ? "Obligatorio" : "No Obligatorio";
     }
@@ -144,80 +164,54 @@ public class CrudProceso {
         String nombreActividad = txtNombreActividad.getText();
         String descripcionActividad = txtDescripcionActividad.getText();
 
-        if (nombreActividad.isEmpty()) {
-            mostrarMensaje("Por favor escriba el nombre");
-            return;
-        }
-        if (descripcionActividad.isEmpty()) {
-            mostrarMensaje("Por favor escriba la descripción");
-            return;
-        }
-
-        Actividad nuevaActividad = new Actividad();
-        Actividad actividad = new Actividad();
-        actividad.setNombre(nombreActividad);
-        actividad.setDescripcion(descripcionActividad);
-
-
-        actividad.setObligatoria(obtenerEstado());
-
-
-        nuevaActividad = modelFactory.crearActividadFinal(procesoSeleccionado, actividad);
-
-        if (nuevaActividad != null) {
-            listaActividad.add(nuevaActividad);
-
-            cargarActividadesEnTabla();
-
-            limpiarCamposActividad();
-
-            mostrarMensaje("Actividad Registrada");
+        if (verificarCamposActividad()) {
+            Actividad nuevaActividad = null;
+            Actividad actividad = new Actividad();
+            actividad.setNombre(nombreActividad);
+            actividad.setDescripcion(descripcionActividad);
+            actividad.setObligatoria(obtenerEstado());
+            nuevaActividad = modelFactory.crearActividadFinal(procesoSeleccionado, actividad);
+            if (nuevaActividad != null) {
+                listaActividades.add(nuevaActividad);
+                cargarActividadesEnTabla();
+                limpiarCamposActividad();
+                mostrarMensaje("Actividad Registrada");
+            } else {
+                mostrarMensaje("Actividad no registrada");
+            }
         } else {
-            mostrarMensaje("Actividad no registrada");
+            mostrarMensaje("Las actividades deben tener nombre y descripción");
         }
+
+
     }
 
-
-
     private ObservableList<Proceso> listaProcesos = FXCollections.observableArrayList();
-    private ObservableList<Actividad> listaActividad = FXCollections.observableArrayList();
-    private ObservableList<Tarea> listaTarea = FXCollections.observableArrayList();
+    private ObservableList<Actividad> listaActividades = FXCollections.observableArrayList();
+    private ObservableList<Tarea> listaTareas = FXCollections.observableArrayList();
 
 
     //Registro Proceso
     @FXML
     void onRegistrarClick(ActionEvent event) {
         String id = String.valueOf(Proceso.generarID());
-        String nombre= txtNombreProceso.getText();
-        int numActividades=0;
+        String nombre = txtNombreProceso.getText();
+        int numActividades = 0;
 
-
-        if (nombre.isEmpty() ) {
+        if (nombre.isEmpty()) {
             mostrarMensaje("Por favor escriba el nombre");
             return;
         }
-        //Crear Proceso
-
-        Proceso nuevoProceso=null;
-        Proceso proceso=new Proceso();
-
+        Proceso nuevoProceso = null;
+        Proceso proceso = new Proceso();
         proceso.setId(id);
         proceso.setNombre(nombre);
         proceso.setNumActividades(numActividades);
-
-        nuevoProceso=modelFactory.crearProceso(proceso);
-
+        nuevoProceso = modelFactory.crearProceso(proceso);
         if (nuevoProceso != null) {
-            // Agregar el proceso a la lista
             listaProcesos.add(nuevoProceso);
-
-            // Actualizar la tabla
             cargarProcesosEnTabla();
-
-            // Limpiar los campos de texto
-
             limpiarCamposProceso();
-            // Mostrar un mensaje de éxito
             mostrarMensaje("Proceso registrado correctamente.");
         } else {
             mostrarMensaje("Proceso ya existe");
@@ -229,10 +223,10 @@ public class CrudProceso {
     void onRemoverClick(ActionEvent event) {
         if (procesoSeleccionado != null) {
             // Llamamos al método eliminarProceso del modelo, pasando el procesoSeleccionado
-            modelFactory.getProceso().eliminarProceso(procesoSeleccionado);
+            //modelFactory.getProceso().eliminarProceso(procesoSeleccionado);
 
             // Actualizamos la tabla después de la eliminación
-            cargarProcesosEnTabla();
+            //cargarProcesosEnTabla();
 
             // Mostrar un mensaje de éxito o cualquier lógica adicional que desees
             mostrarMensaje("Proceso eliminado correctamente.");
@@ -260,123 +254,79 @@ public class CrudProceso {
             mostrarMensaje("Proceso no encontrado");
         }
     }
+
     @FXML
     void onCambiarNombreClick(ActionEvent event) {
-        if(procesoSeleccionado!=null){
-            String nombre= txtAux.getText();
+        if (procesoSeleccionado != null) {
+            String nombre = txtAux.getText();
             procesoSeleccionado.setNombre(nombre);
             mostrarMensaje("Proceso cambiado correctamente.");
-        }else{
+        } else {
             mostrarMensaje("Proceso no cambiado");
         }
-            // Actualizar la tabla
-            cargarProcesosEnTabla();
+        // Actualizar la tabla
+        //cargarProcesosEnTabla();
 
-            // Limpiar los campos de texto
+        // Limpiar los campos de texto
 
-            limpiarCamposProceso();
-            // Mostrar un mensaje de éxito
+        limpiarCamposProceso();
+        // Mostrar un mensaje de éxito
 
-        }
+    }
+
     @FXML
     void onCancelarClick(ActionEvent event) {
         limpiarCamposProceso();
 
     }
+
     @FXML
     void onConsultarTiempoPClick(ActionEvent event) {
 
     }
 
-
-    public MainApp getAplicacion() {
-        return aplicacion;
+    public MainApp getApp() {
+        return app;
     }
 
-    public void setAplicacion(MainApp aplicacion) {
-        this.aplicacion = aplicacion;
+    public void setApp(MainApp app) {
+        this.app = app;
     }
 
-        // Cargar procesos en la tabla
-        public void cargarProcesosEnTabla() {
-            if (modelFactory != null && modelFactory.getProceso() != null) {
-                colNombreProceso.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-                colIdProceso.setCellValueFactory(new PropertyValueFactory<>("id"));
-                colNumActividades.setCellValueFactory(new PropertyValueFactory<>("numActividades"));
+    // Cargar procesos en la tabla
+    public void cargarProcesosEnTabla() {
+        colNombreProceso.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colIdProceso.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colNumActividades.setCellValueFactory(new PropertyValueFactory<>("numActividades"));
 
-                // Asignar los datos a la tabla
-                tblProcesos.getItems().clear();
+        tblProcesos.getItems().clear();
+        tblProcesos.setItems(getListaProcesos());
+        tblProcesos.refresh();
+    }
 
-                List<Proceso> listaProcesos = getListaProcesos();
-                if (listaProcesos != null) {
-                    tblProcesos.setItems((ObservableList<Proceso>) listaProcesos);
-                } else {
-                    // Manejo de caso en que getListaProcesos() devuelve nulo
-                }
-
-                tblProcesos.refresh();
-            } else {
-                // Manejo de caso en que modelFactory o getProceso() es nulo
-            }
-        }
     public void cargarProcesosNombreEnTabla() {
-        if (modelFactory != null && modelFactory.getProceso() != null) {
-             colNombreProceso2.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-
-            // Asignar los datos a la tabla
-            tblProcesos2.getItems().clear();
-
-            List<Proceso> listaProcesos = getListaProcesos();
-            if (listaProcesos != null) {
-                tblProcesos2.setItems((ObservableList<Proceso>) listaProcesos);
-            } else {
-                // Manejo de caso en que getListaProcesos() devuelve nulo
-            }
-
-            tblProcesos2.refresh();
-        } else {
-            // Manejo de caso en que modelFactory o getProceso() es nulo
-        }
+        colNombreProceso.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        tblProcesos2.getItems().clear();
+        tblProcesos2.setItems(getListaProcesos());
+        tblProcesos2.refresh();
     }
+
     public void cargarActividadesEnTabla() {
-        if (modelFactory != null && modelFactory.getProceso().getActividades() != null) {
-            colNombreActividad.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-            colDescripcionActividad.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
-            colEstado.setCellValueFactory(new PropertyValueFactory<>("obligatoria"));
-
-            // Asignar los datos a la tabla
-            tblActividades.getItems().clear();
-
-            ObservableList<Actividad> listaActividades = getListaActivades(); // Cambio aquí
-            if (listaActividades != null) {
-                tblActividades.setItems(listaActividades);
-            } else {
-                // Manejo de caso en que la listaActividades es nula
-            }
-            tblActividades.refresh();
-        } else {
-            // Manejo de caso en que modelFactory o getProceso() es nulo
-        }
+        colNombreActividad.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colDescripcionActividad.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+        colEstado.setCellValueFactory(new PropertyValueFactory<>("obligatoria"));
+        tblActividades.getItems().clear();
+        tblActividades.setItems(getListaActivades(procesoSeleccionado));
+        tblActividades.refresh();
     }
     public ObservableList<Proceso> getListaProcesos() {
-        ListaDobleEnlazada<Proceso> listaProcesos = modelFactory.getProceso().getListaProcesos();
-        if (listaProcesos != null) {
-            this.listaProcesos.addAll(listaProcesos.aLista());
-        }
-        return this.listaProcesos;
+        listaProcesos.addAll(modelFactory.getAplicacion().getListaProcesos());
+        return listaProcesos;
     }
-    public ObservableList<Actividad> getListaActivades() {
-        ListaDobleEnlazada<Actividad> listaActividad = modelFactory.getProceso().getActividades();
-        ObservableList<Actividad> observableList = FXCollections.observableArrayList();
 
-        if (listaActividad != null) {
-            observableList.addAll(listaActividad.aLista());
-        } else {
-            // Manejo de caso en que la lista de actividades es nula
-            System.out.println("La lista de actividades es nula");
-        }
-
-        return observableList;
+    public ObservableList<Actividad> getListaActivades(Proceso proceso) {
+        listaActividades.addAll(modelFactory.getAplicacion().getListaActividades());
+        return listaActividades;
     }
 
     private void mostrarMensaje(String mensaje) {
@@ -386,9 +336,11 @@ public class CrudProceso {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
+
     void limpiarCamposProceso() {
-         txtNombreProceso.clear();
+        txtNombreProceso.clear();
     }
+
     void limpiarCamposActividad() {
         txtNombreActividad.clear();
         txtDescripcionActividad.clear();

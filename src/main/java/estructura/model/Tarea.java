@@ -1,11 +1,12 @@
 package estructura.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * Representa una tarea dentro de un proceso o actividad.
  */
-public class Tarea {
+public class Tarea implements Serializable {
     private String descripcion;
     private Estado estado;
     private int duracionMinutos;

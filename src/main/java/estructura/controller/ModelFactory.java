@@ -2,6 +2,7 @@ package estructura.controller;
 
 import estructura.exceptions.ProcesoExisteException;
 import estructura.model.Actividad;
+import estructura.model.Aplicacion;
 import estructura.model.ListaDobleEnlazada;
 import estructura.model.Proceso;
 import estructura.persistencia.Persistencia;
@@ -11,7 +12,7 @@ import java.io.IOException;
 
 
 public class ModelFactory {
-    Proceso proceso;
+    Aplicacion aplicacion;
 
     private static class SingletonHolder {
         private final static ModelFactory eINSTANCE = new ModelFactory();
@@ -21,16 +22,18 @@ public class ModelFactory {
         return SingletonHolder.eINSTANCE;
     }
 
+    public Aplicacion getAplicacion() {
+        return aplicacion;
+    }
+
     public ModelFactory() {
         cargarDatos();
     }
 
-    public ListaDobleEnlazada<Proceso> cargarDatos() {
-        Proceso proceso = new Proceso();
+    public void cargarDatos() {
+        aplicacion = new Aplicacion();
         try {
-            ListaDobleEnlazada<Proceso> listaProcesos = Persistencia.cargarDatos(proceso);
-            setProceso(proceso); // Actualizar el proceso en ModelFactory
-            return listaProcesos;
+            Persistencia.cargarDatos(aplicacion);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -39,24 +42,22 @@ public class ModelFactory {
     public Proceso crearProceso(Proceso proceso) {
         Proceso nuevoProceso = null;
         try {
-            nuevoProceso = getProceso().crearProceso(proceso.getNombre());
-            Persistencia.guardarProcesos(getProceso().getListaProcesos());
-
+            nuevoProceso = getAplicacion().crearProceso(proceso);
+            Persistencia.guardarProcesos(getAplicacion().getListaProcesos());
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ProcesoExisteException e) {
-            mostrarMensaje("PROCESO YA EXISTE");
+            mostrarMensaje("El proceso ya existe");
             throw new RuntimeException(e);
         }
         return nuevoProceso;
     }
 
-    public Actividad crearActividadFinal(Proceso proceso ,Actividad actividad) {
+    public Actividad crearActividadFinal(Proceso proceso, Actividad actividad) {
         Actividad nuevaActividad = null;
         try {
-            nuevaActividad = getProceso().crearActividadFinal(proceso,actividad);
-            Persistencia.guardarActividades(getProceso().getActividades());
-
+            nuevaActividad = getAplicacion().crearActividadFinal(proceso, actividad);
+            Persistencia.guardarActividades(getAplicacion().getListaProcesos(), proceso.getActividades().aLista());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -64,15 +65,19 @@ public class ModelFactory {
         return actividad;
     }
 
-    public Proceso getProceso() {
+    /*public Proceso getProceso() {
         if (proceso == null) {
             proceso = new Proceso();
         }
         return proceso;
     }
+
+    public Proceso buscarProceso(Proceso proceso) {
+
+    }
     public void setProceso(Proceso proceso) {
         this.proceso = proceso;
-    }
+    }*/
     private void mostrarMensaje(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Información");
@@ -80,4 +85,5 @@ public class ModelFactory {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
+
 }
