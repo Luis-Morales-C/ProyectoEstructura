@@ -17,6 +17,11 @@
    <children>
       <TabPane layoutX="74.0" layoutY="17.0" prefHeight="600.0" prefWidth="807.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
+            <Tab text="Login">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
           <Tab fx:id="tabProcesos" text="Procesos">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="571.0" prefWidth="768.0">
@@ -81,6 +86,38 @@
                   </AnchorPane>
             </content>
           </Tab>
+            <Tab text="Tareas">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="tblProcesosTareas" layoutX="14.0" layoutY="172.0" prefHeight="162.0" prefWidth="141.0">
+                          <columns>
+                            <TableColumn prefWidth="147.20001220703125" text="Procesos" />
+                          </columns>
+                        </TableView>
+                        <TableView fx:id="tblActividadesTareas" layoutX="172.0" layoutY="172.0" prefHeight="164.0" prefWidth="446.0">
+                          <columns>
+                            <TableColumn prefWidth="160.0" text="Nombre actividad" />
+                            <TableColumn minWidth="0.0" prefWidth="186.4000244140625" text="Descripción" />
+                              <TableColumn prefWidth="96.0" text="Estado" />
+                          </columns>
+                        </TableView>
+                        <Label layoutX="53.0" layoutY="28.0" text="Descripción:" />
+                        <Label layoutX="404.0" layoutY="82.0" text="Duración (minutos):" />
+                        <CheckBox fx:id="checkBoxTarea" layoutX="404.0" layoutY="28.0" mnemonicParsing="false" text="Obligatoria" />
+                        <TextField fx:id="txtDescripcionTarea" layoutX="180.0" layoutY="24.0" prefHeight="133.0" prefWidth="173.0" />
+                        <TextField fx:id="txtDuracionTarea" layoutX="531.0" layoutY="78.0" />
+                        <TableView fx:id="tblTareas" layoutX="172.0" layoutY="349.0" prefHeight="209.0" prefWidth="442.0">
+                          <columns>
+                            <TableColumn prefWidth="177.5999755859375" text="Descripción" />
+                            <TableColumn prefWidth="144.00006103515625" text="Duración" />
+                              <TableColumn prefWidth="119.19998779296873" text="Obligatorio" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
         </tabs>
       </TabPane>
    </children>

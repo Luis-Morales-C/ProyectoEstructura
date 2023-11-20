@@ -10,7 +10,6 @@ import java.util.List;
 
 public class Aplicacion implements Serializable {
     private ListaDobleEnlazada<Proceso> listaProcesos = new ListaDobleEnlazada<>();
-    private ListaDobleEnlazada<Tarea> listaTareas = new ListaDobleEnlazada<>();
 
     public Aplicacion() {
     }
@@ -21,14 +20,6 @@ public class Aplicacion implements Serializable {
 
     public void setListaProcesos(ListaDobleEnlazada<Proceso> listaProcesos) {
         this.listaProcesos = listaProcesos;
-    }
-
-    public List<Tarea> getListaTareas() {
-        return listaTareas.aLista();
-    }
-
-    public void setListaTareas(ListaDobleEnlazada<Tarea> listaTareas) {
-        this.listaTareas = listaTareas;
     }
 
     public boolean buscarProceso(Proceso procesoBuscado) {

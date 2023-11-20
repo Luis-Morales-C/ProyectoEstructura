@@ -53,6 +53,8 @@ public class CrudProceso {
     private CheckBox checkObligatorio;
 
     @FXML
+    private CheckBox checkBoxTarea;
+    @FXML
     private TableColumn<?, ?> colNombreActividad;
 
     @FXML
@@ -196,6 +198,10 @@ public class CrudProceso {
 
     private String obtenerEstado() {
         return checkObligatorio.isSelected() ? "Obligatorio" : "No Obligatorio";
+    }
+
+    private String obtenerEstadoTarea() {
+        return checkBoxTarea.isSelected() ? "Obligatorio" : "No Obligatorio";
     }
 
     @FXML
