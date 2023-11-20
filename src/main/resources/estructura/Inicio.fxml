@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.Tab?>
@@ -102,11 +103,11 @@
                               <TableColumn prefWidth="96.0" text="Estado" />
                           </columns>
                         </TableView>
-                        <Label layoutX="53.0" layoutY="28.0" text="Descripción:" />
-                        <Label layoutX="404.0" layoutY="82.0" text="Duración (minutos):" />
-                        <CheckBox fx:id="checkBoxTarea" layoutX="404.0" layoutY="28.0" mnemonicParsing="false" text="Obligatoria" />
-                        <TextField fx:id="txtDescripcionTarea" layoutX="180.0" layoutY="24.0" prefHeight="133.0" prefWidth="173.0" />
-                        <TextField fx:id="txtDuracionTarea" layoutX="531.0" layoutY="78.0" />
+                        <Label layoutX="228.0" layoutY="33.0" text="Descripción:" />
+                        <Label layoutX="530.0" layoutY="87.0" text="Duración (minutos):" />
+                        <CheckBox fx:id="checkBoxTarea" layoutX="530.0" layoutY="33.0" mnemonicParsing="false" text="Obligatoria" />
+                        <TextField fx:id="txtDescripcionTarea" layoutX="306.0" layoutY="29.0" prefHeight="133.0" prefWidth="173.0" />
+                        <TextField fx:id="txtDuracionTarea" layoutX="657.0" layoutY="83.0" />
                         <TableView fx:id="tblTareas" layoutX="172.0" layoutY="349.0" prefHeight="209.0" prefWidth="442.0">
                           <columns>
                             <TableColumn prefWidth="177.5999755859375" text="Descripción" />
@@ -114,6 +115,13 @@
                               <TableColumn prefWidth="119.19998779296873" text="Obligatorio" />
                           </columns>
                         </TableView>
+                        <MenuButton layoutX="36.0" layoutY="70.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Crear">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Insertar al final" />
+                            <MenuItem mnemonicParsing="false" text="Insertar en la posición:" />
+                          </items>
+                        </MenuButton>
+                        <TextField fx:id="txtPosicionTarea" layoutX="173.0" layoutY="136.0" prefHeight="26.0" prefWidth="110.0" promptText="Ingresar posición" />
                      </children>
                   </AnchorPane>
               </content>

@@ -1,10 +1,7 @@
 package estructura.controller;
 
 import estructura.exceptions.ProcesoExisteException;
-import estructura.model.Actividad;
-import estructura.model.Aplicacion;
-import estructura.model.ListaDobleEnlazada;
-import estructura.model.Proceso;
+import estructura.model.*;
 import estructura.persistencia.Persistencia;
 import javafx.scene.control.Alert;
 
@@ -13,6 +10,9 @@ import java.io.IOException;
 
 public class ModelFactory {
     Aplicacion aplicacion;
+
+    public Tarea crearTareaFinal(Proceso procesoSeleccionado, Actividad actividadSeleccionada, Tarea tarea) {
+    }
 
     private static class SingletonHolder {
         private final static ModelFactory eINSTANCE = new ModelFactory();

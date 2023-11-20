@@ -14,7 +14,6 @@ public class Cola<E> implements Serializable {
 
     private Node<E> inicio; // Referencia al inicio de la cola
     private Node<E> fin;    // Referencia al final de la cola
-    private int tamaño;      // Número de elementos en la cola
 
     /**
      * Clase interna estática que representa un nodo en la cola.
@@ -42,7 +41,6 @@ public class Cola<E> implements Serializable {
     public Cola() {
         inicio = null;
         fin = null;
-        tamaño = 0;
     }
 
     /**
@@ -51,18 +49,8 @@ public class Cola<E> implements Serializable {
      * @return {@code true} si la cola está vacía, {@code false} en caso contrario.
      */
     public boolean isEmpty() {
-        return tamaño == 0;
+        return inicio == null;
     }
-
-    /**
-     * Devuelve el número de elementos en la cola.
-     *
-     * @return El tamaño de la cola.
-     */
-    public int size() {
-        return tamaño;
-    }
-
     /**
      * Agrega un nuevo elemento al final de la cola.
      *
@@ -76,7 +64,6 @@ public class Cola<E> implements Serializable {
             fin.siguiente = nuevoNodo;
             fin = nuevoNodo;
         }
-        tamaño++;
     }
 
     /**
@@ -93,7 +80,6 @@ public class Cola<E> implements Serializable {
             if (inicio == null) {
                 fin = null;
             }
-            tamaño--;
             return elemento;
         }
     }
@@ -110,24 +96,41 @@ public class Cola<E> implements Serializable {
         return inicio.elemento;
     }
 
-    /**
-     * Convierte la cola en una {@link List}.
-     * Este método recorre la cola desde el inicio hasta el final y agrega cada elemento
-     * a una nueva lista, manteniendo el orden FIFO (First In, First Out) de los elementos.
-     *
-     * @return Una nueva {@link List} que contiene todos los elementos de la cola
-     *         en el mismo orden. La lista devuelta es una nueva instancia y cualquier modificación
-     *         a la misma no afectará a la cola original.
-     */
     public List<E> toList() {
         List<E> lista = new ArrayList<>();
         Node<E> actual = inicio;
-
         while (actual != null) {
             lista.add(actual.elemento);
             actual = actual.siguiente;
         }
-
         return lista;
+    }
+
+    public void enqueueAtPosition(E elemento, int posicion) {
+        Node<E> nuevoNodo = new Node<>(elemento, null);
+        if (posicion < 0) {
+            throw new IllegalArgumentException("La posición no puede ser negativa");
+        }
+        if (posicion == 0) {
+            nuevoNodo.siguiente = inicio;
+            inicio = nuevoNodo;
+
+            if (fin == null) {
+                fin = nuevoNodo;
+            }
+        } else {
+            Node<E> actual = inicio;
+            for (int i = 0; i < posicion - 1; i++) {
+                if (actual == null) {
+                    throw new IllegalArgumentException("No hay más posiciones");
+                }
+                actual = actual.siguiente;
+            }
+            nuevoNodo.siguiente = actual.siguiente;
+            actual.siguiente = nuevoNodo;
+            if (nuevoNodo.siguiente == null) {
+                fin = nuevoNodo;
+            }
+        }
     }
 }

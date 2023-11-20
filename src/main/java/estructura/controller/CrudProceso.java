@@ -2,6 +2,7 @@ package estructura.controller;
 
 import estructura.MainApp;
 import estructura.model.Actividad;
+import estructura.model.Estado;
 import estructura.model.Proceso;
 import estructura.model.Tarea;
 import javafx.collections.FXCollections;
@@ -50,8 +51,17 @@ public class CrudProceso {
     private SplitMenuButton SplitCrear;
 
     @FXML
+    private MenuButton crearTarea;
+
+    @FXML
     private CheckBox checkObligatorio;
 
+    @FXML
+    private TextField txtPosicionTarea;
+    @FXML
+    private TextField txtDescripcionTarea;
+    @FXML
+    private TextField txtDuracionTarea;
     @FXML
     private CheckBox checkBoxTarea;
     @FXML
@@ -128,6 +138,30 @@ public class CrudProceso {
         }
     }
 
+    @FXML
+    void crearTareaFinal(ActionEvent event) {
+        String descripcionTarea = txtDescripcionTarea.getText();
+        int duracion = Integer.parseInt(txtDuracionTarea.getText());
+
+        if (verificarCamposActividadTarea()) {
+            Tarea nuevaTarea = null;
+            Tarea tarea = new Tarea();
+            tarea.setEstado(Estado.valueOf(obtenerEstadoTarea()));
+            tarea.setDescripcion(descripcionTarea);
+            tarea.setDuracionMinutos(duracion);
+            nuevaTarea = modelFactory.crearTareaFinal(procesoSeleccionado, actividadSeleccionada, tarea);
+            if (nuevaTarea != null) {
+                listaTareas.add(nuevaTarea);
+                cargarActividadesEnTabla();
+                limpiarCamposActividad();
+                mostrarMensaje("Tarea Registrada");
+            } else {
+                mostrarMensaje("Tarea no registrada");
+            }
+        } else {
+            mostrarMensaje("Las Tarea deben tener descripción");
+        }
+    }
 
     @FXML
     void onCrearUltimo(ActionEvent event) {
@@ -156,6 +190,10 @@ public class CrudProceso {
 
     private boolean verificarCamposActividad() {
         return !txtNombreActividad.getText().isEmpty() || !txtDescripcionActividad.getText().isEmpty();
+    }
+
+    private boolean verificarCamposActividadTarea() {
+        return !txtDuracionTarea.getText().isEmpty() || !txtDescripcionActividad.getText().isEmpty();
     }
 
     @FXML
@@ -201,7 +239,7 @@ public class CrudProceso {
     }
 
     private String obtenerEstadoTarea() {
-        return checkBoxTarea.isSelected() ? "Obligatorio" : "No Obligatorio";
+        return checkBoxTarea.isSelected() ? "OBLIGATORIO" : "OPTIONAL";
     }
 
     @FXML
