@@ -17,9 +17,8 @@ public class Proceso {
     private String nombre;
     private int numActividades;
     private ListaDobleEnlazada<Proceso> ListaProcesos;
-    private ListaDobleEnlazada<Actividad> actividades;
+    private ListaDobleEnlazada<Actividad> ListaActividades;
     private ListaDobleEnlazada<Tarea> tareas = new Actividad().getListaTarea();
-
     private static ListaDobleEnlazada<Integer> ids = new ListaDobleEnlazada<>();
     private int duracionTotal;
 
@@ -31,7 +30,9 @@ public class Proceso {
     public Proceso(String nombre) {
         this.id = String.valueOf(generarID());
         this.nombre = nombre;
-        this.actividades = new ListaDobleEnlazada<>();
+        this.ListaProcesos = new ListaDobleEnlazada<>();
+        this.ListaActividades = new ListaDobleEnlazada<>();
+        this.tareas = new ListaDobleEnlazada<>();
         this.duracionTotal = 0;
     }
 
@@ -63,8 +64,8 @@ public class Proceso {
      * @param actividad La actividad a añadir.
      */
     public void addActividad(Actividad actividad) {
-        actividades.agregarUltimo(actividad);
-        actualizarDuracion();
+        ListaActividades.agregarUltimo(actividad);
+
     }
 
     /**
@@ -79,11 +80,6 @@ public class Proceso {
     /**
      * Actualiza la duración total del proceso sumando las duraciones de todas las actividades.
      */
-    private void actualizarDuracion() {
-        this.duracionTotal = 0;
-        actividades.forEach(actividad ->
-                actualizarDuracion(actividad.getTotalDuracionMinutes()), false);
-    }
 
     /**
      * Obtiene la duración total del proceso en minutos.
@@ -100,7 +96,7 @@ public class Proceso {
      * @return La lista de actividades del proceso.
      */
     public ListaDobleEnlazada<Actividad> getActividades() {
-        return actividades;
+        return ListaActividades;
     }
 
 
@@ -118,7 +114,7 @@ public class Proceso {
     }
 
     public void setActividades(ListaDobleEnlazada<Actividad> actividades) {
-        this.actividades = actividades;
+        this.ListaActividades = actividades;
     }
 
     public void setDuracionTotal(int duracionTotal) {
@@ -193,7 +189,47 @@ public class Proceso {
             e.printStackTrace();
         }
     }
+    //tres tipo de cracion;
+    //Crear actividad al final
+    //Crear actividad despues de otra actividad
+    //Crear actividad en continuacion a la ultima insertada
+    //todas usando listas enlazadas
+    public Actividad crearActividadFinal(Proceso procesoSeleccionado,Actividad actividad) {
+        if (ListaActividades == null ) {
+            ListaActividades = new ListaDobleEnlazada<>();
+        }
+        ListaActividades.agregarUltimo(actividad);
 
+        if(procesoSeleccionado ==null){
+            return null;
+        }
+        try {
+            Persistencia.guardarActividades(getActividades());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return actividad;
+    }
+    public Actividad crearActividadDespuesDe(Actividad actividad) {
+        try {
+            if (ListaActividades != null) {
+                Iterator<Actividad> iterator = ListaActividades.iterator();
+                while (iterator.hasNext()) {
+                    Actividad actividadActual = iterator.next();
+                    if (actividadActual.equals(actividad)) {
+                        // Agrega la nueva actividad después de la actividad seleccionada
+                        ListaActividades.agregarUltimo(actividad);
+                    }
+                    // Agrega la actividad actual a la lista
+                    ListaActividades.agregarUltimo(actividadActual);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return actividad;
+    }
     public int getNumActividades() {
         return numActividades;
     }
@@ -232,7 +268,7 @@ public class Proceso {
         if (!Objects.equals(nombre, proceso.nombre)) return false;
         if (!Objects.equals(ListaProcesos, proceso.ListaProcesos))
             return false;
-        if (!Objects.equals(actividades, proceso.actividades)) return false;
+        if (!Objects.equals(ListaActividades, proceso.ListaActividades)) return false;
         return Objects.equals(tareas, proceso.tareas);
     }
 
@@ -242,7 +278,7 @@ public class Proceso {
         result = 31 * result + (nombre != null ? nombre.hashCode() : 0);
         result = 31 * result + numActividades;
         result = 31 * result + (ListaProcesos != null ? ListaProcesos.hashCode() : 0);
-        result = 31 * result + (actividades != null ? actividades.hashCode() : 0);
+        result = 31 * result + (ListaActividades != null ? ListaActividades.hashCode() : 0);
         result = 31 * result + (tareas != null ? tareas.hashCode() : 0);
         result = 31 * result + duracionTotal;
         return result;

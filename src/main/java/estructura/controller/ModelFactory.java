@@ -1,6 +1,7 @@
 package estructura.controller;
 
 import estructura.exceptions.ProcesoExisteException;
+import estructura.model.Actividad;
 import estructura.model.ListaDobleEnlazada;
 import estructura.model.Proceso;
 import estructura.persistencia.Persistencia;
@@ -23,6 +24,7 @@ public class ModelFactory {
     public ModelFactory() {
         cargarDatos();
     }
+
     public ListaDobleEnlazada<Proceso> cargarDatos() {
         Proceso proceso = new Proceso();
         try {
@@ -34,10 +36,10 @@ public class ModelFactory {
         }
     }
 
-    public Proceso crearProceso(Proceso proceso){
+    public Proceso crearProceso(Proceso proceso) {
         Proceso nuevoProceso = null;
         try {
-            nuevoProceso =getProceso().crearProceso(proceso.getNombre());
+            nuevoProceso = getProceso().crearProceso(proceso.getNombre());
             Persistencia.guardarProcesos(getProceso().getListaProcesos());
 
         } catch (IOException e) {
@@ -47,6 +49,19 @@ public class ModelFactory {
             throw new RuntimeException(e);
         }
         return nuevoProceso;
+    }
+
+    public Actividad crearActividadFinal(Proceso proceso ,Actividad actividad) {
+        Actividad nuevaActividad = null;
+        try {
+            nuevaActividad = getProceso().crearActividadFinal(proceso,actividad);
+            Persistencia.guardarActividades(getProceso().getActividades());
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return actividad;
     }
 
     public Proceso getProceso() {

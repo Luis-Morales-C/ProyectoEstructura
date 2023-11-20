@@ -25,7 +25,7 @@ public class Persistencia {
         String contenido = "";
 
         for(Actividad actividad: listaActividades) {
-            contenido += actividad.getNombre()+"@@"+actividad.getDescripcion()+"@@"+actividad.getEstado()+"\n";
+            contenido += actividad.getNombre()+"@@"+actividad.getDescripcion()+"@@"+actividad.isObligatoria()+"\n";
         }
         guardarArchivo(RUTA_ARCHIVO_ACTIVIDADES, contenido);
     }
@@ -88,17 +88,23 @@ public class Persistencia {
         for (int i = 0; i < contenido.size(); i++) {
             linea = contenido.get(i);
             Actividad actividad=new Actividad();
-            Tarea tarea=new Tarea(linea.split("@@")[3], Estado.valueOf(linea.split("@@")[4]),
-                    Integer.parseInt(linea.split("@@")[5]));
+            // Tarea tarea=new Tarea(linea.split("@@")[3], Estado.valueOf(linea.split("@@")[4]),
+              //      Integer.parseInt(linea.split("@@")[5]));
 
-            ListaDobleEnlazada<Tarea> tareas = new ListaDobleEnlazada<>();
-            tareas.agregarUltimo(tarea);
+            //ListaDobleEnlazada<Tarea> tareas = new ListaDobleEnlazada<>();
+            //tareas.agregarUltimo(tarea);
 
-            actividad.setNombre(linea.split("@@")[0]);
-            actividad.setDescripcion(linea.split("@@")[1]);
-            actividad.setEstado(Estado.valueOf(linea.split("@@")[2]));
+            String[] partes = linea.split("@@");
+            if (partes.length >= 3) {
+                actividad.setNombre(partes[0]);
+                actividad.setDescripcion(partes[1]);
+                actividad.setObligatoria((partes[2]));
+            } else {
+                // Manejar el caso donde la línea no tiene la longitud esperada
+                System.err.println("Error: La línea no tiene el formato esperado. Linea: " + linea);
+            }
 
-            actividad.setListaTarea(tareas);
+            //actividad.setListaTarea(tareas);
 
             actividades.agregarUltimo(actividad);
 
@@ -144,6 +150,17 @@ public class Persistencia {
         ListaDobleEnlazada<Proceso> procesos = cargarProceso();
         ListaDobleEnlazada<Actividad> actividades = cargarActividades();
         ListaDobleEnlazada<Tarea> tareas = cargarTareas();
+
+        // Verifica y, si es necesario, inicializa las listas en la instancia de Proceso
+        if (proceso.getListaProcesos() == null) {
+            proceso.setListaProcesos(new ListaDobleEnlazada<>());
+        }
+        if (proceso.getActividades() == null) {
+            proceso.setActividades(new ListaDobleEnlazada<>());
+        }
+        if (proceso.getTareas() == null) {
+            proceso.setTareas(new ListaDobleEnlazada<>());
+        }
 
         // Agregar procesos a la lista existente
         for (Proceso p : procesos) {

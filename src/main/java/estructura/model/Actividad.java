@@ -2,6 +2,8 @@ package estructura.model;
 
 
 
+import javafx.scene.control.CheckBox;
+
 import java.util.List;
 import java.util.Random;
 
@@ -13,7 +15,7 @@ import java.util.Random;
 public class Actividad {
     private String nombre;
     private String descripcion;
-    private Estado estado;
+    private String obligatoria;
     private ListaDobleEnlazada<Tarea> listaTarea;
     private Cola<Tarea> tareasPendientes; // Cola de tareas pendientes
     private Cola<Tarea> completarTarea; // Cola de tareas completadas
@@ -23,10 +25,10 @@ public class Actividad {
      *
      * @param nombre El nombre de la actividad.
      */
-    public Actividad(String nombre,String descripcion,Estado estado) {
+    public Actividad(String nombre,String descripcion,String obligatoria) {
         this.nombre = nombre;
         this.descripcion=descripcion;
-        this.estado=estado;
+        this.obligatoria=obligatoria;
         this.tareasPendientes = new Cola<>();
         this.completarTarea = new Cola<>();
     }
@@ -99,8 +101,8 @@ public class Actividad {
      *
      * @return Lista de tareas completadas.
      */
-    public List<Tarea> getCompletedTasksAsList() {
-        return completarTarea.toList();
+    public List<Tarea> getCompletedTasksAsList(){
+            return completarTarea.toList();
     }
 
     /**
@@ -116,6 +118,15 @@ public class Actividad {
 
         return totalDuration;
     }
+    public String calcularEstado(CheckBox estado){
+        if(estado.isSelected()){
+            return "OBLIGATORIO";
+        }
+        else{
+            return "NO OBLIGATORIO";
+        }
+    }
+
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
@@ -129,12 +140,12 @@ public class Actividad {
         this.descripcion = descripcion;
     }
 
-    public Estado getEstado() {
-        return estado;
+    public String isObligatoria() {
+        return obligatoria;
     }
 
-    public void setEstado(Estado estado) {
-        this.estado = estado;
+    public void setObligatoria(String obligatoria) {
+        this.obligatoria = obligatoria;
     }
 
     public void setTareasPendientes(Cola<Tarea> tareasPendientes) {
