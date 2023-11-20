@@ -82,6 +82,10 @@ public class CrudProceso {
     @FXML
     MenuItem crearOrdenActividad;
 
+    private ObservableList<Proceso> listaProcesos = FXCollections.observableArrayList();
+    private ObservableList<Actividad> listaActividades = FXCollections.observableArrayList();
+    private ObservableList<Tarea> listaTareas = FXCollections.observableArrayList();
+
     @FXML
     void onCrearActividad(ActionEvent event) {
         if (procesoSeleccionado != null) {
@@ -93,12 +97,54 @@ public class CrudProceso {
 
     @FXML
     void onCrearDespuesDe(ActionEvent event) {
+        String nombreActividad = txtNombreActividad.getText();
+        String descripcionActividad = txtDescripcionActividad.getText();
         if (verificarCamposActividad()) {
             if (actividadSeleccionada != null) {
-
+                Actividad nuevaActividad = null;
+                Actividad actividad = new Actividad();
+                actividad.setNombre(nombreActividad);
+                actividad.setDescripcion(descripcionActividad);
+                actividad.setObligatoria(obtenerEstado());
+                nuevaActividad = modelFactory.crearActividadDespuesDe(procesoSeleccionado, actividadSeleccionada,
+                        actividad);
+                if (nuevaActividad != null) {
+                    listaActividades.add(nuevaActividad);
+                    cargarActividadesEnTabla();
+                    limpiarCamposActividad();
+                    mostrarMensaje("Actividad Registrada");
+                } else {
+                    mostrarMensaje("Actividad no registrada");
+                }
             } else {
                 mostrarMensaje("Debe seleccionar una actividad para insertar " + txtNombreActividad.getText() + " después" +
                         " de esta");
+            }
+        } else {
+            mostrarMensaje("Las actividades deben tener nombre y descripción");
+        }
+    }
+
+
+    @FXML
+    void onCrearUltimo(ActionEvent event) {
+        String nombreActividad = txtNombreActividad.getText();
+        String descripcionActividad = txtDescripcionActividad.getText();
+
+        if (verificarCamposActividad()) {
+            Actividad nuevaActividad = null;
+            Actividad actividad = new Actividad();
+            actividad.setNombre(nombreActividad);
+            actividad.setDescripcion(descripcionActividad);
+            actividad.setObligatoria(obtenerEstado());
+            nuevaActividad = modelFactory.crearActividadFinal(procesoSeleccionado, actividad);
+            if (nuevaActividad != null) {
+                listaActividades.add(nuevaActividad);
+                cargarActividadesEnTabla();
+                limpiarCamposActividad();
+                mostrarMensaje("Actividad Registrada");
+            } else {
+                mostrarMensaje("Actividad no registrada");
             }
         } else {
             mostrarMensaje("Las actividades deben tener nombre y descripción");
@@ -148,9 +194,6 @@ public class CrudProceso {
                 actividadSeleccionada = (Actividad) newSelection;
             }
         });
-        crearUltimoActividad.setDisable(true);
-        crearDespuesActividad.setDisable(true);
-        crearOrdenActividad.setDisable(true);
         cargarProcesosEnTabla();
         cargarProcesosNombreEnTabla();
     }
@@ -159,36 +202,7 @@ public class CrudProceso {
         return checkObligatorio.isSelected() ? "Obligatorio" : "No Obligatorio";
     }
 
-    @FXML
-    void onCrearUltimo(ActionEvent event) {
-        String nombreActividad = txtNombreActividad.getText();
-        String descripcionActividad = txtDescripcionActividad.getText();
 
-        if (verificarCamposActividad()) {
-            Actividad nuevaActividad = null;
-            Actividad actividad = new Actividad();
-            actividad.setNombre(nombreActividad);
-            actividad.setDescripcion(descripcionActividad);
-            actividad.setObligatoria(obtenerEstado());
-            nuevaActividad = modelFactory.crearActividadFinal(procesoSeleccionado, actividad);
-            if (nuevaActividad != null) {
-                listaActividades.add(nuevaActividad);
-                cargarActividadesEnTabla();
-                limpiarCamposActividad();
-                mostrarMensaje("Actividad Registrada");
-            } else {
-                mostrarMensaje("Actividad no registrada");
-            }
-        } else {
-            mostrarMensaje("Las actividades deben tener nombre y descripción");
-        }
-
-
-    }
-
-    private ObservableList<Proceso> listaProcesos = FXCollections.observableArrayList();
-    private ObservableList<Actividad> listaActividades = FXCollections.observableArrayList();
-    private ObservableList<Tarea> listaTareas = FXCollections.observableArrayList();
 
 
     //Registro Proceso
@@ -325,7 +339,7 @@ public class CrudProceso {
     }
 
     public ObservableList<Actividad> getListaActivades(Proceso proceso) {
-        listaActividades.addAll(modelFactory.getAplicacion().getListaActividades());
+        listaActividades.addAll(modelFactory.getAplicacion().buscarActividades(proceso));
         return listaActividades;
     }
 

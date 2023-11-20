@@ -1,13 +1,8 @@
 package estructura.model;
 
 
-import estructura.exceptions.ProcesoExisteException;
-import estructura.persistencia.Persistencia;
-
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -17,19 +12,14 @@ public class Proceso implements Serializable {
     private String id;
     private String nombre;
     private int numActividades;
-    private ListaDobleEnlazada<Actividad> ListaActividades;
+    private ListaDobleEnlazada<Actividad> listaActividades = new ListaDobleEnlazada<>();
     private static ListaDobleEnlazada<Integer> ids = new ListaDobleEnlazada<>();
     private int duracionTotal;
 
-    /**
-     * Constructor de la clase Procesos.
-     *
-     * @param nombre El nombre del proceso.
-     */
     public Proceso(String nombre) {
         this.id = String.valueOf(generarID());
         this.nombre = nombre;
-        this.ListaActividades = new ListaDobleEnlazada<>();
+        this.listaActividades = new ListaDobleEnlazada<>();
         this.duracionTotal = 0;
     }
 
@@ -37,63 +27,24 @@ public class Proceso implements Serializable {
         super();
     }
 
-    /**
-     * Obtiene el ID del proceso.
-     *
-     * @return El ID del proceso.
-     */
     public String getId() {
         return id;
     }
 
-    /**
-     * Obtiene el nombre del proceso.
-     *
-     * @return El nombre del proceso.
-     */
     public String getNombre() {
         return nombre;
     }
 
-    /**
-     * Añade una actividad al proceso.
-     *
-     * @param actividad La actividad a añadir.
-     */
-    public void addActividad(Actividad actividad) {
-        ListaActividades.agregarUltimo(actividad);
-
-    }
-
-    /**
-     * Actualiza la duración total del proceso.
-     *
-     * @param totalDurationMinutes La duración total en minutos a agregar.
-     */
     private void actualizarDuracion(int totalDurationMinutes) {
         this.duracionTotal += totalDurationMinutes;
     }
 
-    /**
-     * Actualiza la duración total del proceso sumando las duraciones de todas las actividades.
-     */
-
-    /**
-     * Obtiene la duración total del proceso en minutos.
-     *
-     * @return La duración total en minutos del proceso.
-     */
     public int getDuracionTotal() {
         return this.duracionTotal;
     }
 
-    /**
-     * Obtiene la lista de actividades asociadas al proceso.
-     *
-     * @return La lista de actividades del proceso.
-     */
     public ListaDobleEnlazada<Actividad> getActividades() {
-        return ListaActividades;
+        return listaActividades;
     }
 
     public void setId(String id) {
@@ -105,37 +56,11 @@ public class Proceso implements Serializable {
     }
 
     public void setActividades(ListaDobleEnlazada<Actividad> actividades) {
-        this.ListaActividades = actividades;
+        this.listaActividades = actividades;
     }
 
     public void setDuracionTotal(int duracionTotal) {
         this.duracionTotal = duracionTotal;
-    }
-
-    //tres tipo de cracion;
-    //Crear actividad al final
-    //Crear actividad despues de otra actividad
-    //Crear actividad en continuacion a la ultima insertada
-    //todas usando listas enlazadas
-
-    public Actividad crearActividadDespuesDe(Actividad actividad) {
-        try {
-            if (ListaActividades != null) {
-                Iterator<Actividad> iterator = ListaActividades.iterator();
-                while (iterator.hasNext()) {
-                    Actividad actividadActual = iterator.next();
-                    if (actividadActual.equals(actividad)) {
-                        // Agrega la nueva actividad después de la actividad seleccionada
-                        ListaActividades.agregarUltimo(actividad);
-                    }
-                    // Agrega la actividad actual a la lista
-                    ListaActividades.agregarUltimo(actividadActual);
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return actividad;
     }
 
     public int getNumActividades() {
@@ -176,7 +101,7 @@ public class Proceso implements Serializable {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (nombre != null ? nombre.hashCode() : 0);
         result = 31 * result + numActividades;
-        result = 31 * result + (ListaActividades != null ? ListaActividades.hashCode() : 0);
+        result = 31 * result + (listaActividades != null ? listaActividades.hashCode() : 0);
         result = 31 * result + duracionTotal;
         return result;
     }

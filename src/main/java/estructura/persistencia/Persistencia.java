@@ -157,17 +157,15 @@ public class Persistencia {
         ListaDobleEnlazada<Proceso> procesos = cargarProceso();
         ListaDobleEnlazada<Actividad> actividades = cargarActividades();
         ListaDobleEnlazada<Tarea> tareas = cargarTareas();
-
-        Iterator<Proceso> iterator = procesos.iterator();
-        while (iterator.hasNext()) {
-            Proceso procesoActual = iterator.next();
-            Iterator<Actividad> iteratorActividades = actividades.iterator();
-            while (iterator.hasNext()) {
-                Actividad actividadActual = iteratorActividades.next();
-                procesoActual.setActividades(actividades);
+        Iterator<Proceso> procesoIterator = procesos.iterator();
+        /*while (procesoIterator.hasNext()) {
+            Proceso procesoActual = procesoIterator.next();
+            Iterator<Actividad> actividadIterator = actividades.iterator();
+            while (procesoIterator.hasNext()) {
+                Actividad actividadActual = actividadIterator.next();
+                procesoActual.getActividades().agregarUltimo(actividadActual);
             }
-            procesoActual.setActividades(actividades);
-        }
+        }*/
         aplicacion.setListaProcesos(procesos);
     }
 }

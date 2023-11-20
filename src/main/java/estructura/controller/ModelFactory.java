@@ -61,8 +61,18 @@ public class ModelFactory {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
         return actividad;
+    }
+
+    public Actividad crearActividadDespuesDe(Proceso proceso, Actividad actividadAnterior, Actividad nueva) {
+        Actividad nuevaActividad = null;
+        try {
+            nuevaActividad = getAplicacion().crearActividadDespuesDe(proceso, actividadAnterior, nueva);
+            Persistencia.guardarActividades(getAplicacion().getListaProcesos(), proceso.getActividades().aLista());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return actividadAnterior;
     }
 
     /*public Proceso getProceso() {

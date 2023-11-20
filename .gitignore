@@ -19,6 +19,7 @@ mvnw.cmd
 target/
 .idea/misc.xml
 
+
 ### Eclipse ###
 .apt_generated
 .classpath
