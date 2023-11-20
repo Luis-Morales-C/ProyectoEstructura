@@ -114,4 +114,20 @@ public class Aplicacion implements Serializable {
         return null;
     }
 
+    public List<Tarea> buscarTareas(Proceso proceso, Actividad actividad) {
+        Iterator<Proceso> iterator = listaProcesos.iterator();
+        while (iterator.hasNext()) {
+            Proceso procesoActual = iterator.next();
+            if(procesoActual.equals(proceso)) {
+                Iterator<Actividad> actividadIterator = procesoActual.getActividades().iterator();
+                while (actividadIterator.hasNext()) {
+                    Actividad actividadActual = actividadIterator.next();
+                    if(actividadActual.equals(actividad)) {
+                        return actividadActual.getPendingTasksAsList();
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }

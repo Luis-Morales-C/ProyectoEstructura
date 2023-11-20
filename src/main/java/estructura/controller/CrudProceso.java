@@ -432,9 +432,9 @@ public class CrudProceso {
     }
 
 
-    public ObservableList<Actividad> getListaTareas(Proceso proceso, Actividad actividad) {
+    public ObservableList<Tarea> getListaTareas(Proceso proceso, Actividad actividad) {
         if(actividad != null)
-            listaTareas.addAll(modelFactory.getAplicacion().buscarActividades(proceso));
+            listaTareas.addAll(modelFactory.getAplicacion().buscarTareas(proceso, actividad));
         return listaTareas;
     }
 

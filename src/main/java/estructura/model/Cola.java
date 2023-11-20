@@ -14,6 +14,7 @@ public class Cola<E> implements Serializable {
 
     private Node<E> inicio; // Referencia al inicio de la cola
     private Node<E> fin;    // Referencia al final de la cola
+    private int size;
 
     /**
      * Clase interna estática que representa un nodo en la cola.
@@ -41,6 +42,7 @@ public class Cola<E> implements Serializable {
     public Cola() {
         inicio = null;
         fin = null;
+        size = 0;
     }
 
     /**
@@ -64,6 +66,7 @@ public class Cola<E> implements Serializable {
             fin.siguiente = nuevoNodo;
             fin = nuevoNodo;
         }
+        size++;
     }
 
     /**
@@ -80,6 +83,7 @@ public class Cola<E> implements Serializable {
             if (inicio == null) {
                 fin = null;
             }
+            size--;
             return elemento;
         }
     }
@@ -120,7 +124,7 @@ public class Cola<E> implements Serializable {
             }
         } else {
             Node<E> actual = inicio;
-            for (int i = 0; i < posicion - 1; i++) {
+            for (int i = 0; i < size - 1; i++) {
                 if (actual == null) {
                     throw new IllegalArgumentException("No hay más posiciones");
                 }
@@ -132,5 +136,6 @@ public class Cola<E> implements Serializable {
                 fin = nuevoNodo;
             }
         }
+        size++;
     }
 }
