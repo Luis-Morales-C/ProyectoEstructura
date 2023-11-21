@@ -6,14 +6,13 @@ import estructura.persistencia.Persistencia;
 import javafx.scene.control.Alert;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class ModelFactory {
     Aplicacion aplicacion;
-
-    public Tarea crearTareaFinal(Proceso procesoSeleccionado, Actividad actividadSeleccionada, Tarea tarea) {
-        return null;
-    }
 
     private static class SingletonHolder {
         private final static ModelFactory eINSTANCE = new ModelFactory();
@@ -58,11 +57,24 @@ public class ModelFactory {
         Actividad nuevaActividad = null;
         try {
             nuevaActividad = getAplicacion().crearActividadFinal(proceso, actividad);
+            List<Actividad> listaActividades = devolverTodasActividades();
+            //------------------iterar todos los procesos y
+            // llamar esto y addAll()
             Persistencia.guardarActividades(getAplicacion().getListaProcesos(), proceso.getActividades().aLista());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return actividad;
+    }
+
+    private List<Actividad> devolverTodasActividades() {
+        List<Actividad> actividades = new ArrayList<>();
+        Iterator<Proceso> procesoIterator = getAplicacion().getListaProcesos().iterator();
+        while(procesoIterator.hasNext()) {
+            Proceso procesoActual = procesoIterator.next();
+            actividades.addAll(procesoActual.getActividades().aLista());
+        }
+        return actividades;
     }
 
     public Actividad crearActividadDespuesDe(Proceso proceso, Actividad actividadAnterior, Actividad nueva) {
@@ -81,6 +93,18 @@ public class ModelFactory {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+
+    public Tarea crearTareaFinal(Proceso procesoSeleccionado, Actividad actividadSeleccionada, Tarea tarea) {
+        Tarea nuevaTarea = null;
+        try {
+            nuevaTarea = getAplicacion().crearTareaFinal(procesoSeleccionado, actividadSeleccionada, tarea);
+            Persistencia.guardarTareas(getAplicacion().getListaProcesos(),
+                    procesoSeleccionado.getActividades().aLista(), getAplicacion().getListaTareasActividadProceso().aLista());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return tarea;
     }
 
 }

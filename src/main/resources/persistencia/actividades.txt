@@ -1,2 +1,6 @@
 a@@d@@d@@No Obligatorio
 a@@t@@t@@Obligatorio
+b@@1@@1@@No Obligatorio
+b@@2@@2@@No Obligatorio
+i@@k@@k@@No Obligatorio
+i@@j@@j@@No Obligatorio

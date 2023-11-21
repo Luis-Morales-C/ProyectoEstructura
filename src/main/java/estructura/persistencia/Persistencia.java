@@ -33,7 +33,9 @@ public class Persistencia {
 
     public static void guardarTareas(List<Proceso> listaProcesos, List<Actividad> listaActividades,
                                      List<Tarea> listaTareas) throws IOException {
+        ListaDobleEnlazada<Actividad> actividades = cargarActividades();
         String contenido = "";
+
         Iterator<Proceso> iterator = listaProcesos.iterator();
         while (iterator.hasNext()) {
             Proceso procesoActual = iterator.next();
@@ -78,7 +80,7 @@ public class Persistencia {
         return procesos;
     }
     public static ListaDobleEnlazada<Actividad> cargarActividades() throws IOException {
-        ListaDobleEnlazada<Actividad> actividades =new ListaDobleEnlazada<>();
+        ListaDobleEnlazada<Actividad> actividades = new ListaDobleEnlazada<>();
         ArrayList<String> contenido = leerArchivo(RUTA_ARCHIVO_ACTIVIDADES);
         String linea="";
         for (int i = 0; i < contenido.size(); i++) {
@@ -127,8 +129,11 @@ public class Persistencia {
         ListaDobleEnlazada<Proceso> procesos = cargarProceso();
         ListaDobleEnlazada<Actividad> actividades = cargarActividades();
         ListaDobleEnlazada<Tarea> tareas = cargarTareas();
-        Iterator<Proceso> procesoIterator = procesos.iterator();
 
+        aplicacion.setListaActividadesProceso(actividades);
+        aplicacion.setListaTareasActividadProceso(tareas);
+
+        Iterator<Proceso> procesoIterator = procesos.iterator();
         while (procesoIterator.hasNext()) {
             Proceso procesoActual = procesoIterator.next();
             Iterator<Actividad> actividadIterator = actividades.iterator();
