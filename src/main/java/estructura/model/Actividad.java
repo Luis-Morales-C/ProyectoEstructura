@@ -9,8 +9,9 @@ public class Actividad implements Serializable {
     private String nombre;
     private String descripcion;
     private String obligatoria;
-    private Cola<Tarea> tareasPendientes; // Cola de tareas pendientes
-    private Cola<Tarea> completarTarea; // Cola de tareas completadas
+    private String proceso;
+    private Cola<Tarea> tareasPendientes = new Cola<>(); // Cola de tareas pendientes
+    private Cola<Tarea> completarTarea = new Cola<>(); // Cola de tareas completadas
 
     public Actividad(String nombre,String descripcion,String obligatoria) {
         this.nombre = nombre;
@@ -34,6 +35,14 @@ public class Actividad implements Serializable {
             completetarTarea.completarTarea();
         }
         return completetarTarea;
+    }
+
+    public String getProceso() {
+        return proceso;
+    }
+
+    public void setProceso(String proceso) {
+        this.proceso = proceso;
     }
 
     public Cola<Tarea> getTareasPendientes() {

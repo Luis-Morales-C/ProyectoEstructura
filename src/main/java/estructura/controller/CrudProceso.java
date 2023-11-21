@@ -12,6 +12,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CrudProceso {
 
     private MainApp app;
@@ -162,10 +165,10 @@ public class CrudProceso {
 
     @FXML
     void crearTareaFinal(ActionEvent event) {
-        String descripcionTarea = txtDescripcionTarea.getText();
-        int duracion = Integer.parseInt(txtDuracionTarea.getText());
-
         if (verificarCamposActividadTarea()) {
+            String descripcionTarea = txtDescripcionTarea.getText();
+            int duracion = Integer.parseInt(txtDuracionTarea.getText());
+
             Tarea nuevaTarea = null;
             Tarea tarea = new Tarea();
             tarea.setEstado(Estado.valueOf(obtenerEstadoTarea()));
@@ -181,7 +184,7 @@ public class CrudProceso {
                 mostrarMensaje("Tarea no registrada");
             }
         } else {
-            mostrarMensaje("Las Tarea deben tener descripción");
+            mostrarMensaje("Las Tareas deben tener descripción y duración");
         }
     }
 
@@ -251,9 +254,29 @@ public class CrudProceso {
                 actividadSeleccionada = (Actividad) newSelection;
             }
         });
+        tblProcesosTareas.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                procesoSeleccionado = (Proceso) newSelection;
+                cargarActividadesTareas();
+            }
+        });
+        tblActividadesTareas.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                actividadSeleccionada = (Actividad) newSelection;
+                cargarTareasEnTabla();
+            }
+        });
+        tblTareas.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                tareaSeleccionada = (Tarea) newSelection;
+            }
+        });
         cargarProcesosEnTabla();
         cargarProcesosNombreEnTabla();
         cargarActividadesEnTabla();
+        cargarProcesosTarea();
+        cargarTareasEnTabla();
+        cargarActividadesTareas();
     }
 
     private String obtenerEstado() {
@@ -261,7 +284,7 @@ public class CrudProceso {
     }
 
     private String obtenerEstadoTarea() {
-        return checkBoxTarea.isSelected() ? "OBLIGATORIO" : "OPTIONAL";
+        return checkBoxTarea.isSelected() ? "OBLIGATORIO" : "OPCIONAL";
     }
 
     @FXML
@@ -461,5 +484,11 @@ public class CrudProceso {
         txtDuracionTarea.clear();
         txtPosicionTarea.clear();
         checkBoxTarea.setSelected(false);
+    }
+
+    public void registrarUsuario(ActionEvent actionEvent) {
+    }
+
+    public void login(ActionEvent actionEvent) {
     }
 }

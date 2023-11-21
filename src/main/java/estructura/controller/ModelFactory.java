@@ -57,14 +57,11 @@ public class ModelFactory {
         Actividad nuevaActividad = null;
         try {
             nuevaActividad = getAplicacion().crearActividadFinal(proceso, actividad);
-            List<Actividad> listaActividades = devolverTodasActividades();
-            //------------------iterar todos los procesos y
-            // llamar esto y addAll()
-            Persistencia.guardarActividades(getAplicacion().getListaProcesos(), proceso.getActividades().aLista());
+            Persistencia.guardarActividades(getAplicacion().getListaProcesos());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return actividad;
+        return nuevaActividad;
     }
 
     private List<Actividad> devolverTodasActividades() {
@@ -81,11 +78,11 @@ public class ModelFactory {
         Actividad nuevaActividad = null;
         try {
             nuevaActividad = getAplicacion().crearActividadDespuesDe(proceso, actividadAnterior, nueva);
-            Persistencia.guardarActividades(getAplicacion().getListaProcesos(), proceso.getActividades().aLista());
+            Persistencia.guardarActividades(getAplicacion().getListaProcesos());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return actividadAnterior;
+        return nuevaActividad;
     }
     private void mostrarMensaje(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -99,12 +96,11 @@ public class ModelFactory {
         Tarea nuevaTarea = null;
         try {
             nuevaTarea = getAplicacion().crearTareaFinal(procesoSeleccionado, actividadSeleccionada, tarea);
-            Persistencia.guardarTareas(getAplicacion().getListaProcesos(),
-                    procesoSeleccionado.getActividades().aLista(), getAplicacion().getListaTareasActividadProceso().aLista());
+            Persistencia.guardarTareas(getAplicacion().getListaProcesos());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return tarea;
+        return nuevaTarea;
     }
 
 }

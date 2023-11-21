@@ -1,6 +1,6 @@
-a@@d@@d@@No Obligatorio
-a@@t@@t@@Obligatorio
-b@@1@@1@@No Obligatorio
-b@@2@@2@@No Obligatorio
-i@@k@@k@@No Obligatorio
-i@@j@@j@@No Obligatorio
+proceso1@@act1_proc1@@act1_proc1@@No Obligatorio
+proceso1@@act3_proc1@@act3_proc1@@No Obligatorio
+proceso1@@act2_proc1@@act2_proc1@@No Obligatorio
+proceso2@@act1_proc2@@act1_proc2@@No Obligatorio
+proceso2@@act3_proc2@@act3_proc2@@No Obligatorio
+proceso2@@act2_proc2@@act2_proc2@@No Obligatorio

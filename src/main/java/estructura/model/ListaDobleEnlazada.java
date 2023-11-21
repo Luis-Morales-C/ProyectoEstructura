@@ -161,6 +161,13 @@ public class ListaDobleEnlazada<E> implements Iterable<E>, Serializable {
         return nodo.elemento;
     }
 
+    public void borrarLista() {
+        cabeza = new Nodo<>();
+        cola = new Nodo<>(null, cabeza, null);
+        cabeza.siguiente = cola;
+        size = 0;
+    }
+
     /**
      * Convierte una lista estándar a una ListaDobleEnlazada.
      *

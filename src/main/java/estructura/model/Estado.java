@@ -4,9 +4,9 @@ package estructura.model;
  * Enumeración para las opciones de estado de una tarea.
  */
 public enum Estado {
-    OBLIGATORIO("Obligatoria"),
-    OPTIONAL("Opcional"),
-    COMPLETO("Completada");
+    OBLIGATORIO("OBLIGATORIO"),
+    OPCIONAL("OPCIONAL"),
+    COMPLETO("COMPLETO");
     private final String status;
     /**
      * Constructor de EstadoTarea.

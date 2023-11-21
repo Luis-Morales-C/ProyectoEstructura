@@ -12,7 +12,8 @@ public class Tarea implements Serializable {
     private int duracionMinutos;
     private LocalDateTime inicio;
     private LocalDateTime fin;
-
+    private String proceso;
+    private String actividad;
 
     /**
      * Constructor para crear una nueva instancia de Tarea.
@@ -38,6 +39,21 @@ public class Tarea implements Serializable {
         this.descripcion = descripcion;
     }
 
+    public String getProceso() {
+        return proceso;
+    }
+
+    public void setProceso(String proceso) {
+        this.proceso = proceso;
+    }
+
+    public String getActividad() {
+        return actividad;
+    }
+
+    public void setActividad(String actividad) {
+        this.actividad = actividad;
+    }
 
     public int getDuracionMinutos() {
         return duracionMinutos;

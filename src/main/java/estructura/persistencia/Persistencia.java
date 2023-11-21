@@ -19,7 +19,7 @@ public class Persistencia {
         guardarArchivo(RUTA_ARCHIVO_PROCESOS, contenido);
     }
 
-    public static void guardarActividades(List<Proceso> listaProcesos, List<Actividad> listaActividades) throws IOException {
+    public static void guardarActividades(List<Proceso> listaProcesos) throws IOException {
         String contenido = "";
         Iterator<Proceso> iterator = listaProcesos.iterator();
         while (iterator.hasNext()) {
@@ -31,17 +31,15 @@ public class Persistencia {
         guardarArchivo(RUTA_ARCHIVO_ACTIVIDADES, contenido);
     }
 
-    public static void guardarTareas(List<Proceso> listaProcesos, List<Actividad> listaActividades,
-                                     List<Tarea> listaTareas) throws IOException {
-        ListaDobleEnlazada<Actividad> actividades = cargarActividades();
+    public static void guardarTareas(List<Proceso> listaProcesos) throws IOException {
         String contenido = "";
 
         Iterator<Proceso> iterator = listaProcesos.iterator();
         while (iterator.hasNext()) {
             Proceso procesoActual = iterator.next();
             for(Actividad actividad: procesoActual.getActividades()) {
-                for(Tarea tarea: actividad.getPendingTasksAsList()) {
-                    contenido += actividad.getNombre()+"@@"+tarea.getDescripcion()+"@@"+tarea.getEstado()+"@@"+tarea.getDuracionMinutos()+"\n";
+                for(Tarea tarea: actividad.getTareasPendientes().toList()) {
+                    contenido += actividad.getProceso()+"@@"+actividad.getNombre()+"@@"+tarea.getDescripcion()+"@@"+tarea.getEstado()+"@@"+tarea.getDuracionMinutos()+"\n";
                 }
             }
         }
@@ -87,7 +85,8 @@ public class Persistencia {
             linea = contenido.get(i);
             Actividad actividad = new Actividad();
             String[] partes = linea.split("@@");
-            actividad.setNombre(partes[0]+"@@@"+partes[1]);
+            actividad.setProceso(partes[0]);
+            actividad.setNombre(partes[1]);
             actividad.setDescripcion(partes[2]);
             actividad.setObligatoria((partes[3]));
             actividades.agregarUltimo(actividad);
@@ -103,9 +102,11 @@ public class Persistencia {
             linea = contenido.get(i);
             Tarea tarea = new Tarea();
             String[] partes = linea.split("@@");
-            tarea.setDescripcion(partes[0]+"@@@"+partes[1]);
-            tarea.setEstado(Estado.valueOf(partes[2]));
-            tarea.setDuracionMinutos(Integer.parseInt(partes[3]));
+            tarea.setProceso(partes[0]);
+            tarea.setActividad(partes[1]);
+            tarea.setDescripcion(partes[2]);
+            tarea.setEstado(Estado.valueOf(partes[3]));
+            tarea.setDuracionMinutos(Integer.parseInt(partes[4]));
             tareas.agregarUltimo(tarea);
         }
         return tareas;
@@ -130,25 +131,18 @@ public class Persistencia {
         ListaDobleEnlazada<Actividad> actividades = cargarActividades();
         ListaDobleEnlazada<Tarea> tareas = cargarTareas();
 
-        aplicacion.setListaActividadesProceso(actividades);
-        aplicacion.setListaTareasActividadProceso(tareas);
-
         Iterator<Proceso> procesoIterator = procesos.iterator();
         while (procesoIterator.hasNext()) {
             Proceso procesoActual = procesoIterator.next();
             Iterator<Actividad> actividadIterator = actividades.iterator();
             while (actividadIterator.hasNext()) {
                 Actividad actividadActual = actividadIterator.next();
-                String[] procesoActividad = actividadActual.getNombre().split("@@@");
-                if(procesoActual.getNombre().equals(procesoActividad[0])) {
-                    actividadActual.setNombre(procesoActividad[1]);
+                if(procesoActual.getNombre().equals(actividadActual.getProceso())) {
                     procesoActual.getActividades().agregarUltimo(actividadActual);
                     Iterator<Tarea> tareaIterator = tareas.iterator();
                     while(tareaIterator.hasNext()) {
                         Tarea tareaActual = tareaIterator.next();
-                        String[] actividadTarea = tareaActual.getDescripcion().split("@@@");
-                        if(actividadActual.getNombre().equals(actividadTarea[0])) {
-                            tareaActual.setDescripcion(actividadTarea[1]);
+                        if(actividadActual.getNombre().equals(tareaActual.getActividad())) {
                             actividadActual.getTareasPendientes().enqueue(tareaActual);
                         }
                     }
