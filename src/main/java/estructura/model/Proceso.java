@@ -90,6 +90,24 @@ public class Proceso implements Serializable {
         return false; // El ID no existe en la lista
     }
 
+    public int getTiempoTotalProceso() {
+        int tiempoTotalProceso = 0;
+        for (Actividad actividad : listaActividades) {
+            tiempoTotalProceso += Integer.parseInt(actividad.getTiempoMaximo());
+        }
+        return tiempoTotalProceso;
+    }
+
+    public void incrementarNumActividades() {
+        this.numActividades++;
+    }
+
+    public void decrementarNumActividades() {
+        this.numActividades--;
+    }
+
+
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

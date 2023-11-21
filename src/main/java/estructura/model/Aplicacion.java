@@ -11,6 +11,15 @@ import java.util.List;
 
 public class Aplicacion implements Serializable {
     private ListaDobleEnlazada<Proceso> listaProcesos = new ListaDobleEnlazada<>();
+    private List<Usuario> listaUsuarios = new ArrayList<>();
+
+    public List<Usuario> getListaUsuarios() {
+        return listaUsuarios;
+    }
+
+    public void setListaUsuarios(List<Usuario> listaUsuarios) {
+        this.listaUsuarios = listaUsuarios;
+    }
 
     public Aplicacion() {
     }
@@ -184,5 +193,29 @@ public class Aplicacion implements Serializable {
             }
         }
         return tarea;
+    }
+
+    public void eliminarActividad(Proceso procesoSeleccionado, Actividad actividadSeleccionada) {
+        Iterator<Proceso> procesoIterator = listaProcesos.iterator();
+        while (procesoIterator.hasNext()) {
+            Proceso procesoActual = procesoIterator.next();
+            if (procesoActual.equals(procesoSeleccionado)) {
+                Iterator<Actividad> actividadIterator = procesoActual.getActividades().iterator();
+                while (actividadIterator.hasNext()) {
+                    Actividad actividadActual = actividadIterator.next();
+                    if (actividadActual.equals(actividadSeleccionada)) {
+                        actividadIterator.remove();
+                        procesoActual.decrementarNumActividades();
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        setListaProcesos(listaProcesos);
+    }
+
+    public boolean validarUsario(String usuario, String contrasena) {
+
     }
 }

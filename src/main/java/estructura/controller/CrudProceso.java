@@ -40,6 +40,10 @@ public class CrudProceso {
 
     @FXML
     private Tab tabProcesos;
+    @FXML
+    private Tab tabActividades;
+    @FXML
+    private Tab tabTareas;
 
     @FXML
     private TableView<Proceso> tblProcesos;
@@ -52,7 +56,10 @@ public class CrudProceso {
     //items actividades
     @FXML
     private SplitMenuButton SplitCrear;
-
+    @FXML
+    private TextField txtUser;
+    @FXML
+    private PasswordField pfPassword;
     @FXML
     private TableColumn<?, ?> colProcesoTarea;
     @FXML
@@ -411,8 +418,13 @@ public class CrudProceso {
     }
 
     @FXML
-    void onConsultarTiempoPClick(ActionEvent event) {
-
+    void onConsultarTiempoProceso(ActionEvent event) {
+        if (procesoSeleccionado != null) {
+            int tiempoTotalProceso = procesoSeleccionado.getTiempoTotalProceso();
+            mostrarMensaje("Tiempo total del proceso de " + procesoSeleccionado.getNombre() + " : " + tiempoTotalProceso + " minutos");
+        } else {
+            mostrarMensaje("Por favor, selecciona un proceso antes de consultar el tiempo.");
+        }
     }
 
     public MainApp getApp() {
@@ -531,6 +543,19 @@ public class CrudProceso {
     }
 
     public void login(ActionEvent actionEvent) {
+        String usuario = txtUser.getText();
+        String contrasena = pfPassword.getText();
+        if (usuario.isEmpty() || contrasena.isEmpty()) {
+            mostrarMensaje("Por favor, complete todos los campos.");
+            return;
+        }
+        if (modelFactory.validarUsuario(usuario, contrasena)) {
+            tabProcesos.setDisable(false);
+            tabActividades.setDisable(false);
+            tabTareas.setDisable(false);
+        } else {
+            mostrarMensaje("Error de Inicio de Sesión");
+        }
     }
 
     public void crearTareaPosicion(ActionEvent actionEvent) {
@@ -561,5 +586,26 @@ public class CrudProceso {
     public void buscarActividad(ActionEvent actionEvent) {
         String actividad = txtNombreActividad.getText();
         cargarActividadesDetalle(actividad);
+    }
+
+    public void onEliminarActividad(ActionEvent actionEvent) {
+        if (procesoSeleccionado != null && actividadSeleccionada != null) {
+            modelFactory.eliminarActividad(procesoSeleccionado, actividadSeleccionada);
+            cargarActividadesEnTabla();
+            limpiarCamposActividad();
+            mostrarMensaje("Actividad eliminada correctamente.");
+        } else {
+            mostrarMensaje("Selecciona un proceso y una actividad antes de intentar eliminar.");
+        }
+    }
+
+    public void onConsultarTiempoActividad(ActionEvent actionEvent) {
+        if (procesoSeleccionado != null && actividadSeleccionada != null) {
+            int tiempoTotalActividad = Integer.parseInt(actividadSeleccionada.getTiempoMaximo());
+            mostrarMensaje("Tiempo total de la actividad es: " + actividadSeleccionada.getNombre() + " : " + tiempoTotalActividad + " minutos");
+        } else {
+            mostrarMensaje("Por favor, selecciona un proceso o actividad antes de consultar.");
+
+        }
     }
 }
