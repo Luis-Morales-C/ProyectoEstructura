@@ -2,13 +2,17 @@ package estructura.controller;
 
 import estructura.MainApp;
 import estructura.model.Actividad;
+<<<<<<< HEAD
 import estructura.model.Estado;
+=======
+>>>>>>> origin/master
 import estructura.model.Proceso;
 import estructura.model.Tarea;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+<<<<<<< HEAD
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
@@ -26,6 +30,17 @@ public class CrudProceso {
 
 
     //Items Proceso
+=======
+import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+
+public class CrudProceso {
+
+    private MainApp aplicacion;
+
+>>>>>>> origin/master
     @FXML
     private TableColumn<?, ?> colIdProceso;
 
@@ -39,6 +54,7 @@ public class CrudProceso {
     private Tab tabProcesos;
 
     @FXML
+<<<<<<< HEAD
     private TableView<Proceso> tblProcesos;
 
     @FXML
@@ -220,10 +236,39 @@ public class CrudProceso {
 
     @FXML
     void onCrearOrden(ActionEvent event) {
+=======
+    private TableView<?> tblProcesos;
+
+    @FXML
+    private TextField txtNombreProceso;
+
+    private ObservableList<Proceso> listaProcesos = FXCollections.observableArrayList();
+    private ObservableList<Actividad> listaActividad = FXCollections.observableArrayList();
+    private ObservableList<Tarea> listaTarea = FXCollections.observableArrayList();
+
+    @FXML
+    void onBuscarClick(ActionEvent event) {
 
     }
 
     @FXML
+    void onCambiarNombreClick(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onCambioNombreClick(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onCancelarClick(ActionEvent event) {
+>>>>>>> origin/master
+
+    }
+
+    @FXML
+<<<<<<< HEAD
     public void initialize() {
         modelFactory = ModelFactory.getInstance();
         //inicializar la tabla de procesos
@@ -262,10 +307,15 @@ public class CrudProceso {
 
     private String obtenerEstadoTarea() {
         return checkBoxTarea.isSelected() ? "OBLIGATORIO" : "OPTIONAL";
+=======
+    void onConsultarTiempoPClick(ActionEvent event) {
+
+>>>>>>> origin/master
     }
 
     @FXML
     void onRegistrarClick(ActionEvent event) {
+<<<<<<< HEAD
         String id = String.valueOf(Proceso.generarID());
         String nombre = txtNombreProceso.getText();
         int numActividades = 0;
@@ -461,5 +511,22 @@ public class CrudProceso {
         txtDuracionTarea.clear();
         txtPosicionTarea.clear();
         checkBoxTarea.setSelected(false);
+=======
+
+    }
+
+    @FXML
+    void onRemoverClick(ActionEvent event) {
+
+    }
+
+
+    public MainApp getAplicacion() {
+        return aplicacion;
+    }
+
+    public void setAplicacion(MainApp aplicacion) {
+        this.aplicacion = aplicacion;
+>>>>>>> origin/master
     }
 }

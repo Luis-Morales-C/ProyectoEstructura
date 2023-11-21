@@ -1,108 +1,124 @@
 package estructura.model;
 
 
-import java.io.Serializable;
-import java.util.Iterator;
 import java.util.Random;
 
 /**
  * Clase que representa un proceso en la aplicación.
  */
-public class Proceso implements Serializable {
+public class Proceso {
     private String id;
-    private String nombre;
-    private int numActividades;
-    private ListaDobleEnlazada<Actividad> listaActividades = new ListaDobleEnlazada<>();
-    private static ListaDobleEnlazada<Integer> ids = new ListaDobleEnlazada<>();
+    private String name;
+    private ListaDobleEnlazada<Actividad> actividades;
+    private ListaDobleEnlazada<Tarea> tareas=new Actividad().getListaTarea();
     private int duracionTotal;
 
-    public Proceso(String nombre) {
+    /**
+     * Constructor de la clase Procesos.
+     *
+     * @param name El nombre del proceso.
+     */
+    public Proceso(String name) {
         this.id = String.valueOf(generarID());
-        this.nombre = nombre;
-        this.listaActividades = new ListaDobleEnlazada<>();
+        this.name = name;
+        this.actividades = new ListaDobleEnlazada<>();
         this.duracionTotal = 0;
     }
-
-    public Proceso() {
+    public Proceso(){
         super();
     }
 
+    /**
+     * Obtiene el ID del proceso.
+     *
+     * @return El ID del proceso.
+     */
     public String getId() {
         return id;
     }
 
-    public String getNombre() {
-        return nombre;
+    /**
+     * Obtiene el nombre del proceso.
+     *
+     * @return El nombre del proceso.
+     */
+    public String getName() {
+        return name;
     }
 
+    /**
+     * Añade una actividad al proceso.
+     *
+     * @param actividad La actividad a añadir.
+     */
+    public void addActividad(Actividad actividad) {
+        actividades.addLast(actividad);
+        actualizarDuracion();
+    }
+
+    /**
+     * Actualiza la duración total del proceso.
+     *
+     * @param totalDurationMinutes La duración total en minutos a agregar.
+     */
     private void actualizarDuracion(int totalDurationMinutes) {
         this.duracionTotal += totalDurationMinutes;
     }
 
+    /**
+     * Actualiza la duración total del proceso sumando las duraciones de todas las actividades.
+     */
+    private void actualizarDuracion() {
+        this.duracionTotal = 0;
+        actividades.forEach(actividad ->
+                        actualizarDuracion(actividad.getTotalDuracionMinutes()), false);
+    }
+
+    /**
+     * Obtiene la duración total del proceso en minutos.
+     *
+     * @return La duración total en minutos del proceso.
+     */
     public int getDuracionTotal() {
         return this.duracionTotal;
     }
 
+    /**
+     * Obtiene la lista de actividades asociadas al proceso.
+     *
+     * @return La lista de actividades del proceso.
+     */
     public ListaDobleEnlazada<Actividad> getActividades() {
-        return listaActividades;
+        return actividades;
     }
+    public static int generarID() {
+        Random random = new Random();
+        return random.nextInt();
+    }
+
+    public ListaDobleEnlazada<Tarea> getTareas() {
+        return tareas;
+    }
+
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setActividades(ListaDobleEnlazada<Actividad> actividades) {
-        this.listaActividades = actividades;
+        this.actividades = actividades;
     }
 
     public void setDuracionTotal(int duracionTotal) {
         this.duracionTotal = duracionTotal;
     }
 
-    public int getNumActividades() {
-        return numActividades;
+    public void setTareas(ListaDobleEnlazada<Tarea> tareas) {
+        this.tareas = tareas;
     }
 
-    public void setNumActividades(int numActividades) {
-        this.numActividades = numActividades;
-    }
-
-    public static int generarID() {
-        Random random = new Random();
-        int nuevoID;
-        do {
-            nuevoID = random.nextInt(100) + 1;
-        } while (idExisteEnLista(nuevoID));
-        return nuevoID;
-    }
-
-    private static boolean idExisteEnLista(int id) {
-        // Utiliza el iterador para recorrer la lista de IDs y verifica si el ID ya existe
-        for (Integer existingID : ids) {
-            if (existingID == id) {
-                return true; // El ID ya existe en la lista
-            }
-        }
-        return false; // El ID no existe en la lista
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        return this == o;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (nombre != null ? nombre.hashCode() : 0);
-        result = 31 * result + numActividades;
-        result = 31 * result + (listaActividades != null ? listaActividades.hashCode() : 0);
-        result = 31 * result + duracionTotal;
-        return result;
-    }
 }

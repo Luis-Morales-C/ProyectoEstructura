@@ -1,61 +1,37 @@
 package estructura;
 
-import estructura.controller.LobbyController;
+import estructura.controller.CrudProceso;
+import estructura.controller.InicioController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 
 public class MainApp extends Application {
-
-    private Stage primaryStage;
-
+    public Stage primaryStage;
     @Override
-    public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
+    public void start(Stage Stage) {
         mostrarRegistro();
-        mostrarLobby();
     }
-
     public void mostrarRegistro() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Inicio.fxml"));
-            AnchorPane rootLayout = loader.load();
+            AnchorPane rootLayout = (AnchorPane) loader.load();
 
-            LobbyController controller = loader.getController();
-            controller.setMainApp(this);
 
-            Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
-            primaryStage.setTitle("Portal Procesos");
-            primaryStage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void mostrarLobby() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/estructura/Lobby.fxml"));
-            AnchorPane rootLayout = loader.load();
+            CrudProceso controller = loader.getController();
+            controller.setAplicacion(this);
 
             Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
-            primaryStage.setTitle("estructura/Lobby.fxml");
+            Stage secondaryStage = new Stage();
+            secondaryStage.setScene(scene);
+            secondaryStage.setTitle("Portal Procesos");
+            secondaryStage.show();
 
-            primaryStage.show();
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

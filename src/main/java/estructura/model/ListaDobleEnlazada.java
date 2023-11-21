@@ -1,232 +1,187 @@
 package estructura.model;
 
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ListaDobleEnlazada<E> implements Iterable<E>, Serializable {
+/**
+ * Custom implementation of a doubly linked list.
+ * It provides methods to add, remove, and iterate over elements.
+ *
+ * @param <E> the type of elements in this list
+ */
+public class ListaDobleEnlazada<E> {
+    // Reference to the head node of the list
+    private Node<E> head;
 
-    private Nodo<E> cabeza;
-    private Nodo<E> cola;
+    // Reference to the tail node of the list
+    private Node<E> tail;
+
+    // The size of the list
     private int size;
 
-    private static class Nodo<E> {
-        E elemento;
-        Nodo<E> siguiente;
-        Nodo<E> anterior;
+    /**
+     * A node within the doubly linked list.
+     * This inner class is static because it does not need access to the instance variables of ListaDobleEnlazada.
+     */
+    private static class Node<E> {
+        E element;
+        Node<E> next;
+        Node<E> prev;
 
-        Nodo(E elemento, Nodo<E> anterior, Nodo<E> siguiente) {
-            this.elemento = elemento;
-            this.anterior = anterior;
-            this.siguiente = siguiente;
+        /**
+         * Constructor for creating a new node with previous and next node references.
+         *
+         * @param element the element to store in this node
+         * @param prev    the previous node in the list
+         * @param next    the next node in the list
+         */
+        Node(E element, Node<E> prev, Node<E> next) {
+            this.element = element;
+            this.prev = prev;
+            this.next = next;
         }
 
         /**
-         * Constructor para crear un nuevo nodo sin elemento y sin referencias de nodo siguiente y anterior.
+         * Constructor for creating a new node with no element and no next and previous node references.
          */
-        Nodo() {
+        Node() {
             this(null, null, null);
         }
     }
-
     public ListaDobleEnlazada() {
-        cabeza = new Nodo<>();
-        cola = new Nodo<>(null, cabeza, null);
-        cabeza.siguiente = cola;
+        head = new Node<>();
+        tail = new Node<>(null, head, null);
+        head.next = tail;
         size = 0;
     }
 
-    public void agregarUltimo(E elemento) {
-        if(cola.anterior == null)
-            agregarEntre(elemento, cabeza, cola);
-        agregarEntre(elemento, cola.anterior, cola);
+    /**
+     * Adds an element to the beginning of the list.
+     *
+     * @param element the element to add
+     */
+    public void addFirst(E element) {
+        addBetween(element, head, head.next);
     }
 
-    private void agregarEntre(E elemento, Nodo<E> predecesor, Nodo<E> sucesor) {
-        // Crear y enlazar un nuevo nodo entre el predecesor y el sucesor
-        Nodo<E> nuevoNodo = new Nodo<>(elemento, predecesor, sucesor);
-        predecesor.siguiente = nuevoNodo;
-        sucesor.anterior = nuevoNodo;
-        size++;
-    }
 
-    public E eliminarPrimero() {
-        if (estaVacia()) return null;
-        return eliminar(cabeza.siguiente);
+    public void addLast(E element) {
+        addBetween(element, tail.prev, tail);
     }
-
-    public E eliminarUltimo() {
-        if (estaVacia()) return null;
-        return eliminar(cola.anterior);
+    public E removeFirst() {
+        if (isEmpty()) return null;
+        return remove(head.next);
     }
-
-    public void eliminar(E elemento) {
-        Nodo<E> actual = cabeza.siguiente;
-        while (actual != cola) {
-            if (actual.elemento.equals(elemento)) {
-                eliminar(actual);
-                return;
-            }
-            actual = actual.siguiente;
-        }
+    public E removeLast() {
+        if (isEmpty()) return null;
+        return remove(tail.prev);
     }
-
-    public boolean estaVacia() {
+    public boolean isEmpty() {
         return size == 0;
     }
-
-    public int getSize() {
+    public int size() {
         return size;
     }
 
+
     /**
-     * Encuentra el primer elemento que coincide con el predicado dado.
+     * Finds the first element that matches the given predicate.
      *
-     * @param predicado un predicado para aplicar a cada elemento y determinar si debe ser devuelto
-     * @return el primer elemento que coincide, o null si no hay coincidencia
+     * @param predicate a predicate to apply to each element to determine if it should be returned
+     * @return the first matching element, or null if no element matches
      */
-    public E encontrarPrimero(java.util.function.Predicate<E> predicado) {
-        Nodo<E> actual = cabeza.siguiente;
-        while (actual != cola) {
-            if (predicado.test(actual.elemento)) {
-                return actual.elemento;
+    public E findFirst(java.util.function.Predicate<E> predicate) {
+        Node<E> current = head.next;
+        while (current != tail) {
+            if (predicate.test(current.element)) {
+                return current.element;
             }
-            actual = actual.siguiente;
+            current = current.next;
         }
         return null;
     }
 
     /**
-     * Realiza la acción dada para cada elemento de la lista hasta que se procesen todos los elementos
-     * o la acción lance una excepción. El orden de iteración está determinado por el parámetro reverse.
+     * Performs the given action for each element of the list until all elements have been processed or the action throws an exception.
+     * The order of iteration is determined by the reverse parameter.
      *
-     * @param acción  la acción a realizar para cada elemento
-     * @param reverso si es true, la lista se itera en orden inverso
+     * @param action  the action to be performed for each element
+     * @param reverse if true, the list is iterated in reverse order
      */
-    public void forEach(Consumer<E> acción, boolean reverso) {
-        if (reverso) {
-            Nodo<E> actual = cola.anterior; // Comenzamos por el final
-            while (actual != cabeza) { // Mientras no lleguemos al nodo ficticio de cabeza
-                acción.accept(actual.elemento);
-                actual = actual.anterior;
+    public void forEach(Consumer<E> action, boolean reverse) {
+        if (reverse) {
+            Node<E> current = tail.prev; // Comenzamos por el final
+            while (current != head) { // Mientras no lleguemos al nodo ficticio de cabeza
+                action.accept(current.element);
+                current = current.prev;
             }
         } else {
-            Nodo<E> actual = cabeza.siguiente; // Comenzamos por el principio
-            while (actual != cola) { // Mientras no lleguemos al nodo ficticio de cola
-                acción.accept(actual.elemento);
-                actual = actual.siguiente;
+            Node<E> current = head.next; // Comenzamos por el principio
+            while (current != tail) { // Mientras no lleguemos al nodo ficticio de cola
+                action.accept(current.element);
+                current = current.next;
             }
         }
     }
 
     /**
-     * Elimina el primer elemento que coincide con el predicado dado.
+     * Removes the first element that matches the given predicate.
      *
-     * @param predicado un predicado para aplicar a cada elemento y determinar si debe ser eliminado
-     * @return true si se eliminó un elemento, false en caso contrario
+     * @param predicate a predicate to apply to each element to determine if it should be removed
+     * @return true if an element was removed, false otherwise
      */
-    public boolean eliminarSi(java.util.function.Predicate<E> predicado) {
-        Nodo<E> actual = cabeza.siguiente;
-        while (actual != cola) {
-            if (predicado.test(actual.elemento)) {
-                eliminar(actual);
+    public boolean removeIf(java.util.function.Predicate<E> predicate) {
+        Node<E> current = head.next;
+        while (current != tail) {
+            if (predicate.test(current.element)) {
+                remove(current);
                 return true;
             }
-            actual = actual.siguiente;
+            current = current.next;
         }
         return false;
     }
 
     /**
-     * Convierte esta ListaDobleEnlazada a una lista estándar.
-     *
-     * @return Una lista estándar que contiene los elementos de la ListaDobleEnlazada.
+     * Converts this ListaDobleEnlazada to a standard List.
+     * @return A standard List containing the elements of the ListaDobleEnlazada.
      */
-    public List<E> aLista() {
-        List<E> lista = new ArrayList<>();
-        this.forEach(lista::add, false);
-        return lista;
+    public List<E> toList() {
+        List<E> list = new ArrayList<>();
+        this.forEach(list::add,false);
+        return list;
     }
-
-
-    private E eliminar(Nodo<E> nodo) {
-        Nodo<E> predecesor = nodo.anterior;
-        Nodo<E> sucesor = nodo.siguiente;
-        predecesor.siguiente = sucesor;
-        sucesor.anterior = predecesor;
+    private void addBetween(E element, Node<E> predecessor, Node<E> successor) {
+        // Crear y enlazar un nuevo nodo entre el predecesor y el sucesor
+        Node<E> newNode = new Node<>(element, predecessor, successor);
+        predecessor.next = newNode;
+        successor.prev = newNode;
+        size++;
+    }
+    private E remove(Node<E> node) {
+        Node<E> predecessor = node.prev;
+        Node<E> successor = node.next;
+        predecessor.next = successor;
+        successor.prev = predecessor;
         size--;
-        return nodo.elemento;
+        return node.element;
     }
 
     /**
-     * Convierte una lista estándar a una ListaDobleEnlazada.
+     * Converts a standard List to a ListaDobleEnlazada.
      *
-     * @param lista La lista estándar a convertir.
-     * @param <E>   El tipo de elementos en la lista.
-     * @return Una ListaDobleEnlazada que contiene los elementos de la lista.
+     * @param list The standard List to convert.
+     * @param <E>  The type of elements in the List.
+     * @return A ListaDobleEnlazada containing the elements of the List.
      */
-    public static <E> ListaDobleEnlazada<E> desdeLista(List<E> lista) {
-        ListaDobleEnlazada<E> listaPersonalizada = new ListaDobleEnlazada<>();
-        for (E elemento : lista) {
-            listaPersonalizada.agregarUltimo(elemento);
+    public static <E> ListaDobleEnlazada<E> fromList(List<E> list) {
+        ListaDobleEnlazada<E> customList = new ListaDobleEnlazada<>();
+        for (E element : list) {
+            customList.addLast(element);
         }
-        return listaPersonalizada;
+        return customList;
     }
 
-    public boolean contieneId(int id) {
-        Nodo<E> actual = cabeza.siguiente;
-        while (actual != cola) {
-            if (actual.elemento instanceof Integer && (Integer) actual.elemento == id) {
-                return true;
-            }
-            actual = actual.siguiente;
-        }
-        return false;
-    }
-
-    @Override
-    public Iterator<E> iterator() {
-        return new ListaDobleEnlazadaIterator();
-    }
-
-    /**
-     * Clase interna que implementa el iterador para la lista doblemente enlazada.
-     */
-    private class ListaDobleEnlazadaIterator implements Iterator<E> {
-        private Nodo<E> actual = cabeza.siguiente; // Comenzamos desde el primer elemento
-        private Nodo<E> ultimoRetornado = null; // Último elemento retornado por next()
-
-        @Override
-        public boolean hasNext() {
-            return actual != cola;
-        }
-
-        @Override
-        public E next() {
-            if (!hasNext()) {
-                throw new java.util.NoSuchElementException();
-            }
-            E elemento = actual.elemento;
-            ultimoRetornado = actual;
-            actual = actual.siguiente;
-            return elemento;
-        }
-
-        @Override
-        public void remove() {
-            if (ultimoRetornado == null) {
-                throw new IllegalStateException("next() no ha sido llamado o el elemento ya ha sido eliminado");
-            }
-            Nodo<E> predecesor = ultimoRetornado.anterior;
-            Nodo<E> sucesor = ultimoRetornado.siguiente;
-            predecesor.siguiente = sucesor;
-            sucesor.anterior = predecesor;
-            size--;
-            ultimoRetornado = null;
-
-        }
-    }
 }
