@@ -5,6 +5,7 @@ import estructura.model.Actividad;
 import estructura.model.Estado;
 import estructura.model.Proceso;
 import estructura.model.Tarea;
+import estructura.persistencia.Persistencia;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -221,10 +223,6 @@ public class CrudProceso {
         return !txtDuracionTarea.getText().isEmpty() || !txtDescripcionActividad.getText().isEmpty();
     }
 
-    @FXML
-    void onCrearOrden(ActionEvent event) {
-
-    }
 
     @FXML
     public void initialize() {
@@ -370,8 +368,28 @@ public class CrudProceso {
     }
 
     @FXML
-    void onConsultarTiempoPClick(ActionEvent event) {
+    private void onConsultarTiempoProceso(ActionEvent event) {
+        if (procesoSeleccionado != null) {
+            int tiempoTotalProceso = procesoSeleccionado.getTiempoTotalProceso();
 
+            // Muestra un mensaje con el tiempo total del proceso
+            mostrarMensaje("Tiempo total del proceso de " + procesoSeleccionado.getNombre() + " : " + tiempoTotalProceso + " minutos");
+        } else {
+            // Muestra un mensaje indicando que no se ha seleccionado un proceso
+            mostrarMensaje("Por favor, selecciona un proceso antes de consultar el tiempo.");
+        }
+    }
+
+    @FXML
+    private void onConsultarTiempoActividad(ActionEvent event) {
+        if (procesoSeleccionado != null && actividadSeleccionada != null) {
+            int tiempoTotalActividad = actividadSeleccionada.getTotalDuracionActividad();
+            mostrarMensaje("Tiempo total de la actividad es: " + actividadSeleccionada.getNombre() + " : " + tiempoTotalActividad + " minutos");
+        } else {
+            // Muestra un mensaje indicando que no se ha seleccionado un proceso
+            mostrarMensaje("Por favor, selecciona un proceso o actividad antes de consultar.");
+
+        }
     }
 
     public MainApp getApp() {
@@ -516,4 +534,60 @@ public class CrudProceso {
             mostrarMensaje("Las Tareas deben tener descripción y duración");
         }
     }
+
+    @FXML
+    void onEliminarActividad(ActionEvent event) throws IOException {
+        if (procesoSeleccionado != null && actividadSeleccionada != null) {
+            // Llama al método eliminarActividad de tu instancia de Aplicacion
+            modelFactory.getAplicacion().eliminarActividad(procesoSeleccionado, actividadSeleccionada);
+
+            // Actualiza la tabla de actividades
+            cargarActividadesEnTabla();
+
+            // Limpia los campos de actividad
+            limpiarCamposActividad();
+
+            // Muestra un mensaje de éxito
+            mostrarMensaje("Actividad eliminada correctamente.");
+
+            // Guarda los cambios en el modelo
+            Persistencia.guardarProcesos(modelFactory.getAplicacion().getListaProcesos());
+        } else {
+            // Muestra un mensaje indicando que no se ha seleccionado un proceso o actividad
+            mostrarMensaje("Selecciona un proceso y una actividad antes de intentar eliminar.");
+        }
+    }
+
+    @FXML
+    void onCrearOrden(ActionEvent event) {
+        if (procesoSeleccionado != null) {
+            String nombreActividad = txtNombreActividad.getText();
+            String descripcionActividad = txtDescripcionActividad.getText();
+
+            if (verificarCamposActividad()) {
+                Actividad nuevaActividad = null;
+                Actividad actividad = new Actividad();
+                actividad.setNombre(nombreActividad);
+                actividad.setDescripcion(descripcionActividad);
+                actividad.setObligatoria(obtenerEstado());
+
+                // Llama al método crearActividadEnOrden de tu instancia de Aplicacion
+                nuevaActividad = modelFactory.crearActividadEnOrden(procesoSeleccionado, actividad);
+
+                if (nuevaActividad != null) {
+                    listaActividades.add(nuevaActividad);
+                    cargarActividadesEnTabla();
+                    limpiarCamposActividad();
+                    mostrarMensaje("Actividad Registrada");
+                } else {
+                    mostrarMensaje("Actividad no registrada");
+                }
+            } else {
+                mostrarMensaje("Las actividades deben tener nombre y descripción");
+            }
+        } else {
+            mostrarMensaje("Debe seleccionar un proceso");
+        }
+    }
 }
+

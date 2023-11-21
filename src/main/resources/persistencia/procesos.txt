@@ -1,2 +1,2 @@
-42@@proceso1@@0
-78@@proceso2@@0
+42@@proceso1@@2
+78@@proceso2@@3

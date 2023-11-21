@@ -1,4 +1,3 @@
-proceso1@@act1_proc1@@act1_proc1@@No Obligatorio
 proceso1@@act3_proc1@@act3_proc1@@No Obligatorio
 proceso1@@act2_proc1@@act2_proc1@@No Obligatorio
 proceso2@@act1_proc2@@act1_proc2@@No Obligatorio

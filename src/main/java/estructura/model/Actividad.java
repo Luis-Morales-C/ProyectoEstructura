@@ -81,6 +81,19 @@ public class Actividad implements Serializable {
             return "NO OBLIGATORIO";
         }
     }
+    public int getTotalDuracionActividad() {
+        int totalDuration = 0;
+        for (Tarea tarea : tareasPendientes.toList()) {
+            totalDuration += tarea.getDuracionMinutos();
+        }
+
+        for (Tarea tarea : completarTarea.toList()) {
+            totalDuration += tarea.getDuracionMinutos();
+        }
+
+        return totalDuration;
+    }
+
 
     public void setNombre(String nombre) {
         this.nombre = nombre;

@@ -32,6 +32,7 @@ public class ListaDobleEnlazada<E> implements Iterable<E>, Serializable {
         }
     }
 
+
     public ListaDobleEnlazada() {
         cabeza = new Nodo<>();
         cola = new Nodo<>(null, cabeza, null);
@@ -52,6 +53,29 @@ public class ListaDobleEnlazada<E> implements Iterable<E>, Serializable {
         sucesor.anterior = nuevoNodo;
         size++;
     }
+
+    /**
+     * Obtiene el último nodo de la lista.
+     *
+     * @return El último nodo de la lista o null si la lista está vacía.
+     */
+    public Nodo<E> obtenerUltimo() {
+        if (estaVacia()) {
+            return null;
+        }
+        return cola.anterior;
+    }
+    public void agregarDespuesDe(E elemento, E elementoAnterior) {
+        Nodo<E> actual = cabeza.siguiente;
+        while (actual != cola) {
+            if (actual.elemento.equals(elementoAnterior)) {
+                agregarEntre(elemento, actual, actual.siguiente);
+                return;
+            }
+            actual = actual.siguiente;
+        }
+    }
+
 
     public E eliminarPrimero() {
         if (estaVacia()) return null;

@@ -12,3 +12,4 @@ proceso2@@act1_proc2@@t@@OPCIONAL@@3
 proceso2@@act1_proc2@@tarea1_act1_proc2@@OPCIONAL@@4
 proceso2@@act1_proc2@@2@@OPCIONAL@@2
 proceso2@@act1_proc2@@l@@OPCIONAL@@8
+proceso2@@act2_proc2@@dd@@OBLIGATORIO@@1

@@ -85,7 +85,17 @@ public class ModelFactory {
         }
         return nuevaActividad;
     }
-
+    public Actividad crearActividadEnOrden(Proceso proceso, Actividad nuevaActividad) {
+        Actividad actividadCreada = null;
+        try {
+            // Llama al método crearActividadEnOrden de tu instancia de Aplicacion
+            actividadCreada = getAplicacion().crearActividadEnOrden(proceso, nuevaActividad);
+            Persistencia.guardarActividades(getAplicacion().getListaProcesos());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return actividadCreada;
+    }
     private void mostrarMensaje(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Información");
