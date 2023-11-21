@@ -13,6 +13,10 @@ public class Usuario implements Serializable {
         this.contrasena = contrasena;
     }
 
+    public Usuario() {
+
+    }
+
     public String getNombreUsuario() {
         return nombreUsuario;
     }
