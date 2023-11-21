@@ -14,25 +14,32 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="634.0" prefWidth="907.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="estructura.controller.CrudProceso">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="634.0" prefWidth="907.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="estructura.controller.CrudProceso">
    <children>
-      <TabPane layoutX="2.0" layoutY="2.0" prefHeight="634.0" prefWidth="907.0" tabClosingPolicy="UNAVAILABLE">
+
+       <TabPane layoutX="2.0" layoutY="2.0" prefHeight="634.0" prefWidth="907.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
             <Tab fx:id="tabLogin" text="Login">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="416.0" prefWidth="744.0">
                      <children>
-                        <Label layoutX="226.0" layoutY="60.0" text="Usuario:" />
-                        <Label layoutX="226.0" layoutY="102.0" text="Contraseña:" />
-                        <TextField fx:id="txtUser" layoutX="334.0" layoutY="56.0" />
-                        <PasswordField fx:id="pfPassword" layoutX="335.0" layoutY="98.0" />
-                        <Button layoutX="222.0" layoutY="177.0" mnemonicParsing="false" onAction="#registrarUsuario" text="Registrar" />
-                        <Button layoutX="409.0" layoutY="177.0" mnemonicParsing="false" onAction="#login" text="Ingresar" />
+                        <Label layoutX="148.0" layoutY="102.0" text="Usuario:" />
+                        <Label layoutX="138.0" layoutY="148.0" text="Contraseña:" />
+                        <TextField fx:id="txtUser" layoutX="222.0" layoutY="98.0" prefHeight="25.0" prefWidth="174.0" />
+                        <PasswordField fx:id="pfPassword" layoutX="222.0" layoutY="144.0" prefHeight="25.0" prefWidth="173.0" />
+                        <Button layoutX="233.0" layoutY="206.0" mnemonicParsing="false" onAction="#registrarUsuario" text="Registrar" />
+                        <Button layoutX="333.0" layoutY="206.0" mnemonicParsing="false" onAction="#login" text="Ingresar" />
+                         <Label layoutX="216.0" layoutY="39.0" prefHeight="52.0" prefWidth="399.0" text="¡Bienvenido! Este es tu sistema de gestión de procesos.">
+                           <font>
+                              <Font name="System Italic" size="16.0" />
+                           </font>
+                        </Label>
                      </children></AnchorPane>
               </content>
             </Tab>
-          <Tab fx:id="tabProcesos" text="Procesos">
+            <Tab fx:id="tabProcesos" disable="true" text="Procesos">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="571.0" prefWidth="768.0">
                      <children>
@@ -63,7 +70,7 @@
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab fx:id="tabActividades" text="Actividades">
+          <Tab fx:id="tabActividades" disable="true" text="Actividades">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -96,7 +103,7 @@
                   </AnchorPane>
             </content>
           </Tab>
-            <Tab fx:id="tabTareas" text="Tareas">
+            <Tab fx:id="tabTareas" disable="true" text="Tareas">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -137,5 +144,6 @@
             </Tab>
         </tabs>
       </TabPane>
+       <Label layoutX="10.0" layoutY="600.0" text="Desarrollado por: Felipe, D'Angello, Luis" />
    </children>
 </AnchorPane>

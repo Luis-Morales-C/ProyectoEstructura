@@ -1,10 +1,8 @@
 package estructura.controller;
 
+
 import estructura.MainApp;
-import estructura.model.Actividad;
-import estructura.model.Estado;
-import estructura.model.Proceso;
-import estructura.model.Tarea;
+import estructura.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class CrudProceso {
@@ -119,10 +118,27 @@ public class CrudProceso {
     @FXML
     MenuItem crearOrdenActividad;
 
+    @FXML
+    private TabPane tabPane;
+
+
+    @FXML
+    private Tab tabActividades;
+
+    @FXML
+    private Tab tabTareas;
+
+    @FXML
+    private TextField txtUser;
+
+    @FXML
+    private PasswordField pfPassword;
+
     private ObservableList<Proceso> listaProcesos = FXCollections.observableArrayList();
     private ObservableList<Proceso> listaProcesosAct = FXCollections.observableArrayList();
     private ObservableList<Actividad> listaActividades = FXCollections.observableArrayList();
     private ObservableList<Tarea> listaTareas = FXCollections.observableArrayList();
+    private Collection<Usuario> listaUsuarios;
 
 
     @FXML
@@ -486,11 +502,7 @@ public class CrudProceso {
         checkBoxTarea.setSelected(false);
     }
 
-    public void registrarUsuario(ActionEvent actionEvent) {
-    }
 
-    public void login(ActionEvent actionEvent) {
-    }
 
     public void crearTareaPosicion(ActionEvent actionEvent) {
         if (verificarCamposActividadTarea()) {
@@ -516,4 +528,83 @@ public class CrudProceso {
             mostrarMensaje("Las Tareas deben tener descripción y duración");
         }
     }
+
+    // Agrega estos métodos a tu clase CrudProceso
+
+    @FXML
+    void registrarUsuario(ActionEvent actionEvent) {
+        String usuario = txtUser.getText();
+        String contrasena = pfPassword.getText();
+
+        if (usuario.isEmpty() || contrasena.isEmpty()) {
+            showAlert("Error de Registro", "Por favor, complete todos los campos.");
+            return;
+        }
+
+        // Verificar si el usuario ya está registrado en el archivo
+        if (UsuarioDAO.usuarioRegistrado(usuario)) {
+            showAlert("Error de Registro", "El usuario ya está registrado");
+            return;
+        }
+
+        Usuario nuevoUsuario = new Usuario(usuario, contrasena);
+        UsuarioDAO.insertarUsuario(nuevoUsuario);
+
+        showAlert("Registro Exitoso", "Usuario registrado correctamente");
+    }
+
+    @FXML
+    void login(ActionEvent actionEvent) {
+        // Obtener el usuario y la contraseña ingresados
+        String usuario = txtUser.getText();
+        String contrasena = pfPassword.getText();
+
+        // Validar que se hayan ingresado datos
+        if (usuario.isEmpty() || contrasena.isEmpty()) {
+            showAlert("Error de Inicio de Sesión", "Por favor, complete todos los campos.");
+            return;
+        }
+
+        // Cargar la lista de usuarios desde el archivo
+        cargarListaUsuarios();
+
+        // Verificar si el usuario y la contraseña son válidos
+        if (validarCredenciales(usuario, contrasena)) {
+            // Mostrar un mensaje de éxito
+            showAlert("Inicio de Sesión Exitoso", "Inicio de sesión exitoso");
+
+            // Desbloquear las otras pestañas
+            tabProcesos.setDisable(false);
+            tabActividades.setDisable(false);
+            tabTareas.setDisable(false);
+
+            // Cambiar a la pestaña de "Procesos" después del inicio de sesión
+            tabPane.getSelectionModel().select(tabProcesos);
+        } else {
+            // Mostrar un mensaje de error si las credenciales no son válidas
+            showAlert("Error de Inicio de Sesión", "Credenciales incorrectas");
+        }
+    }
+
+    private void cargarListaUsuarios() {
+        // Cargar la lista de usuarios desde el archivo
+        listaUsuarios = UsuarioDAO.obtenerUsuarios();
+    }
+
+    private boolean validarCredenciales(String nombreUsuario, String contrasena) {
+        // Verificar si el usuario y la contraseña son válidos
+        return listaUsuarios.stream()
+                .anyMatch(u -> u.getNombreUsuario().equals(nombreUsuario) && u.getContrasena().equals(contrasena));
+    }
+
+
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText(null);
+        alert.setTitle(title);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
 }
