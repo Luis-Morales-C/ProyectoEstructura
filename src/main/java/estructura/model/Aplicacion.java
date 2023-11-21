@@ -146,4 +146,27 @@ public class Aplicacion implements Serializable {
         }
         return tarea;
     }
+
+    public Tarea crearTareaPosicion(Proceso procesoSeleccionado, Actividad actividadSeleccionada, Tarea tarea, int posicion) {
+        Iterator<Proceso> iterator = listaProcesos.iterator();
+        while (iterator.hasNext()) {
+            Proceso procesoActual = iterator.next();
+            if(procesoActual.equals(procesoSeleccionado)) {
+                Iterator<Actividad> actividadIterator = procesoActual.getActividades().iterator();
+                procesoActual.getActividades().borrarLista();
+                while(actividadIterator.hasNext()) {
+                    Actividad actividadActual = actividadIterator.next();
+                    if(actividadActual==null)
+                        break;
+                    if(actividadActual.equals(actividadSeleccionada)) {
+                        tarea.setProceso(procesoActual.getNombre());
+                        tarea.setActividad(actividadActual.getNombre());
+                        actividadActual.getTareasPendientes().enqueueAtPosition(tarea, posicion);
+                    }
+                    procesoActual.getActividades().agregarUltimo(actividadActual);
+                }
+            }
+        }
+        return tarea;
+    }
 }

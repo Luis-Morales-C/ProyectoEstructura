@@ -14,6 +14,7 @@ import java.util.List;
 public class ModelFactory {
     Aplicacion aplicacion;
 
+
     private static class SingletonHolder {
         private final static ModelFactory eINSTANCE = new ModelFactory();
     }
@@ -67,7 +68,7 @@ public class ModelFactory {
     private List<Actividad> devolverTodasActividades() {
         List<Actividad> actividades = new ArrayList<>();
         Iterator<Proceso> procesoIterator = getAplicacion().getListaProcesos().iterator();
-        while(procesoIterator.hasNext()) {
+        while (procesoIterator.hasNext()) {
             Proceso procesoActual = procesoIterator.next();
             actividades.addAll(procesoActual.getActividades().aLista());
         }
@@ -84,6 +85,7 @@ public class ModelFactory {
         }
         return nuevaActividad;
     }
+
     private void mostrarMensaje(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Información");
@@ -103,4 +105,15 @@ public class ModelFactory {
         return nuevaTarea;
     }
 
+
+    public Tarea crearTareaPosicion(Proceso procesoSeleccionado, Actividad actividadSeleccionada, Tarea tarea, int posicion) {
+        Tarea nuevaTarea = null;
+        try {
+            nuevaTarea = getAplicacion().crearTareaPosicion(procesoSeleccionado, actividadSeleccionada, tarea, posicion);
+            Persistencia.guardarTareas(getAplicacion().getListaProcesos());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return nuevaTarea;
+    }
 }

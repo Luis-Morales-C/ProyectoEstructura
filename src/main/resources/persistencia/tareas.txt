@@ -1,2 +1,10 @@
 proceso1@@act1_proc1@@tarea1_act1_proc1@@OPCIONAL@@2
+proceso1@@act1_proc1@@a@@OPCIONAL@@3
+proceso1@@act1_proc1@@b@@OPCIONAL@@7
+proceso1@@act1_proc1@@t@@OPCIONAL@@4
+proceso1@@act1_proc1@@s@@OPCIONAL@@1
+proceso1@@act1_proc1@@y@@OPCIONAL@@9
+proceso1@@act3_proc1@@a@@OPCIONAL@@1
+proceso2@@act1_proc2@@t@@OPCIONAL@@3
 proceso2@@act1_proc2@@tarea1_act1_proc2@@OPCIONAL@@4
+proceso2@@act1_proc2@@2@@OPCIONAL@@2
