@@ -13,6 +13,11 @@ public class ListaDobleEnlazada<E> implements Iterable<E>, Serializable {
     private Nodo<E> cola;
     private int size;
 
+    public void addAll(List<E> actividads) {
+
+
+    }
+
     private static class Nodo<E> {
         E elemento;
         Nodo<E> siguiente;

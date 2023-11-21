@@ -27,7 +27,7 @@
                         <Label layoutX="226.0" layoutY="102.0" text="Contraseña:" />
                         <TextField fx:id="txtUser" layoutX="334.0" layoutY="56.0" />
                         <PasswordField fx:id="pfPassword" layoutX="335.0" layoutY="98.0" />
-                        <Button layoutX="222.0" layoutY="177.0" mnemonicParsing="false" onAction="#registrarUsuario" text="Registrar" />
+                         <Button layoutX="222.0" layoutY="177.0" mnemonicParsing="false" onAction="#registrarUsuario" text="Registrar" />
                         <Button layoutX="409.0" layoutY="177.0" mnemonicParsing="false" onAction="#login" text="Ingresar" />
                      </children></AnchorPane>
               </content>

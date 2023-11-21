@@ -1,6 +1,8 @@
 package estructura.controller;
 
 import estructura.MainApp;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 
 public class InicioController {
     private MainApp aplicacion;
@@ -12,4 +14,7 @@ public class InicioController {
     public void setAplicacion(MainApp aplicacion) {
         this.aplicacion = aplicacion;
     }
+
+
+
 }

@@ -1,5 +1,6 @@
 package estructura.controller;
 
+
 import estructura.MainApp;
 import estructura.model.Actividad;
 import estructura.model.Estado;
@@ -123,6 +124,12 @@ public class CrudProceso {
     private ObservableList<Proceso> listaProcesosAct = FXCollections.observableArrayList();
     private ObservableList<Actividad> listaActividades = FXCollections.observableArrayList();
     private ObservableList<Tarea> listaTareas = FXCollections.observableArrayList();
+    @FXML
+    private TextField txtUser;
+    @FXML
+    private TextField pfPassword;
+
+
 
 
     @FXML
@@ -486,11 +493,43 @@ public class CrudProceso {
         checkBoxTarea.setSelected(false);
     }
 
+    @FXML
     public void registrarUsuario(ActionEvent actionEvent) {
+        // Obtener el usuario y la contraseña ingresados
+        String usuario = txtUser.getText();
+        String contrasena = pfPassword.getText();
+
+        // Validar que se hayan ingresado datos
+        if (usuario.isEmpty() || contrasena.isEmpty()) {
+            showAlert("Error de Registro", "Por favor, complete todos los campos.");
+            return;
+        }
+
+        // Lógica para registrar el usuario (puedes usar una base de datos, almacenamiento en archivos, etc.)
+        // Aquí deberías implementar la lógica para almacenar el usuario en tu sistema
+        // Puedes usar clases de servicio, bases de datos u otros mecanismos de almacenamiento.
+
+        // Por ahora, simplemente mostraremos un mensaje de éxito.
+        showAlert("Registro Exitoso", "Usuario registrado correctamente");
     }
 
+    @FXML
     public void login(ActionEvent actionEvent) {
+        // Obtener el usuario y la contraseña ingresados
+        String usuario = txtUser.getText();
+        String contrasena = pfPassword.getText();
+
+        // Validar que se hayan ingresado datos
+        if (usuario.isEmpty() || contrasena.isEmpty()) {
+            showAlert("Error de Inicio de Sesión", "Por favor, complete todos los campos.");
+            return;
+        }
+
+
+        // Por ahora, simplemente mostraremos un mensaje de éxito.
+        showAlert("Inicio de Sesión Exitoso", "Inicio de sesión exitoso");
     }
+
 
     public void crearTareaPosicion(ActionEvent actionEvent) {
         if (verificarCamposActividadTarea()) {
@@ -515,5 +554,43 @@ public class CrudProceso {
         } else {
             mostrarMensaje("Las Tareas deben tener descripción y duración");
         }
+    }
+
+    public void registrarUsuario(ActionEvent actionEvent) {
+        // Aquí deberías implementar la lógica para registrar un nuevo usuario
+        // Puedes acceder a los campos de texto u otros controles de la interfaz para obtener la información necesaria
+
+        // Ejemplo:
+        String usuario = txtUser.getText();
+        String contrasena = pfPassword.getText();
+
+        // Lógica de registro de usuario aquí
+        // ...
+
+        // Puedes mostrar un mensaje de éxito o error
+        showAlert("Registro Exitoso", "Usuario registrado correctamente");
+    }
+
+    public void login(ActionEvent actionEvent) {
+        // Aquí deberías implementar la lógica para el inicio de sesión
+        // Puedes acceder a los campos de texto u otros controles de la interfaz para obtener la información necesaria
+
+        // Ejemplo:
+        String usuario = txtUser.getText();
+        String contrasena = pfPassword.getText();
+
+        // Lógica de inicio de sesión aquí
+        // ...
+
+        // Puedes mostrar un mensaje de éxito o error
+        showAlert("Inicio de Sesión", "Inicio de sesión exitoso");
+    }
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText(null);
+        alert.setTitle(title);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }
