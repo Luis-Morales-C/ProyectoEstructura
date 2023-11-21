@@ -56,7 +56,7 @@ public class Persistencia {
         fw.close();
     }
 
-    private static void guardarUsuarios(List<Usuario> listaUsuarios) throws IOException {
+    public static void guardarUsuarios(List<Usuario> listaUsuarios) throws IOException {
         String contenido = "";
         for (Usuario usuario : listaUsuarios) {
             contenido += usuario.getRol() + "@@" + usuario.getUser() + "@@" + usuario.getPassword() + "\n";

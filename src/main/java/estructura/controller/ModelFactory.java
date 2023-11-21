@@ -23,15 +23,22 @@ public class ModelFactory {
         }
     }
 
-    public boolean validarUsuario(String usuario, String contrasena) {
-        boolean valido = false;
+    public boolean validarUsuario(Usuario usuario) {
         try {
-            getAplicacion().validarUsario(usuario, contrasena);
-            Persistencia.guardarProcesos(getAplicacion().getListaProcesos());
+            List<Usuario> usuarios = Persistencia.cargarUsuarios();
+            return getAplicacion().validarUsario(usuario, usuarios);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return valido;
+    }
+
+    public void registrarUsuario(Usuario user) {
+        try {
+            getAplicacion().getListaUsuarios().add(user);
+            Persistencia.guardarUsuarios(getAplicacion().getListaUsuarios());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

@@ -1,10 +1,7 @@
 package estructura.controller;
 
 import estructura.MainApp;
-import estructura.model.Actividad;
-import estructura.model.Estado;
-import estructura.model.Proceso;
-import estructura.model.Tarea;
+import estructura.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -540,6 +537,25 @@ public class CrudProceso {
     }
 
     public void registrarUsuario(ActionEvent actionEvent) {
+        String usuario = txtUser.getText();
+        String contrasena = pfPassword.getText();
+        if (usuario.isEmpty() || contrasena.isEmpty()) {
+            mostrarMensaje("Por favor, complete todos los campos.");
+            return;
+        }
+        Usuario user = new Usuario(usuario, contrasena);
+        if (modelFactory.validarUsuario(user)) {
+            mostrarMensaje("El usuario ya está registrado");
+            return;
+        } else {
+            modelFactory.registrarUsuario(user);
+            tabProcesos.setDisable(true);
+            tabActividades.setDisable(true);
+            tabTareas.setDisable(true);
+            txtUser.clear();
+            pfPassword.clear();
+            mostrarMensaje("Usuario registrado correctamente");
+        }
     }
 
     public void login(ActionEvent actionEvent) {
@@ -549,10 +565,13 @@ public class CrudProceso {
             mostrarMensaje("Por favor, complete todos los campos.");
             return;
         }
-        if (modelFactory.validarUsuario(usuario, contrasena)) {
+        Usuario user = new Usuario(usuario, contrasena);
+        if (modelFactory.validarUsuario(user)) {
             tabProcesos.setDisable(false);
             tabActividades.setDisable(false);
             tabTareas.setDisable(false);
+            txtUser.clear();
+            pfPassword.clear();
         } else {
             mostrarMensaje("Error de Inicio de Sesión");
         }
@@ -607,5 +626,11 @@ public class CrudProceso {
             mostrarMensaje("Por favor, selecciona un proceso o actividad antes de consultar.");
 
         }
+    }
+
+    public void cerrarSesion(ActionEvent actionEvent) {
+        tabProcesos.setDisable(true);
+        tabActividades.setDisable(true);
+        tabTareas.setDisable(true);
     }
 }

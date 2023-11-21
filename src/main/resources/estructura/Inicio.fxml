@@ -29,10 +29,11 @@
                         <PasswordField fx:id="pfPassword" layoutX="335.0" layoutY="98.0" />
                         <Button layoutX="222.0" layoutY="177.0" mnemonicParsing="false" onAction="#registrarUsuario" text="Registrar" />
                         <Button layoutX="409.0" layoutY="177.0" mnemonicParsing="false" onAction="#login" text="Ingresar" />
+                        <Button layoutX="594.0" layoutY="177.0" mnemonicParsing="false" onAction="#cerrarSesion" text="Cerrar sesión" />
                      </children></AnchorPane>
               </content>
             </Tab>
-          <Tab fx:id="tabProcesos" text="Procesos">
+          <Tab fx:id="tabProcesos" disable="true" text="Procesos">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="571.0" prefWidth="768.0">
                      <children>
@@ -63,7 +64,7 @@
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab fx:id="tabActividades" text="Actividades">
+          <Tab fx:id="tabActividades" disable="true" text="Actividades">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -109,7 +110,7 @@
                   </AnchorPane>
             </content>
           </Tab>
-            <Tab fx:id="tabTareas" text="Tareas">
+            <Tab fx:id="tabTareas" disable="true" text="Tareas">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>

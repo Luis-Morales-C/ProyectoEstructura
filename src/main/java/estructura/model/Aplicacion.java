@@ -215,7 +215,12 @@ public class Aplicacion implements Serializable {
         setListaProcesos(listaProcesos);
     }
 
-    public boolean validarUsario(String usuario, String contrasena) {
-
+    public boolean validarUsario(Usuario usuario, List<Usuario> usuarios) {
+        boolean valido = false;
+        for(Usuario user: usuarios) {
+            if(user.getUser().equals(usuario.getUser()) && user.getPassword().equals(usuario.getPassword()))
+                valido = true;
+        }
+        return valido;
     }
 }
