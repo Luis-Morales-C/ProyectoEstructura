@@ -10,6 +10,9 @@ public class Actividad implements Serializable {
     private String descripcion;
     private String obligatoria;
     private String proceso;
+    private String tareas;
+    private String tiempoMinimo;
+    private String tiempoMaximo;
     private Cola<Tarea> tareasPendientes = new Cola<>(); // Cola de tareas pendientes
     private Cola<Tarea> completarTarea = new Cola<>(); // Cola de tareas completadas
 
@@ -26,6 +29,48 @@ public class Actividad implements Serializable {
 
     public void addTarea(Tarea tarea) {
         tareasPendientes.enqueue(tarea);
+    }
+
+    public String getObligatoria() {
+        return obligatoria;
+    }
+
+    public String getTareas() {
+        String tareas = "";
+        for(Tarea tarea: getTareasPendientes().toList()) {
+            tareas += tarea.getDescripcion()+", ";
+        }
+        return tareas;
+    }
+
+    public void setTareas(String tareas) {
+        this.tareas = tareas;
+    }
+
+    public String getTiempoMinimo() {
+        int tiempo = 0;
+        for(Tarea tarea: getTareasPendientes().toList()) {
+            Estado e = tarea.getEstado();
+            if(e.equals(Estado.OBLIGATORIO))
+                tiempo += tarea.getDuracionMinutos();
+        }
+        return tiempo+"";
+    }
+
+    public void setTiempoMinimo(String tiempoMinimo) {
+        this.tiempoMinimo = tiempoMinimo;
+    }
+
+    public String getTiempoMaximo() {
+        int tiempo = 0;
+        for(Tarea tarea: getTareasPendientes().toList()) {
+            tiempo += tarea.getDuracionMinutos();
+        }
+        return tiempo+"";
+    }
+
+    public void setTiempoMaximo(String tiempoMaximo) {
+        this.tiempoMaximo = tiempoMaximo;
     }
 
     public Tarea completetarTarea() {

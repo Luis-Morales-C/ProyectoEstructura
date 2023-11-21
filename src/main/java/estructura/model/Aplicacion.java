@@ -107,6 +107,22 @@ public class Aplicacion implements Serializable {
         return null;
     }
 
+    public List<Actividad> buscarActividadesDetalle(String actividad) {
+        List<Actividad> listaActividades = new ArrayList<>();
+        Iterator<Proceso> iterator = listaProcesos.iterator();
+        while (iterator.hasNext()) {
+            Proceso procesoActual = iterator.next();
+            Iterator<Actividad> actividadIterator = procesoActual.getActividades().iterator();
+            while (actividadIterator.hasNext()) {
+                Actividad actividadActual = actividadIterator.next();
+                if(actividadActual.getNombre().equals(actividad)) {
+                    listaActividades.add(actividadActual);
+                }
+            }
+        }
+        return listaActividades;
+    }
+
     public List<Tarea> buscarTareas(Proceso proceso, Actividad actividad) {
         Iterator<Proceso> iterator = listaProcesos.iterator();
         while (iterator.hasNext()) {

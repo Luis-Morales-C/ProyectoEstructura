@@ -108,6 +108,20 @@ public class CrudProceso {
     private TableView<Actividad> tblActividadesTareas;
 
     @FXML
+    private TableColumn<?, ?>  colActividadDetalleActividad;
+    @FXML
+    private TableColumn<?, ?> colDescripcionDetalleActividad;
+    @FXML
+    private TableColumn<?, ?> colTareasDetalleActividad;
+    @FXML
+    private TableColumn<?, ?> colTiempoMinimoDetalleActividad;
+    @FXML
+    private TableColumn<?, ?> colTiempoMaximoDetalleActividad;
+    @FXML
+    private TableColumn<?, ?> colProcesosDetalleActividad;
+    @FXML
+    private TableView<Actividad> tablaDetalleActividades;
+    @FXML
     private TextField txtNombreActividad;
 
     @FXML
@@ -122,6 +136,7 @@ public class CrudProceso {
     private ObservableList<Proceso> listaProcesos = FXCollections.observableArrayList();
     private ObservableList<Proceso> listaProcesosAct = FXCollections.observableArrayList();
     private ObservableList<Actividad> listaActividades = FXCollections.observableArrayList();
+    private ObservableList<Actividad> listaActividadesDetalle = FXCollections.observableArrayList();
     private ObservableList<Tarea> listaTareas = FXCollections.observableArrayList();
 
 
@@ -277,6 +292,23 @@ public class CrudProceso {
         cargarProcesosTarea();
         cargarTareasEnTabla();
         cargarActividadesTareas();
+    }
+    
+    public void cargarActividadesDetalle(String actividad) {
+        colActividadDetalleActividad.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colDescripcionDetalleActividad.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+        colTareasDetalleActividad.setCellValueFactory(new PropertyValueFactory<>("tareas"));
+        colTiempoMinimoDetalleActividad.setCellValueFactory(new PropertyValueFactory<>("tiempoMinimo"));
+        colTiempoMaximoDetalleActividad.setCellValueFactory(new PropertyValueFactory<>("tiempoMaximo"));
+        colProcesosDetalleActividad.setCellValueFactory(new PropertyValueFactory<>("proceso"));
+        tablaDetalleActividades.getItems().clear();
+        tablaDetalleActividades.setItems(buscarActivades(actividad));
+        tablaDetalleActividades.refresh();
+    }
+
+    private ObservableList<Actividad> buscarActivades(String actividad) {
+        listaActividadesDetalle.addAll(modelFactory.getAplicacion().buscarActividadesDetalle(actividad));
+        return listaActividadesDetalle;
     }
 
     private String obtenerEstado() {
@@ -515,5 +547,10 @@ public class CrudProceso {
         } else {
             mostrarMensaje("Las Tareas deben tener descripción y duración");
         }
+    }
+
+    public void buscarActividad(ActionEvent actionEvent) {
+        String actividad = txtNombreActividad.getText();
+        cargarActividadesDetalle(actividad);
     }
 }
