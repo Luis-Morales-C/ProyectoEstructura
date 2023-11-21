@@ -2,7 +2,7 @@ package estructura.model;
 
 import estructura.exceptions.ProcesoExisteException;
 import estructura.persistencia.Persistencia;
-import estructura.model.*;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,8 +11,6 @@ import java.util.List;
 
 public class Aplicacion implements Serializable {
     private ListaDobleEnlazada<Proceso> listaProcesos = new ListaDobleEnlazada<>();
-    private ListaDobleEnlazada<Actividad> listaActividadesProceso = new ListaDobleEnlazada<>();
-    private ListaDobleEnlazada<Tarea> listaTareasActividadProceso = new ListaDobleEnlazada<>();
 
     public Aplicacion() {
     }
@@ -23,22 +21,6 @@ public class Aplicacion implements Serializable {
 
     public void setListaProcesos(ListaDobleEnlazada<Proceso> listaProcesos) {
         this.listaProcesos = listaProcesos;
-    }
-
-    public ListaDobleEnlazada<Actividad> getListaActividadesProceso() {
-        return listaActividadesProceso;
-    }
-
-    public void setListaActividadesProceso(ListaDobleEnlazada<Actividad> listaActividadesProceso) {
-        this.listaActividadesProceso = listaActividadesProceso;
-    }
-
-    public ListaDobleEnlazada<Tarea> getListaTareasActividadProceso() {
-        return listaTareasActividadProceso;
-    }
-
-    public void setListaTareasActividadProceso(ListaDobleEnlazada<Tarea> listaTareasActividadProceso) {
-        this.listaTareasActividadProceso = listaTareasActividadProceso;
     }
 
     public boolean buscarProceso(Proceso procesoBuscado) {
@@ -54,7 +36,7 @@ public class Aplicacion implements Serializable {
     }
     public Proceso crearProceso(Proceso proceso) throws ProcesoExisteException {
         if (!buscarProceso(proceso)) {
-            listaProcesos.agregarUltimo(proceso);
+            listaProcesos.addLast(proceso);
         } else {
             throw new ProcesoExisteException("El proceso ya existe");
         }
@@ -66,76 +48,49 @@ public class Aplicacion implements Serializable {
             Iterator<Proceso> iterator = listaProcesos.iterator();
             while (iterator.hasNext()) {
                 Proceso procesoActual = iterator.next();
-                String cadena1 = procesoActual.getNombre().replace(" ", "");
-                String cadena2 = proceso.getNombre().replace(" ", "");
-                if (cadena1.equals(cadena2)) {
+                if (procesoActual.getNombre().replaceAll(" ", "").equals(proceso.getNombre().replaceAll(" ", ""))) {
                     iterator.remove();
-                    break;  // Mover el break dentro del if para salir después de eliminar el elemento
+                    break;
                 }
             }
             setListaProcesos(listaProcesos);
-            Persistencia.guardarProcesos(getListaProcesos());
+            Persistencia.guardarProcesos((ArrayList<Proceso>) getListaProcesos());
         } catch (IOException e) {
-            // Manejar la excepción (mostrar mensaje, registrar en un archivo de registro, etc.)
             e.printStackTrace();
         }
     }
 
     public Actividad crearActividadFinal(Proceso procesoSeleccionado, Actividad actividad) {
-        try {
-            setListaActividadesProceso(null);
-            Iterator<Proceso> iterator = listaProcesos.iterator();
-            while (iterator.hasNext()) {
-                Proceso procesoActual = iterator.next();
-                if(procesoActual.equals(procesoSeleccionado)) {
-                    procesoActual.getActividades().agregarUltimo(actividad);
-                    getListaActividadesProceso().addAll(procesoActual.getActividades().aLista());
-                    procesoSeleccionado = procesoActual;
-                } else {
-                    Iterator<Actividad> actividadIterator = procesoActual.getActividades().iterator();
-                    while(actividadIterator.hasNext()){
-                        Actividad actividadActual = actividadIterator.next();
-                        actividadesProceso.add(actividadActual);
-                    }
-                }
+        Iterator<Proceso> iterator = listaProcesos.iterator();
+        while (iterator.hasNext()) {
+            Proceso procesoActual = iterator.next();
+            if(procesoActual.equals(procesoSeleccionado)) {
+                procesoActual.getActividades().agregarUltimo(actividad);
+                procesoSeleccionado = procesoActual;
             }
-            Persistencia.guardarActividades(getListaProcesos(), actividadesProceso);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        Persistencia.guardarActividades(getListaProcesos(), procesoSeleccionado.getActividades().aLista());
         return actividad;
     }
 
     public Actividad crearActividadDespuesDe(Proceso procesoSeleccionado, Actividad actividadAnterior, Actividad nuevaActividad) {
-        try {
-            List<Actividad> actividadesProceso = new ArrayList<>();
-            Iterator<Proceso> iterator = listaProcesos.iterator();
-            while (iterator.hasNext()) {
-                Proceso procesoActual = iterator.next();
-                if(procesoActual.equals(procesoSeleccionado)) {
-                    Iterator<Actividad> actividadIterator = procesoActual.getActividades().iterator();
-                    ListaDobleEnlazada<Actividad> nuevaListaActividades = new ListaDobleEnlazada<>();
-                    while(actividadIterator.hasNext()){
-                        Actividad actividadActual = actividadIterator.next();
-                        nuevaListaActividades.agregarUltimo(actividadActual);
-                        if(actividadActual.equals(actividadAnterior)) {
-                            nuevaListaActividades.agregarUltimo(nuevaActividad);
-                        }
-                    }
-                    procesoActual.setActividades(nuevaListaActividades);
-                    actividadesProceso.addAll(nuevaListaActividades.aLista());
-                } else {
-                    Iterator<Actividad> actividadIterator = procesoActual.getActividades().iterator();
-                    while(actividadIterator.hasNext()){
-                        Actividad actividadActual = actividadIterator.next();
-                        actividadesProceso.add(actividadActual);
+        Iterator<Proceso> iterator = listaProcesos.iterator();
+        while (iterator.hasNext()) {
+            Proceso procesoActual = iterator.next();
+            if(procesoActual.equals(procesoSeleccionado)) {
+                Iterator<Actividad> actividadIterator = procesoActual.getActividades().iterator();
+                ListaDobleEnlazada<Actividad> nuevaListaActividades = new ListaDobleEnlazada<>();
+                while(actividadIterator.hasNext()){
+                    Actividad actividadActual = actividadIterator.next();
+                    nuevaListaActividades.agregarUltimo(actividadActual);
+                    if(actividadActual.equals(actividadAnterior)) {
+                        nuevaListaActividades.agregarUltimo(nuevaActividad);
                     }
                 }
+                procesoActual.setActividades(nuevaListaActividades);
             }
-            Persistencia.guardarActividades(getListaProcesos(), actividadesProceso);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        Persistencia.guardarActividades(getListaProcesos(), procesoSeleccionado.getActividades().aLista());
         return actividadAnterior;
     }
 
@@ -163,10 +118,6 @@ public class Aplicacion implements Serializable {
                 }
             }
         }
-        return null;
-    }
-
-    public Tarea crearTareaFinal(Proceso procesoSeleccionado, Actividad actividadSeleccionada, Tarea tarea) {
         return null;
     }
 }
