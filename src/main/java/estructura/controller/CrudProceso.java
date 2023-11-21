@@ -134,6 +134,7 @@ public class CrudProceso {
     MenuItem crearOrdenActividad;
 
     private ObservableList<Proceso> listaProcesos = FXCollections.observableArrayList();
+    private ObservableList<Proceso> listaProcesosBuscar = FXCollections.observableArrayList();
     private ObservableList<Proceso> listaProcesosAct = FXCollections.observableArrayList();
     private ObservableList<Actividad> listaActividades = FXCollections.observableArrayList();
     private ObservableList<Actividad> listaActividadesDetalle = FXCollections.observableArrayList();
@@ -215,6 +216,7 @@ public class CrudProceso {
                 if (nuevaActividad != null) {
                     listaActividades.add(nuevaActividad);
                     cargarActividadesEnTabla();
+                    cargarProcesosEnTabla();
                     limpiarCamposActividad();
                     mostrarMensaje("Actividad Registrada");
                 } else {
@@ -359,46 +361,53 @@ public class CrudProceso {
 
     @FXML
     void onBuscarClick(ActionEvent event) {
-        boolean bandera = false;
         String buscado = txtAux.getText();
-
+        boolean bandera = false;
         for (Proceso proceso : listaProcesos) {
             if (buscado.equals(proceso.getNombre())) {
                 bandera = true;
-                break;  // Agregar un break para salir del bucle una vez que se encuentra el proceso
+                listaProcesosBuscar.add(proceso);
+                cargarProcesosBuscar();
+                break;
             }
         }
 
-        if (bandera) {
-            mostrarMensaje("Proceso encontrado");
-        } else {
+        if (!bandera) {
             mostrarMensaje("Proceso no encontrado");
         }
+    }
+
+    private void cargarProcesosBuscar() {
+        colNombreProceso.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colIdProceso.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colNumActividades.setCellValueFactory(new PropertyValueFactory<>("numActividades"));
+
+        tblProcesos.getItems().clear();
+        tblProcesos.setItems(getListaProcesosBuscar());
+        tblProcesos.refresh();
+    }
+
+    private ObservableList<Proceso> getListaProcesosBuscar() {
+        return listaProcesosBuscar;
     }
 
     @FXML
     void onCambiarNombreClick(ActionEvent event) {
         if (procesoSeleccionado != null) {
             String nombre = txtAux.getText();
-            procesoSeleccionado.setNombre(nombre);
+            procesoSeleccionado.setNombre(nombre); // actualizar en modelFactory
             mostrarMensaje("Proceso cambiado correctamente.");
         } else {
             mostrarMensaje("Proceso no cambiado");
         }
-        // Actualizar la tabla
-        //cargarProcesosEnTabla();
-
-        // Limpiar los campos de texto
-
+        cargarProcesosEnTabla();
         limpiarCamposProceso();
-        // Mostrar un mensaje de éxito
-
     }
 
     @FXML
     void onCancelarClick(ActionEvent event) {
         limpiarCamposProceso();
-
+        cargarProcesosEnTabla();
     }
 
     @FXML

@@ -64,7 +64,7 @@ public class Proceso implements Serializable {
     }
 
     public int getNumActividades() {
-        return numActividades;
+        return getActividades().getSize();
     }
 
     public void setNumActividades(int numActividades) {
