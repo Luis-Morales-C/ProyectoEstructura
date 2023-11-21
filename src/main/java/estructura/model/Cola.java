@@ -112,29 +112,26 @@ public class Cola<E> implements Serializable {
 
     public void enqueueAtPosition(E elemento, int posicion) {
         Node<E> nuevoNodo = new Node<>(elemento, null);
-        if (posicion < 0) {
-            throw new IllegalArgumentException("La posición no puede ser negativa");
+        if (posicion < 0 || posicion > size) {
+            throw new IllegalArgumentException("Posición inválida");
         }
         if (posicion == 0) {
             nuevoNodo.siguiente = inicio;
             inicio = nuevoNodo;
-
             if (fin == null) {
                 fin = nuevoNodo;
             }
+        }
+        if(posicion == size) {
+            fin.siguiente = nuevoNodo;
+            fin = nuevoNodo;
         } else {
             Node<E> actual = inicio;
-            for (int i = 0; i < size - 1; i++) {
-                if (actual == null) {
-                    throw new IllegalArgumentException("No hay más posiciones");
-                }
+            for (int i = 0; i < posicion - 1; i++) {
                 actual = actual.siguiente;
             }
             nuevoNodo.siguiente = actual.siguiente;
             actual.siguiente = nuevoNodo;
-            if (nuevoNodo.siguiente == null) {
-                fin = nuevoNodo;
-            }
         }
         size++;
     }
