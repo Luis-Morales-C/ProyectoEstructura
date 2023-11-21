@@ -1,6 +1,5 @@
 package estructura.model;
 
-
 import java.util.Random;
 
 /**
@@ -8,23 +7,24 @@ import java.util.Random;
  */
 public class Proceso {
     private String id;
-    private String name;
+    private String nombre;
     private ListaDobleEnlazada<Actividad> actividades;
-    private ListaDobleEnlazada<Tarea> tareas=new Actividad().getListaTarea();
+    private ListaDobleEnlazada<Tarea> tareas = new Actividad().getListaTarea();
     private int duracionTotal;
 
     /**
      * Constructor de la clase Procesos.
      *
-     * @param name El nombre del proceso.
+     * @param nombre El nombre del proceso.
      */
-    public Proceso(String name) {
+    public Proceso(String nombre) {
         this.id = String.valueOf(generarID());
-        this.name = name;
+        this.nombre = nombre;
         this.actividades = new ListaDobleEnlazada<>();
         this.duracionTotal = 0;
     }
-    public Proceso(){
+
+    public Proceso() {
         super();
     }
 
@@ -42,8 +42,8 @@ public class Proceso {
      *
      * @return El nombre del proceso.
      */
-    public String getName() {
-        return name;
+    public String getNombre() {
+        return nombre;
     }
 
     /**
@@ -70,8 +70,7 @@ public class Proceso {
      */
     private void actualizarDuracion() {
         this.duracionTotal = 0;
-        actividades.forEach(actividad ->
-                        actualizarDuracion(actividad.getTotalDuracionMinutes()), false);
+        actividades.forEach(actividad -> actualizarDuracion(actividad.getTotalDuracionMinutes()), false);
     }
 
     /**
@@ -91,6 +90,7 @@ public class Proceso {
     public ListaDobleEnlazada<Actividad> getActividades() {
         return actividades;
     }
+
     public static int generarID() {
         Random random = new Random();
         return random.nextInt();
@@ -100,13 +100,12 @@ public class Proceso {
         return tareas;
     }
 
-
     public void setId(String id) {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public void setActividades(ListaDobleEnlazada<Actividad> actividades) {
@@ -120,5 +119,4 @@ public class Proceso {
     public void setTareas(ListaDobleEnlazada<Tarea> tareas) {
         this.tareas = tareas;
     }
-
 }

@@ -19,7 +19,7 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.CheckBox?>
 <AnchorPane prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="estructura.infrastructure.view.controllers.Controller">
+            fx:controller="estructura.controllers.Controller">
     <VBox layoutX="500" layoutY="30" spacing="10">
         <Label text="Crear Proceso"/>
         <TextField fx:id="nombreProceso" promptText="Nombre del Proceso"/>

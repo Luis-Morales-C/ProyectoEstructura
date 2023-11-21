@@ -1,11 +1,12 @@
 module Proyecto {
     requires javafx.controls;
     requires javafx.fxml;
-    exports estructura;
-    exports estructura.controller;
+    requires javafx.graphics;
+    exports estructura.model;
+    exports estructura.controllers;
+    exports estructura; // Exporta el paquete estructura
 
     opens estructura.model to javafx.base;
-
-    opens estructura.controller to javafx.fxml;
+    opens estructura.controllers to javafx.fxml;
     opens estructura to javafx.fxml;
 }

@@ -4,7 +4,6 @@ package estructura.persistencia;
 import estructura.model.*;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Persistencia {
@@ -17,7 +16,7 @@ public class Persistencia {
         String contenido = "";
 
         for(Proceso proceso: listaProcesos) {
-            contenido += proceso.getId()+"@@"+proceso.getName()+"@@"+proceso.getActividades()+"\n";
+            contenido += proceso.getId()+"@@"+proceso.getNombre()+"@@"+proceso.getActividades()+"\n";
         }
         guardarArchivo(RUTA_ARCHIVO_PROCESOS, contenido);
     }
@@ -60,7 +59,7 @@ public class Persistencia {
 
             Actividad actividad=new Actividad(linea.split("@@")[2],linea.split("@@")[3],Estado.valueOf(linea.split("@@")[4]));
             proceso.setId(linea.split("@@")[0]);
-            proceso.setName(linea.split("@@")[1]);
+            proceso.setNombre(linea.split("@@")[1]);
 
             ListaDobleEnlazada<Actividad> actividades=new ListaDobleEnlazada<>();
             actividades.addLast(actividad);
@@ -135,4 +134,7 @@ public class Persistencia {
     }
 
 
+    public static void guardarActividades(List<Proceso> listaProcesos, List<Actividad> actividads) {
+
+    }
 }
