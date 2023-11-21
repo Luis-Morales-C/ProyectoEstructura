@@ -2,7 +2,9 @@ package estructura.model;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
 /**
@@ -20,6 +22,19 @@ public class ListaDobleEnlazada<E> {
 
     // The size of the list
     private int size;
+
+    public List<E> aLista() {
+        return null;
+    }
+
+    public Iterator<E> iterator() {
+        return null;
+    }
+
+    public void agregarUltimo(E proceso) {
+
+    }
+
 
     /**
      * A node within the doubly linked list.
@@ -60,24 +75,27 @@ public class ListaDobleEnlazada<E> {
     /**
      * Adds an element to the beginning of the list.
      *
-     * @param element the element to add
      */
-    public void addFirst(E element) {
-        addBetween(element, head, head.next);
+    public E removeFirst() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("La lista está vacía");
+        }
+        return remove(head.next);
     }
+
+    public E removeLast() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("La lista está vacía");
+        }
+        return remove(tail.prev);
+    }
+
 
 
     public void addLast(E element) {
         addBetween(element, tail.prev, tail);
     }
-    public E removeFirst() {
-        if (isEmpty()) return null;
-        return remove(head.next);
-    }
-    public E removeLast() {
-        if (isEmpty()) return null;
-        return remove(tail.prev);
-    }
+
     public boolean isEmpty() {
         return size == 0;
     }

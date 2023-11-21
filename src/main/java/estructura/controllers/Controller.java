@@ -1,15 +1,13 @@
-package estructura.infrastructure.view.controllers;
+package estructura.controllers;
 
-        import estructura.main.modelos.Actividades;
-        import estructura.main.modelos.Procesos;
-        import javafx.fxml.FXML;
-        import javafx.scene.control.*;
-        import javafx.stage.Stage;
-        import javafx.scene.control.Alert;
-        import javafx.scene.control.Alert.AlertType;
+import estructura.model.Actividad;
+import estructura.model.Proceso;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 
-        import java.util.ArrayList;
-        import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Controller {
 
@@ -36,11 +34,11 @@ public class Controller {
     @FXML
     private Button btnSalir;
     @FXML
-    private TableView<Procesos> tablaProcesos;
+    private TableView<Proceso> tablaProcesos;
     @FXML
-    private TableView<Actividades> tablaActividades;
+    private TableView<Actividad> tablaActividades;
 
-    private List<Procesos> listaDeProcesos = new ArrayList<>();
+    private List<Proceso> listaDeProcesos = new ArrayList<>();
 
 
     @FXML
@@ -101,7 +99,7 @@ public class Controller {
     @FXML
     private void handleVerDetallesProceso() {
         // Obtener el proceso seleccionado (puedes implementar esto según tu lógica)
-        Procesos procesoSeleccionado = obtenerProcesoSeleccionado();
+        Proceso procesoSeleccionado = obtenerProcesoSeleccionado();
 
         // Verificar si se seleccionó un proceso
         if (procesoSeleccionado != null) {
@@ -114,23 +112,23 @@ public class Controller {
     }
 
     // Método de ejemplo para obtener el proceso seleccionado (debes implementar según tu lógica)
-    private Procesos obtenerProcesoSeleccionado() {
+    private Proceso obtenerProcesoSeleccionado() {
         // Obtener la fila seleccionada en la tabla
         return tablaProcesos.getSelectionModel().getSelectedItem();
     }
 
     // Método de ejemplo para mostrar los detalles del proceso
-    private void mostrarDetallesProceso(Procesos proceso) {
+    private void mostrarDetallesProceso(Proceso proceso) {
         // Verificar si se ha seleccionado un proceso
         if (proceso != null) {
             // Crear un cuadro de diálogo de tipo INFORMATION
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Detalles del Proceso");
-            alert.setHeaderText("Detalles del Proceso: " + proceso.getName());
+            alert.setHeaderText("Detalles del Proceso: " + proceso.getNombre());
 
             // Construir el contenido del cuadro de diálogo con los detalles del proceso
             String contenido = "ID: " + proceso.getId() + "\n"
-                    + "Nombre: " + proceso.getName() + "\n"
+                    + "Nombre: " + proceso.getNombre() + "\n"
                     // Agregar más detalles según la estructura de tu clase Procesos
                     + "Duración Total: " + proceso.getDuracionTotal();
             alert.setContentText(contenido);
@@ -162,7 +160,7 @@ public class Controller {
     @FXML
     private void handleVerDetallesActividad() {
         // Obtener la actividad seleccionada (puedes implementar esto según tu lógica)
-        Actividades actividadSeleccionada = obtenerActividadSeleccionada();
+       Actividad actividadSeleccionada = obtenerActividadSeleccionada();
 
         // Verificar si se seleccionó una actividad
         if (actividadSeleccionada != null) {
@@ -175,16 +173,16 @@ public class Controller {
     }
 
     // Método de ejemplo para obtener la actividad seleccionada (debes implementar según tu lógica)
-    private Actividades obtenerActividadSeleccionada() {
+    private Actividad obtenerActividadSeleccionada() {
         // Obtener la fila seleccionada en la tabla (asumiendo que tienes una TableView llamada tablaActividades)
-        Actividades actividadSeleccionada;
+        Actividad actividadSeleccionada;
         actividadSeleccionada = tablaActividades.getSelectionModel().getSelectedItem();
 
         return actividadSeleccionada;
     }
 
     // Método de ejemplo para mostrar los detalles de la actividad
-    private void mostrarDetallesActividad(Actividades actividad) {
+    private void mostrarDetallesActividad(Actividad actividad) {
         // Verificar si se ha seleccionado una actividad
         if (actividad != null) {
             // Crear un cuadro de diálogo de tipo INFORMATION
@@ -195,7 +193,7 @@ public class Controller {
             // Construir el contenido del cuadro de diálogo con los detalles de la actividad
             String contenido = "ID: " + actividad.getId() + "\n"
                     + "Nombre: " + actividad.getNombre() + "\n"
-                    // Puedes agregar más detalles según la estructura de tu clase Actividades
+                    // Puedes agregar más detalles según la estructura de tu clase Actividad
                     + "Duración Total: " + actividad.getTotalDuracionMinutes() + " minutos";
             alert.setContentText(contenido);
 
@@ -217,7 +215,7 @@ public class Controller {
         // Verificar si el nombre del proceso no está vacío
         if (nombreProcesoTexto != null && !nombreProcesoTexto.trim().isEmpty()) {
             // Crear una nueva instancia de Procesos
-            Procesos nuevoProceso = new Procesos(nombreProcesoTexto);
+            Proceso nuevoProceso = new Proceso(nombreProcesoTexto);
 
             // Agregar el nuevo proceso a tu estructura de datos o lista de procesos
             listaDeProcesos.add(nuevoProceso);
@@ -258,7 +256,7 @@ public class Controller {
         }
 
         // Crear la actividad con los valores obtenidos
-        Actividades nuevaActividad = new Actividades(nombre);
+        Actividad nuevaActividad = new Actividad(nombre);
         nuevaActividad.setDescripcion(descripcion);
         nuevaActividad.setObligatoria(obligatoria);
 

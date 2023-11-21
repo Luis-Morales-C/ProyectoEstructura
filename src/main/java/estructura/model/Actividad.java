@@ -1,160 +1,106 @@
-package estructura.main.modelos;
+package estructura.model;
 
-import estructura.main.nodos.Cola;
-import estructura.main.util.CrearID;
+import estructura.model.Cola;
+import estructura.model.Tarea;
 
 import java.util.List;
 
-/**
- * La clase Actividades representa una actividad en el contexto del proyecto.
- * Una actividad tiene tareas pendientes y completadas, así como métodos para
- * gestionarlas y obtener información sobre la actividad.
- */
-public class Actividades {
+public class Actividad {
     private String id;
     private String nombre;
-    private Cola<Tarea> tareasPendientes; // Cola de tareas pendientes
-    private Cola<Tarea> completarTarea; // Cola de tareas completadas
+    private Cola<Tarea> tareasPendientes;
+    private Cola<Tarea> completarTarea;
     private String descripcion;
-    boolean obligatoria = false;
+    private boolean obligatoria;
+    private Estado estado;
+    private ListaDobleEnlazada<Tarea> listaTarea;
 
-    /**
-     * Constructor de la clase Actividades.
-     *
-     * @param nombre El nombre de la actividad.
-     */
-    public Actividades(String nombre) {
-        this.id = CrearID.generarID();
+    public Actividad(String nombre) {
         this.nombre = nombre;
         this.tareasPendientes = new Cola<>();
         this.completarTarea = new Cola<>();
-        this.obligatoria = false; // Inicializar con el valor por defecto
+        this.obligatoria = false;
     }
 
-    /**
-     * Agrega una tarea a la lista de tareas pendientes.
-     *
-     * @param tarea La tarea a agregar.
-     */
+    public Actividad() {
+        // Constructor por defecto
+    }
+
+    public Actividad(String s, String s1, Estado estado) {
+
+    }
+
     public void addTarea(Tarea tarea) {
         tareasPendientes.enqueue(tarea);
     }
 
-    /**
-     * Completa la tarea más antigua de la lista de tareas pendientes.
-     *
-     * @return La tarea completada, o null si no hay tareas pendientes.
-     */
-    public Tarea completetarTarea() {
-        Tarea completetarTarea = tareasPendientes.dequeue();
-        if (completetarTarea != null) {
-            this.completarTarea.enqueue(completetarTarea);
-            completetarTarea.completarTarea();
+    public Tarea completarTarea() {
+        Tarea tareaCompletada = tareasPendientes.dequeue();
+        if (tareaCompletada != null) {
+            completarTarea.enqueue(tareaCompletada);
+            tareaCompletada.completarTarea();
         }
-        return completetarTarea;
+        return tareaCompletada;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    // Resto de los métodos sin cambios
+
+    public int getTotalDuracionMinutes() {
+        int totalDuration = 0;
+        totalDuration += calcularDuracion(tareasPendientes);
+        totalDuration += calcularDuracion(completarTarea);
+        return totalDuration;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    private int calcularDuracion(Cola<Tarea> cola) {
+        int totalDuration = 0;
+        for (Tarea tarea : cola.toList()) {
+            totalDuration += tarea.getDuracionMinutos();
+        }
+        return totalDuration;
     }
 
-    public void setTareasPendientes(Cola<Tarea> tareasPendientes) {
-        this.tareasPendientes = tareasPendientes;
+    public ListaDobleEnlazada<Tarea> getListaTarea() {
+        return null;
     }
 
-    public void setCompletarTarea(Cola<Tarea> completarTarea) {
-        this.completarTarea = completarTarea;
+    public void setNombre(String s) {
+
     }
 
-    /**
-     * Obtiene la cola de tareas pendientes.
-     *
-     * @return La cola de tareas pendientes.
-     */
-    public Cola<Tarea> getTareasPendientes() {
-        return tareasPendientes;
+    public List<Tarea> getPendingTasksAsList() {
+        return null;
     }
 
-    /**
-     * Obtiene la cola de tareas completadas.
-     *
-     * @return La cola de tareas completadas.
-     */
-    public Cola<Tarea> getCompletarTarea() {
-        return completarTarea;
+    public void setDescripcion(String s) {
+
     }
 
-    /**
-     * Obtiene el ID de la actividad.
-     *
-     * @return El ID de la actividad.
-     */
-    public String getId() {
-        return id;
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
 
-    /**
-     * Obtiene el nombre de la actividad.
-     *
-     * @return El nombre de la actividad.
-     */
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setListaTarea(ListaDobleEnlazada<Tarea> listaTarea) {
+        this.listaTarea = listaTarea;
+    }
+
     public String getNombre() {
         return nombre;
     }
 
-    /**
-     * Obtiene todas las tareas pendientes en forma de lista.
-     *
-     * @return Lista de tareas pendientes.
-     */
-    public List<Tarea> getPendingTasksAsList() {
-        return tareasPendientes.toList();
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    /**
-     * Obtiene todas las tareas completadas en forma de lista.
-     *
-     * @return Lista de tareas completadas.
-     */
-    public List<Tarea> getCompletedTasksAsList() {
-        return completarTarea.toList();
+    public String getId() {
+        return null;
     }
-
-    /**
-     * Calcula y devuelve la duración total de la actividad.
-     *
-     * @return La duración total en minutos de todas las tareas (pendientes y completadas).
-     */
-    public int getTotalDuracionMinutes() {
-        int totalDuration = 0;
-        for (Tarea tarea : tareasPendientes.toList()) totalDuration += tarea.getDuracionMinutos();
-
-        for (Tarea tarea : completarTarea.toList()) totalDuration += tarea.getDuracionMinutos();
-
-        return totalDuration;
-    }
-
 
     public void setObligatoria(boolean obligatoria) {
 
-        this.obligatoria = obligatoria;
-    }
-
-    public boolean isObligatoria() {
-
-        return obligatoria;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-
-    }
-
-    public String getDescripcion() {
-        return descripcion;
     }
 }

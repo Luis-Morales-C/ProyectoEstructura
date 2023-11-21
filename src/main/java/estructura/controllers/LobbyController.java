@@ -1,5 +1,6 @@
-package estructura.controller;
+package estructura.controllers;
 
+import estructura.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -8,14 +9,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import estructura.MainApp;
-
 
 
 public class LobbyController {
 
     private Stage stage;
-    private MainApp mainApp;
+    private Main mainApp;
 
     @FXML
     private Label etiqueta;
@@ -76,7 +75,7 @@ public class LobbyController {
         alert.showAndWait();
     }
 
-    void setStage(Stage stage) {
+    public void setStage(Stage stage) {
         this.stage = stage;
         stage.setOnCloseRequest((event) -> {
             showAlert("Cerrar sesion", "Gracias por usar este programa");
@@ -85,7 +84,19 @@ public class LobbyController {
     }
 
     // Método para establecer la referencia a MainApp
-    public void setMainApp(MainApp mainApp) {
+    public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
     }
+
+
+    public void setMain(Main main) {
+        // Puedes realizar acciones de inicialización o configuración aquí si es necesario
+        System.out.println("Referencia a Main establecida en LobbyController");
+    }
+
+    public void setP(Main main) {
+
+
+    }
 }
+

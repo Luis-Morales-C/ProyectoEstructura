@@ -52,7 +52,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>estructura.infrastructure.Main</mainClass>
+                            <mainClass>estructura.Main</mainClass>
                             <!-- Otras configuraciones según sea necesario -->
                         </configuration>
                     </execution>
