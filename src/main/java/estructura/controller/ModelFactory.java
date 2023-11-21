@@ -14,6 +14,33 @@ import java.util.List;
 public class ModelFactory {
     Aplicacion aplicacion;
 
+    public void eliminarActividad(Proceso procesoSeleccionado, Actividad actividadSeleccionada){
+        try {
+            getAplicacion().eliminarActividad(procesoSeleccionado, actividadSeleccionada);
+            Persistencia.guardarProcesos(getAplicacion().getListaProcesos());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean validarUsuario(Usuario usuario) {
+        try {
+            List<Usuario> usuarios = Persistencia.cargarUsuarios();
+            return getAplicacion().validarUsario(usuario, usuarios);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void registrarUsuario(Usuario user) {
+        try {
+            getAplicacion().getListaUsuarios().add(user);
+            Persistencia.guardarUsuarios(getAplicacion().getListaUsuarios());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     private static class SingletonHolder {
         private final static ModelFactory eINSTANCE = new ModelFactory();

@@ -1,10 +1,7 @@
 package estructura.controller;
 
 import estructura.MainApp;
-import estructura.model.Actividad;
-import estructura.model.Estado;
-import estructura.model.Proceso;
-import estructura.model.Tarea;
+import estructura.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -40,6 +37,10 @@ public class CrudProceso {
 
     @FXML
     private Tab tabProcesos;
+    @FXML
+    private Tab tabActividades;
+    @FXML
+    private Tab tabTareas;
 
     @FXML
     private TableView<Proceso> tblProcesos;
@@ -52,7 +53,10 @@ public class CrudProceso {
     //items actividades
     @FXML
     private SplitMenuButton SplitCrear;
-
+    @FXML
+    private TextField txtUser;
+    @FXML
+    private PasswordField pfPassword;
     @FXML
     private TableColumn<?, ?> colProcesoTarea;
     @FXML
@@ -108,6 +112,20 @@ public class CrudProceso {
     private TableView<Actividad> tblActividadesTareas;
 
     @FXML
+    private TableColumn<?, ?>  colActividadDetalleActividad;
+    @FXML
+    private TableColumn<?, ?> colDescripcionDetalleActividad;
+    @FXML
+    private TableColumn<?, ?> colTareasDetalleActividad;
+    @FXML
+    private TableColumn<?, ?> colTiempoMinimoDetalleActividad;
+    @FXML
+    private TableColumn<?, ?> colTiempoMaximoDetalleActividad;
+    @FXML
+    private TableColumn<?, ?> colProcesosDetalleActividad;
+    @FXML
+    private TableView<Actividad> tablaDetalleActividades;
+    @FXML
     private TextField txtNombreActividad;
 
     @FXML
@@ -120,8 +138,10 @@ public class CrudProceso {
     MenuItem crearOrdenActividad;
 
     private ObservableList<Proceso> listaProcesos = FXCollections.observableArrayList();
+    private ObservableList<Proceso> listaProcesosBuscar = FXCollections.observableArrayList();
     private ObservableList<Proceso> listaProcesosAct = FXCollections.observableArrayList();
     private ObservableList<Actividad> listaActividades = FXCollections.observableArrayList();
+    private ObservableList<Actividad> listaActividadesDetalle = FXCollections.observableArrayList();
     private ObservableList<Tarea> listaTareas = FXCollections.observableArrayList();
 
 
@@ -200,6 +220,7 @@ public class CrudProceso {
                 if (nuevaActividad != null) {
                     listaActividades.add(nuevaActividad);
                     cargarActividadesEnTabla();
+                    cargarProcesosEnTabla();
                     limpiarCamposActividad();
                     mostrarMensaje("Actividad Registrada");
                 } else {
@@ -278,6 +299,23 @@ public class CrudProceso {
         cargarTareasEnTabla();
         cargarActividadesTareas();
     }
+    
+    public void cargarActividadesDetalle(String actividad) {
+        colActividadDetalleActividad.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colDescripcionDetalleActividad.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+        colTareasDetalleActividad.setCellValueFactory(new PropertyValueFactory<>("tareas"));
+        colTiempoMinimoDetalleActividad.setCellValueFactory(new PropertyValueFactory<>("tiempoMinimo"));
+        colTiempoMaximoDetalleActividad.setCellValueFactory(new PropertyValueFactory<>("tiempoMaximo"));
+        colProcesosDetalleActividad.setCellValueFactory(new PropertyValueFactory<>("proceso"));
+        tablaDetalleActividades.getItems().clear();
+        tablaDetalleActividades.setItems(buscarActivades(actividad));
+        tablaDetalleActividades.refresh();
+    }
+
+    private ObservableList<Actividad> buscarActivades(String actividad) {
+        listaActividadesDetalle.addAll(modelFactory.getAplicacion().buscarActividadesDetalle(actividad));
+        return listaActividadesDetalle;
+    }
 
     private String obtenerEstado() {
         return checkObligatorio.isSelected() ? "Obligatorio" : "No Obligatorio";
@@ -327,51 +365,63 @@ public class CrudProceso {
 
     @FXML
     void onBuscarClick(ActionEvent event) {
-        boolean bandera = false;
         String buscado = txtAux.getText();
-
+        boolean bandera = false;
         for (Proceso proceso : listaProcesos) {
             if (buscado.equals(proceso.getNombre())) {
                 bandera = true;
-                break;  // Agregar un break para salir del bucle una vez que se encuentra el proceso
+                listaProcesosBuscar.add(proceso);
+                cargarProcesosBuscar();
+                break;
             }
         }
 
-        if (bandera) {
-            mostrarMensaje("Proceso encontrado");
-        } else {
+        if (!bandera) {
             mostrarMensaje("Proceso no encontrado");
         }
+    }
+
+    private void cargarProcesosBuscar() {
+        colNombreProceso.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colIdProceso.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colNumActividades.setCellValueFactory(new PropertyValueFactory<>("numActividades"));
+
+        tblProcesos.getItems().clear();
+        tblProcesos.setItems(getListaProcesosBuscar());
+        tblProcesos.refresh();
+    }
+
+    private ObservableList<Proceso> getListaProcesosBuscar() {
+        return listaProcesosBuscar;
     }
 
     @FXML
     void onCambiarNombreClick(ActionEvent event) {
         if (procesoSeleccionado != null) {
             String nombre = txtAux.getText();
-            procesoSeleccionado.setNombre(nombre);
+            procesoSeleccionado.setNombre(nombre); // actualizar en modelFactory
             mostrarMensaje("Proceso cambiado correctamente.");
         } else {
             mostrarMensaje("Proceso no cambiado");
         }
-        // Actualizar la tabla
-        //cargarProcesosEnTabla();
-
-        // Limpiar los campos de texto
-
+        cargarProcesosEnTabla();
         limpiarCamposProceso();
-        // Mostrar un mensaje de éxito
-
     }
 
     @FXML
     void onCancelarClick(ActionEvent event) {
         limpiarCamposProceso();
-
+        cargarProcesosEnTabla();
     }
 
     @FXML
-    void onConsultarTiempoPClick(ActionEvent event) {
-
+    void onConsultarTiempoProceso(ActionEvent event) {
+        if (procesoSeleccionado != null) {
+            int tiempoTotalProceso = procesoSeleccionado.getTiempoTotalProceso();
+            mostrarMensaje("Tiempo total del proceso de " + procesoSeleccionado.getNombre() + " : " + tiempoTotalProceso + " minutos");
+        } else {
+            mostrarMensaje("Por favor, selecciona un proceso antes de consultar el tiempo.");
+        }
     }
 
     public MainApp getApp() {
@@ -487,9 +537,44 @@ public class CrudProceso {
     }
 
     public void registrarUsuario(ActionEvent actionEvent) {
+        String usuario = txtUser.getText();
+        String contrasena = pfPassword.getText();
+        if (usuario.isEmpty() || contrasena.isEmpty()) {
+            mostrarMensaje("Por favor, complete todos los campos.");
+            return;
+        }
+        Usuario user = new Usuario(usuario, contrasena);
+        if (modelFactory.validarUsuario(user)) {
+            mostrarMensaje("El usuario ya está registrado");
+            return;
+        } else {
+            modelFactory.registrarUsuario(user);
+            tabProcesos.setDisable(true);
+            tabActividades.setDisable(true);
+            tabTareas.setDisable(true);
+            txtUser.clear();
+            pfPassword.clear();
+            mostrarMensaje("Usuario registrado correctamente");
+        }
     }
 
     public void login(ActionEvent actionEvent) {
+        String usuario = txtUser.getText();
+        String contrasena = pfPassword.getText();
+        if (usuario.isEmpty() || contrasena.isEmpty()) {
+            mostrarMensaje("Por favor, complete todos los campos.");
+            return;
+        }
+        Usuario user = new Usuario(usuario, contrasena);
+        if (modelFactory.validarUsuario(user)) {
+            tabProcesos.setDisable(false);
+            tabActividades.setDisable(false);
+            tabTareas.setDisable(false);
+            txtUser.clear();
+            pfPassword.clear();
+        } else {
+            mostrarMensaje("Error de Inicio de Sesión");
+        }
     }
 
     public void crearTareaPosicion(ActionEvent actionEvent) {
@@ -515,5 +600,37 @@ public class CrudProceso {
         } else {
             mostrarMensaje("Las Tareas deben tener descripción y duración");
         }
+    }
+
+    public void buscarActividad(ActionEvent actionEvent) {
+        String actividad = txtNombreActividad.getText();
+        cargarActividadesDetalle(actividad);
+    }
+
+    public void onEliminarActividad(ActionEvent actionEvent) {
+        if (procesoSeleccionado != null && actividadSeleccionada != null) {
+            modelFactory.eliminarActividad(procesoSeleccionado, actividadSeleccionada);
+            cargarActividadesEnTabla();
+            limpiarCamposActividad();
+            mostrarMensaje("Actividad eliminada correctamente.");
+        } else {
+            mostrarMensaje("Selecciona un proceso y una actividad antes de intentar eliminar.");
+        }
+    }
+
+    public void onConsultarTiempoActividad(ActionEvent actionEvent) {
+        if (procesoSeleccionado != null && actividadSeleccionada != null) {
+            int tiempoTotalActividad = Integer.parseInt(actividadSeleccionada.getTiempoMaximo());
+            mostrarMensaje("Tiempo total de la actividad es: "+actividadSeleccionada.getNombre()+": "+tiempoTotalActividad+ " minutos");
+        } else {
+            mostrarMensaje("Por favor, selecciona un proceso o actividad antes de consultar.");
+
+        }
+    }
+
+    public void cerrarSesion(ActionEvent actionEvent) {
+        tabProcesos.setDisable(true);
+        tabActividades.setDisable(true);
+        tabTareas.setDisable(true);
     }
 }

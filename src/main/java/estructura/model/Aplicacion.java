@@ -11,6 +11,15 @@ import java.util.List;
 
 public class Aplicacion implements Serializable {
     private ListaDobleEnlazada<Proceso> listaProcesos = new ListaDobleEnlazada<>();
+    private List<Usuario> listaUsuarios = new ArrayList<>();
+
+    public List<Usuario> getListaUsuarios() {
+        return listaUsuarios;
+    }
+
+    public void setListaUsuarios(List<Usuario> listaUsuarios) {
+        this.listaUsuarios = listaUsuarios;
+    }
 
     public Aplicacion() {
     }
@@ -107,6 +116,22 @@ public class Aplicacion implements Serializable {
         return null;
     }
 
+    public List<Actividad> buscarActividadesDetalle(String actividad) {
+        List<Actividad> listaActividades = new ArrayList<>();
+        Iterator<Proceso> iterator = listaProcesos.iterator();
+        while (iterator.hasNext()) {
+            Proceso procesoActual = iterator.next();
+            Iterator<Actividad> actividadIterator = procesoActual.getActividades().iterator();
+            while (actividadIterator.hasNext()) {
+                Actividad actividadActual = actividadIterator.next();
+                if(actividadActual.getNombre().equals(actividad)) {
+                    listaActividades.add(actividadActual);
+                }
+            }
+        }
+        return listaActividades;
+    }
+
     public List<Tarea> buscarTareas(Proceso proceso, Actividad actividad) {
         Iterator<Proceso> iterator = listaProcesos.iterator();
         while (iterator.hasNext()) {
@@ -168,5 +193,34 @@ public class Aplicacion implements Serializable {
             }
         }
         return tarea;
+    }
+
+    public void eliminarActividad(Proceso procesoSeleccionado, Actividad actividadSeleccionada) {
+        Iterator<Proceso> procesoIterator = listaProcesos.iterator();
+        while (procesoIterator.hasNext()) {
+            Proceso procesoActual = procesoIterator.next();
+            if (procesoActual.equals(procesoSeleccionado)) {
+                Iterator<Actividad> actividadIterator = procesoActual.getActividades().iterator();
+                while (actividadIterator.hasNext()) {
+                    Actividad actividadActual = actividadIterator.next();
+                    if (actividadActual.equals(actividadSeleccionada)) {
+                        actividadIterator.remove();
+                        procesoActual.decrementarNumActividades();
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        setListaProcesos(listaProcesos);
+    }
+
+    public boolean validarUsario(Usuario usuario, List<Usuario> usuarios) {
+        boolean valido = false;
+        for(Usuario user: usuarios) {
+            if(user.getUser().equals(usuario.getUser()) && user.getPassword().equals(usuario.getPassword()))
+                valido = true;
+        }
+        return valido;
     }
 }
