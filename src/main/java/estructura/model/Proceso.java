@@ -116,7 +116,69 @@ public class Proceso {
         this.duracionTotal = duracionTotal;
     }
 
+<<<<<<< HEAD
     public void setTareas(ListaDobleEnlazada<Tarea> tareas) {
         this.tareas = tareas;
+=======
+    public int getNumActividades() {
+        return getActividades().getSize();
+    }
+
+    public void setNumActividades(int numActividades) {
+        this.numActividades = numActividades;
+    }
+
+    public static int generarID() {
+        Random random = new Random();
+        int nuevoID;
+        do {
+            nuevoID = random.nextInt(100) + 1;
+        } while (idExisteEnLista(nuevoID));
+        return nuevoID;
+    }
+
+    private static boolean idExisteEnLista(int id) {
+        // Utiliza el iterador para recorrer la lista de IDs y verifica si el ID ya existe
+        for (Integer existingID : ids) {
+            if (existingID == id) {
+                return true; // El ID ya existe en la lista
+            }
+        }
+        return false; // El ID no existe en la lista
+    }
+
+    public int getTiempoTotalProceso() {
+        int tiempoTotalProceso = 0;
+        for (Actividad actividad : listaActividades) {
+            tiempoTotalProceso += Integer.parseInt(actividad.getTiempoMaximo());
+        }
+        return tiempoTotalProceso;
+    }
+
+    public void incrementarNumActividades() {
+        this.numActividades++;
+    }
+
+    public void decrementarNumActividades() {
+        this.numActividades--;
+    }
+
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        return this == o;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (nombre != null ? nombre.hashCode() : 0);
+        result = 31 * result + numActividades;
+        result = 31 * result + (listaActividades != null ? listaActividades.hashCode() : 0);
+        result = 31 * result + duracionTotal;
+        return result;
+>>>>>>> b68463c175c89b8725aaba06abe66fc722b30441
     }
 }

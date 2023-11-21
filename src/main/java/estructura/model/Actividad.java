@@ -4,6 +4,20 @@ import estructura.model.Cola;
 import estructura.model.Tarea;
 
 import java.util.List;
+<<<<<<< HEAD
+=======
+import java.util.Random;
+public class Actividad implements Serializable {
+    private String nombre;
+    private String descripcion;
+    private String obligatoria;
+    private String proceso;
+    private String tareas;
+    private String tiempoMinimo;
+    private String tiempoMaximo;
+    private Cola<Tarea> tareasPendientes = new Cola<>(); // Cola de tareas pendientes
+    private Cola<Tarea> completarTarea = new Cola<>(); // Cola de tareas completadas
+>>>>>>> b68463c175c89b8725aaba06abe66fc722b30441
 
 public class Actividad {
     private String id;
@@ -34,11 +48,61 @@ public class Actividad {
         tareasPendientes.enqueue(tarea);
     }
 
+<<<<<<< HEAD
     public Tarea completarTarea() {
         Tarea tareaCompletada = tareasPendientes.dequeue();
         if (tareaCompletada != null) {
             completarTarea.enqueue(tareaCompletada);
             tareaCompletada.completarTarea();
+=======
+    public String getObligatoria() {
+        return obligatoria;
+    }
+
+    public String getTareas() {
+        String tareas = "";
+        for(Tarea tarea: getTareasPendientes().toList()) {
+            tareas += tarea.getDescripcion()+", ";
+        }
+        return tareas;
+    }
+
+    public void setTareas(String tareas) {
+        this.tareas = tareas;
+    }
+
+    public String getTiempoMinimo() {
+        int tiempo = 0;
+        for(Tarea tarea: getTareasPendientes().toList()) {
+            Estado e = tarea.getEstado();
+            if(e.equals(Estado.OBLIGATORIO))
+                tiempo += tarea.getDuracionMinutos();
+        }
+        return tiempo+"";
+    }
+
+    public void setTiempoMinimo(String tiempoMinimo) {
+        this.tiempoMinimo = tiempoMinimo;
+    }
+
+    public String getTiempoMaximo() {
+        int tiempo = 0;
+        for(Tarea tarea: getTareasPendientes().toList()) {
+            tiempo += tarea.getDuracionMinutos();
+        }
+        return tiempo+"";
+    }
+
+    public void setTiempoMaximo(String tiempoMaximo) {
+        this.tiempoMaximo = tiempoMaximo;
+    }
+
+    public Tarea completetarTarea() {
+        Tarea completetarTarea = tareasPendientes.dequeue();
+        if (completetarTarea != null) {
+            this.completarTarea.enqueue(completetarTarea);
+            completetarTarea.completarTarea();
+>>>>>>> b68463c175c89b8725aaba06abe66fc722b30441
         }
         return tareaCompletada;
     }
