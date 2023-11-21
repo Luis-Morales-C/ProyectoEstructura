@@ -2,17 +2,16 @@ package estructura.controller;
 
 import estructura.MainApp;
 import estructura.model.Actividad;
-<<<<<<< HEAD
+
 import estructura.model.Estado;
-=======
->>>>>>> origin/master
+
 import estructura.model.Proceso;
 import estructura.model.Tarea;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-<<<<<<< HEAD
+
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
@@ -27,6 +26,9 @@ public class CrudProceso {
     private Actividad actividadSeleccionada;
 
     private Tarea tareaSeleccionada;
+
+    public void setAplicacion(MainApp mainApp) {
+    }
 
 
     //Items Proceso
