@@ -621,7 +621,7 @@ public class CrudProceso {
     public void onConsultarTiempoActividad(ActionEvent actionEvent) {
         if (procesoSeleccionado != null && actividadSeleccionada != null) {
             int tiempoTotalActividad = Integer.parseInt(actividadSeleccionada.getTiempoMaximo());
-            mostrarMensaje("Tiempo total de la actividad es: " + actividadSeleccionada.getNombre() + " : " + tiempoTotalActividad + " minutos");
+            mostrarMensaje("Tiempo total de la actividad es: "+actividadSeleccionada.getNombre()+": "+tiempoTotalActividad+ " minutos");
         } else {
             mostrarMensaje("Por favor, selecciona un proceso o actividad antes de consultar.");
 
